@@ -1,2 +1,38 @@
-# coach-eehuan-app
-AI-powered coaching app for nutrition, accountability and client transformation.
+# Coach Eehuan 蜕变陪伴系统
+
+面向 Herbalife 教练的售后陪伴与保留率工具。学员每天上传营养奶昔、Supplements
+与三餐照片，记录卡路里是否达成「神奇数字」、饮水量与睡眠状况；教练（Auditor）
+则在后台查看每位学员的每日打卡，及时给予表扬或专业修正。
+
+## 功能
+
+- **封面首页**：Coach Eehuan 品牌形象、三种挑战计划介绍、学员/教练入口
+- **学员打卡** `/dashboard`：奶昔、Supplements、三餐拍照，卡路里 vs 神奇数字进度环，
+  饮水与睡眠追踪，连续打卡天数与挑战进度条，教练点评时间线
+- **打卡历史** `/history`：按挑战周期查看每日达标状态与教练点评
+- **教练后台** `/coach`：学员总览（今日打卡率、需要关注人数），按状态排序的学员列表
+- **学员详情** `/coach/[clientId]`：近 7 天达标趋势图、每日打卡记录、
+  表扬 / 修正快捷点评与自定义留言
+
+支持三种挑战计划：11 天启动挑战、1 个月蜕变挑战、3 个月蜕变挑战。
+
+## 技术说明
+
+这是一个 Demo 版本：所有数据（学员档案、打卡记录、教练点评、照片）都保存在
+浏览器 `localStorage` 中，无需后端即可完整体验全部功能，也预置了几位示例学员
+方便直接查看教练后台效果。后续要接入真实账号系统、数据库与云端图片存储时，
+只需替换 `lib/store.ts` 中的读写实现，其余组件不受影响。
+
+## 开发
+
+```bash
+npm install
+npm run dev
+```
+
+打开 [http://localhost:3000](http://localhost:3000)。
+
+```bash
+npm run build   # 生产构建
+npm run lint    # 代码检查
+```

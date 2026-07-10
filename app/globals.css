@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f9f9f7;
+  --foreground: #171717;
+
+  /* Brand — herbal green (Coach Eehuan) */
+  --color-brand-50: #eaf7ef;
+  --color-brand-100: #cdeeda;
+  --color-brand-200: #9dddb9;
+  --color-brand-300: #66c491;
+  --color-brand-400: #34ab72;
+  --color-brand-500: #158f58;
+  --color-brand-600: #0e7a4a;
+  --color-brand-700: #0b6039;
+  --color-brand-800: #094a2c;
+  --color-brand-900: #073821;
+
+  /* Accent — warm gold, used for "magic number" / streak / highlights */
+  --color-gold-50: #fef6e7;
+  --color-gold-100: #fce9c2;
+  --color-gold-200: #f8d48c;
+  --color-gold-300: #f2a73b;
+  --color-gold-400: #e08f1e;
+  --color-gold-500: #b4790c;
+  --color-gold-600: #8f5f09;
+
+  /* Status — fixed semantic palette, never reused for series identity */
+  --color-status-good: #0ca30c;
+  --color-status-warning: #fab219;
+  --color-status-critical: #d03b3b;
+
+  /* Chart chrome */
+  --color-surface: #fcfcfb;
+  --color-surface-page: #f9f9f7;
+  --color-ink-primary: #0b0b0b;
+  --color-ink-secondary: #52514e;
+  --color-ink-muted: #898781;
+  --color-hairline: #e1e0d9;
+
+  /* Categorical slots reserved for multi-series charts (fixed order) */
+  --color-series-1: #2a78d6;
+  --color-series-2: #1baf7a;
+  --color-series-3: #eda100;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  --color-brand-50: var(--color-brand-50);
+  --color-brand-100: var(--color-brand-100);
+  --color-brand-200: var(--color-brand-200);
+  --color-brand-300: var(--color-brand-300);
+  --color-brand-400: var(--color-brand-400);
+  --color-brand-500: var(--color-brand-500);
+  --color-brand-600: var(--color-brand-600);
+  --color-brand-700: var(--color-brand-700);
+  --color-brand-800: var(--color-brand-800);
+  --color-brand-900: var(--color-brand-900);
+
+  --color-gold-50: var(--color-gold-50);
+  --color-gold-100: var(--color-gold-100);
+  --color-gold-200: var(--color-gold-200);
+  --color-gold-300: var(--color-gold-300);
+  --color-gold-400: var(--color-gold-400);
+  --color-gold-500: var(--color-gold-500);
+  --color-gold-600: var(--color-gold-600);
+
+  --color-status-good: var(--color-status-good);
+  --color-status-warning: var(--color-status-warning);
+  --color-status-critical: var(--color-status-critical);
+
+  --color-surface: var(--color-surface);
+  --color-surface-page: var(--color-surface-page);
+  --color-ink-primary: var(--color-ink-primary);
+  --color-ink-secondary: var(--color-ink-secondary);
+  --color-ink-muted: var(--color-ink-muted);
+  --color-hairline: var(--color-hairline);
+
+  --color-series-1: var(--color-series-1);
+  --color-series-2: var(--color-series-2);
+  --color-series-3: var(--color-series-3);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0d0d0d;
+    --foreground: #ededed;
+
+    --color-surface: #1a1a19;
+    --color-surface-page: #0d0d0d;
+    --color-ink-primary: #ffffff;
+    --color-ink-secondary: #c3c2b7;
+    --color-ink-muted: #898781;
+    --color-hairline: #2c2c2a;
+
+    --color-brand-50: #0b3a24;
+    --color-brand-100: #0b4a2c;
+    --color-brand-200: #0d5c35;
+    --color-brand-300: #157844;
+    --color-brand-400: #1f9857;
+    --color-brand-500: #34ab72;
+    --color-brand-600: #4fc088;
+    --color-brand-700: #7fd4a9;
+    --color-brand-800: #b6e8cd;
+    --color-brand-900: #eaf7ef;
+
+    --color-gold-50: #3a2c0c;
+    --color-gold-100: #4d3a0e;
+    --color-gold-200: #7a5a10;
+    --color-gold-300: #e8a838;
+    --color-gold-400: #f2bd5e;
+
+    --color-status-good: #0ca30c;
+    --color-status-warning: #fab219;
+    --color-status-critical: #e66767;
+
+    --color-series-1: #3987e5;
+    --color-series-2: #199e70;
+    --color-series-3: #c98500;
+  }
+}
+
+body {
+  background: var(--color-surface-page);
+  color: var(--foreground);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei",
+    var(--font-sans), "Segoe UI", sans-serif;
+}

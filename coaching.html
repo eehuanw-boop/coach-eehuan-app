@@ -404,7 +404,15 @@ textarea{width:100%;min-height:84px;background:var(--panel);border:1px solid var
    填好后：学员用 email 登入，餐单和训练课表存在云端，换手机也能看到。
    留空（null）= 本机模式：资料只存在这台设备的浏览器。
    设定步骤见 SETUP-LOGIN.md。web config 本来就是公开的，安全由 firestore.rules 控制。 */
-const FIREBASE_CONFIG = null;   // 例：{apiKey:"…", authDomain:"xxx.firebaseapp.com", projectId:"xxx", appId:"…"}
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyDz7vjpgT209R8rNNEMrWeLnk1TJs7yr6w",
+  authDomain: "burnup-coaching.firebaseapp.com",
+  projectId: "burnup-coaching",
+  storageBucket: "burnup-coaching.firebasestorage.app",
+  messagingSenderId: "469074734620",
+  appId: "1:469074734620:web:8c6c2be260a8757b6b39d9",
+  measurementId: "G-VEXMGEWFV7"
+};  // 例：{apiKey:"…", authDomain:"xxx.firebaseapp.com", projectId:"xxx", appId:"…"}
 const COACH_EMAILS = ["eehuanw@gmail.com"];        // 教练 email（要和 firestore.rules 里的一样），例：["coach@gmail.com"]
 const FB_VER = "10.12.2";
 let CLOUD = !!((FIREBASE_CONFIG && FIREBASE_CONFIG.apiKey) || window.__FB_MOCK);

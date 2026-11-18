@@ -351,6 +351,97 @@ textarea{width:100%;min-height:84px;background:var(--panel);border:1px solid var
 .loading i{width:28px;height:28px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--yellow);animation:spin 0.8s linear infinite;margin-bottom:12px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .wro.screen{gap:12px}
+/* ---------- client app shell (Today / Meal plan / Fitness) ---------- */
+.apphd{background:var(--bg)}
+.apphd-in{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:16px 4px}
+.me{display:flex;align-items:center;gap:12px;min-width:0}
+.me > div{min-width:0}
+.avatar{flex:none;width:46px;height:46px;border-radius:50%;border:0;background:var(--grad-y);color:var(--ink);font-family:var(--head);font-weight:800;font-size:18px}
+.me small{display:block;color:var(--muted);font-size:12px}
+.me b{display:block;font-family:var(--head);font-size:20px;letter-spacing:-.02em;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pmenu{position:absolute;top:66px;left:0;z-index:30;background:var(--panel-2);border:1px solid var(--line);border-radius:16px;padding:6px;display:grid;min-width:210px;box-shadow:0 20px 40px rgba(0,0,0,.6)}
+.pmenu button{background:none;border:0;text-align:left;padding:11px 12px;border-radius:10px;font-weight:600;font-size:14px}
+.pmenu button:hover{background:#222}
+main.shell{padding-top:14px;padding-bottom:120px}
+.card{background:linear-gradient(180deg,#151515,#0e0e0e);border:1px solid var(--line);border-radius:24px;padding:18px}
+.cardh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:8px}
+.cardh h3{margin:0;font-family:var(--head);font-size:18px;font-weight:800;letter-spacing:-.02em}
+.cardh button{background:none;border:0;color:var(--muted);font-size:13px;font-weight:600;padding:2px 0}
+.cardh button:hover{color:var(--yellow)}
+.week{display:flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px}
+.streak{flex:none;width:52px;height:52px;border-radius:50%;background:#1a1a1a;border:1px solid var(--line);display:grid;place-items:center;align-content:center;line-height:1.05}
+.streak span{display:flex;align-items:center;gap:2px;font-family:var(--head);font-weight:800;font-size:15px}
+.streak svg{width:12px;height:12px;color:#FF8A3D}
+.streak small{font-size:9px;color:var(--muted)}
+.todaychip{flex:1;min-width:0;display:flex;align-items:center;gap:8px;background:#1a1a1a;border-radius:999px;padding:5px 12px 5px 5px;font-weight:600;font-size:13px}
+.todaychip > span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.todaychip .dot{flex:none;width:42px;height:42px;border-radius:50%;background:var(--yellow);color:var(--ink);display:grid;place-items:center;font-family:var(--head);font-weight:800;font-size:12px}
+.dday{flex:none;width:38px;display:grid;justify-items:center;line-height:1.2;position:relative;padding-bottom:6px}
+.dday b{font-family:var(--head);font-size:15px}
+.dday small{font-size:10px;color:var(--muted)}
+.dday.tr::after{content:"";position:absolute;bottom:0;width:5px;height:5px;border-radius:50%;background:var(--yellow)}
+.cal{display:grid;grid-template-columns:1fr auto;gap:16px 12px;align-items:center}
+.cal-l{display:grid;gap:14px;border-left:1px dashed #333;padding-left:14px}
+.cal-l .lab{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.cal-l .lab svg{width:14px;height:14px;color:var(--yellow)}
+.cal-l .v{display:flex;align-items:baseline;gap:6px;font-size:12px;color:var(--muted)}
+.cal-l .v b{font-family:var(--head);font-size:30px;font-weight:800;letter-spacing:-.03em;color:var(--fg)}
+.ring{position:relative;width:136px;height:136px}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .c{position:absolute;inset:0;display:grid;place-items:center;align-content:center;text-align:center}
+.ring .c b{font-family:var(--head);font-size:28px;font-weight:800;color:var(--yellow);letter-spacing:-.03em;line-height:1}
+.ring .c small{font-size:11px;color:var(--muted);margin-top:4px}
+.macs{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;border-top:1px solid var(--line);padding-top:14px}
+.macs.flat{border-top:0;padding-top:0}
+.mac span{display:block;font-family:var(--head);font-weight:700;font-size:15px}
+.mac i{display:block;height:5px;border-radius:5px;background:#262626;margin:8px 0 6px;overflow:hidden}
+.mac i b{display:block;height:100%;border-radius:5px}
+.mac small{display:block;font-size:12px;color:var(--muted)}
+.mac em{display:block;font-style:normal;font-size:11px;color:#6b6b6b;margin-top:2px}
+.sqs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sq{background:linear-gradient(160deg,#1c1c1c,#0f0f0f);border:1px solid var(--line);border-radius:22px;padding:16px;display:grid;gap:16px;min-height:110px;align-content:space-between}
+.sq .t{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;color:#cfcfcf}
+.sq .t svg{flex:none;width:18px;height:18px;color:var(--yellow)}
+.sq b{font-family:var(--head);font-size:28px;font-weight:800;letter-spacing:-.03em;color:var(--yellow);line-height:1}
+.sq b small{font-size:12px;color:var(--muted);font-weight:600;margin-left:4px;letter-spacing:0}
+.sq.hl{background:var(--grad);border-color:#2b2400}
+.sq.hl b{color:var(--fg)}
+.next{display:grid;gap:10px}
+.next .k{display:flex;align-items:center;gap:6px}
+.next .k svg{width:14px;height:14px}
+.next .acts{display:flex;justify-content:flex-start}
+.mlist{display:grid}
+.mrow{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:10px 0;border-top:1px dashed var(--line)}
+.mrow:first-child{border-top:0}
+.tick{width:30px;height:30px;border-radius:50%;border:1.5px solid #444;background:none;display:grid;place-items:center;color:transparent;padding:0}
+.tick.on{background:var(--yellow);border-color:var(--yellow);color:var(--ink)}
+.tick svg{width:16px;height:16px}
+.mrow .nm{min-width:0}
+.mrow .nm b{display:block;font-weight:700;font-size:14px}
+.mrow .nm small{display:block;color:var(--muted);font-size:12px}
+.mrow .kc{font-family:var(--head);font-weight:800;color:var(--yellow);white-space:nowrap}
+.mrow.done .nm b{text-decoration:line-through;color:var(--muted)}
+.wkc{position:relative;overflow:hidden;border-radius:26px;padding:22px;background:var(--grad);border:1px solid #2b2400;display:grid;gap:14px}
+.wkc .bolt-bg{position:absolute;right:-20px;bottom:-30px;width:170px;opacity:.14;pointer-events:none}
+.wkc .bolt-bg svg{width:100%;height:auto}
+.wkc > *{position:relative}
+.wkc h3{margin:0;font-family:var(--head);font-weight:800;font-size:28px;letter-spacing:-.03em;line-height:1.05;max-width:16ch}
+.wkc p{margin:0;color:#d9d2bc;font-size:14px}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pills span{font-size:12px;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:5px 10px}
+.wkc .acts{display:flex;gap:10px;flex-wrap:wrap}
+.btn.sm{padding:12px 16px;font-size:13px}
+.btn.done{background:rgba(61,220,132,.15);color:var(--good);border:1px solid rgba(61,220,132,.5)}
+.wd.today{border-color:var(--yellow)!important}
+.wd .todaytag{float:right;font-size:10px;font-weight:800;letter-spacing:.1em;color:var(--ink);background:var(--yellow);border-radius:4px;padding:2px 6px}
+.bnav{position:fixed;left:0;right:0;bottom:0;z-index:25;padding:0 max(16px,env(safe-area-inset-left,0px)) calc(14px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));pointer-events:none}
+.bnav-in{pointer-events:auto;max-width:440px;margin:0 auto;display:flex;gap:8px;background:rgba(18,18,18,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:999px;padding:8px}
+.bnav button{flex:none;height:52px;min-width:52px;border-radius:999px;border:1px solid var(--line);background:#1a1a1a;color:#cfcfcf;display:flex;align-items:center;justify-content:center;gap:8px;padding:0 16px}
+.bnav button span{display:none;font-family:var(--head);font-weight:800;font-size:14px;white-space:nowrap}
+.bnav button.on{flex:1;background:var(--yellow);color:var(--ink);border-color:var(--yellow)}
+.bnav button.on span{display:inline}
+.bnav svg{width:22px;height:22px;flex:none}
+@media print{.bnav,.apphd{display:none!important}.card,.sq{background:#fff!important}}
 /* ---------- shake mixing animation ---------- */
 .mixbtn{display:inline-flex;align-items:center;gap:6px;margin-top:10px;background:rgba(255,208,0,.1);border:1px solid rgba(255,208,0,.5);color:var(--yellow);border-radius:999px;padding:6px 12px;font-family:var(--head);font-weight:700;font-size:12px}
 .mixbtn svg{width:10px;height:10px}
@@ -710,6 +801,44 @@ const T = {
   "fit.open":["Open my workout","打开我的训练课表","打開我的訓練課表","Buka latihan saya"],
   "wk.none":["Your coach hasn't designed your workout yet. Check back soon.","教练还没为你设计训练课表，请稍后再来看看。","教練還沒為你設計訓練課表，請稍後再來看看。","Jurulatih anda belum mereka bentuk latihan anda. Sila semak semula nanti."],
   "dash.cloud":["Client files are saved in the cloud and sync across your devices. Clients with the APP tag log in with their own email.","学员档案存在云端，换设备也能看到。有 APP 标签的学员是用自己的 email 登入。","學員檔案存在雲端，換設備也能看到。有 APP 標籤的學員是用自己的 email 登入。","Fail klien disimpan di awan dan disegerakkan antara peranti. Klien bertanda APP log masuk dengan e-mel sendiri."],
+  "hi.m":["Good morning","早安","早安","Selamat pagi"],
+  "hi.a":["Good afternoon","午安","午安","Selamat petang"],
+  "hi.e":["Good evening","晚上好","晚上好","Selamat malam"],
+  "nav.today":["Today","今天","今天","Hari ini"],
+  "streak.s":["streak","连续","連續","rentetan"],
+  "wk.time":["Time to workout","今天要训练","今天要訓練","Masa bersenam"],
+  "wk.restday":["Rest day","休息日","休息日","Hari rehat"],
+  "wk.nodesign":["Workout coming soon","课表准备中","課表準備中","Latihan akan datang"],
+  "cal.target":["Target","目标","目標","Sasaran"],
+  "cal.eaten":["Eaten","已吃","已吃","Dimakan"],
+  "cal.left":["kcal left","kcal 剩余","kcal 剩餘","kcal lagi"],
+  "cal.over":["kcal over","kcal 超出","kcal 超出","kcal lebih"],
+  "mac.f":["Fat","脂肪","脂肪","Lemak"],
+  "mac.left":["{n}g left","还差 {n}g","還差 {n}g","{n}g lagi"],
+  "mac.done":["Goal reached","已达标","已達標","Sasaran dicapai"],
+  "sq.target":["Daily target","每日目标","每日目標","Sasaran harian"],
+  "sq.protein":["Protein goal","蛋白质目标","蛋白質目標","Sasaran protein"],
+  "sq.water":["Water","饮水","飲水","Air"],
+  "sq.wk":["Workouts this week","本周训练","本週訓練","Senaman minggu ini"],
+  "next.h":["NEXT UP","下一餐","下一餐","SETERUSNYA"],
+  "next.mark":["I ate this","我吃了","我吃了","Saya sudah makan"],
+  "next.alldone":["All meals done today. Great job!","今天的餐都吃完了，做得好！","今天的餐都吃完了，做得好！","Semua hidangan hari ini selesai. Syabas!"],
+  "meals.h":["Today's meals","今日餐单","今日餐單","Hidangan hari ini"],
+  "meals.all":["Full plan →","完整餐单 →","完整餐單 →","Pelan penuh →"],
+  "today.wk":["TODAY'S WORKOUT","今日训练","今日訓練","LATIHAN HARI INI"],
+  "wk.start":["Start","开始","開始","Mula"],
+  "wk.mark":["Mark as done","完成打卡","完成打卡","Tandakan selesai"],
+  "wk.doneToday":["Done today ✓","今天已完成 ✓","今天已完成 ✓","Selesai hari ini ✓"],
+  "wk.restTip":["Recover today: walk 8,000+ steps and stretch for 10 minutes.","今天恢复：走 8,000 步以上，拉伸 10 分钟。","今天恢復：走 8,000 步以上，拉伸 10 分鐘。","Pulih hari ini: jalan 8,000+ langkah dan regangan 10 minit."],
+  "wk.min":["~{n} min","约 {n} 分钟","約 {n} 分鐘","~{n} minit"],
+  "wk.ex":["{n} exercises","{n} 个动作","{n} 個動作","{n} senaman"],
+  "wk.dayof":["Day {n} of {m}","第 {n}/{m} 天","第 {n}/{m} 天","Hari {n}/{m}"],
+  "wk.nextday":["Next: {d}","下次：{d}","下次：{d}","Seterusnya: {d}"],
+  "menu.edit":["Edit my details","修改我的资料","修改我的資料","Ubah butiran saya"],
+  "menu.home":["BurnUp home page","BurnUp 首页","BurnUp 首頁","Laman utama BurnUp"],
+  "macros.h":["Daily macros","每日营养素","每日營養素","Makronutrien harian"],
+  "macros.plan":["plan {p}g · goal {g}g","餐单 {p}g · 目标 {g}g","餐單 {p}g · 目標 {g}g","pelan {p}g · sasaran {g}g"],
+  "macros.note":["Estimates. Protein goal = {k}g per kg of body weight; fat about 25% of calories; carbs make up the rest.","估算值：蛋白质目标 = 每公斤体重 {k}g；脂肪约占热量 25%；其余为碳水。","估算值：蛋白質目標 = 每公斤體重 {k}g；脂肪約佔熱量 25%；其餘為碳水。","Anggaran: sasaran protein = {k}g sekilogram berat badan; lemak kira-kira 25% kalori; selebihnya karbohidrat."],
   "mix.btn":["How to mix","冲泡示范","沖泡示範","Cara bancuh"],
   "mix.replay":["Replay","重播","重播","Main semula"],
   "mix.open":["Open the lids","打开盖子","打開蓋子","Buka penutup"],
@@ -986,6 +1115,70 @@ function calc(rec){
     tooLow: diff >= 150, tooHigh: diff <= -300, belowFloor: coachSet && target < FLOOR[a.gender]};
 }
 
+/* ================= 营养素（估算） ================= */
+const MAC = {f1:[9,13,1.5], f3:[9,0.5,0.5], milk:[8.5,12,4], banana:[0.7,15,0.2]};   // 每份 [蛋白质, 碳水, 脂肪] g
+const PLATE_MAC = {800:[67,55,33], 600:[37,55,25], 400:[35,32,14], 300:[33,10,14]};
+const SNACK_MAC = {banana:[1.5,35,0.5], apple:[0.5,25,0.3], sandwich:[12,30,9]};
+const WHEY_MAC = [30,6,2];
+function mealMacros(key, m){
+  if(m.off) return [0,0,0];
+  if(m.custom){ const k = m.kcal; return [k*.25/4, k*.45/4, k*.30/9]; }
+  if(m.shake) return SHAKE_ITEMS.reduce((a,i)=> m.shake[i.id] ? a.map((v,j)=>v+MAC[i.id][j]) : a, [0,0,0]);
+  if(m.portion) return PLATE_MAC[m.portion];
+  if(m.snack) return SNACK_MAC[m.snack.id] || [0,0,0];
+  if(SLOT_INFO[key].kind==="whey") return WHEY_MAC;
+  return [0,0,0];
+}
+const proPerKg = g => (g==="lose"||g==="keepLose") ? 2.0 : (g==="gain"||g==="keepGain") ? 1.8 : 1.6;
+function macroTargets(rec, kcal){
+  const p = Math.round(rec.a.weight * proPerKg(rec.a.goal));
+  const f = Math.round(kcal * 0.25 / 9);
+  return [p, Math.max(0, Math.round((kcal - p*4 - f*9) / 4)), f];   // [蛋白质, 碳水, 脂肪]
+}
+const MAC_UI = [["lab.protein","#FFD000",0],["lab.carbs","#FFE98A",1],["mac.f","#FF8A3D",2]];
+
+/* ================= 每日打卡（存在这台设备） ================= */
+const ymd = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const logKey = () => "bu_log_" + (cloudOn() && S.user ? S.user.uid : "local");
+const getLog = () => LS.get(logKey(), {});
+const dayLog = date => Object.assign({meals:{}, wk:false}, getLog()[date]);
+function setDayLog(date, fn){
+  const L = getLog(); const d = Object.assign({meals:{}, wk:false}, L[date]); fn(d); L[date] = d;
+  const keys = Object.keys(L).sort(); while(keys.length > 60) delete L[keys.shift()];
+  LS.set(logKey(), L);
+}
+function streak(){
+  const L = getLog(), d = new Date();
+  const has = k => L[k] && (Object.values(L[k].meals||{}).some(Boolean) || L[k].wk);
+  if(!has(ymd(d))) d.setDate(d.getDate()-1);
+  let n = 0; while(has(ymd(d))){ n++; d.setDate(d.getDate()-1); }
+  return n;
+}
+
+/* ================= 训练日安排：按设计的天数自动排到一周 ================= */
+const SCHED = {1:[3], 2:[2,5], 3:[1,3,5], 4:[1,2,4,5], 5:[1,2,3,4,5], 6:[1,2,3,4,5,6], 7:[1,2,3,4,5,6,7]};   // 1 = 星期一
+const isoDow = d => (d.getDay()+6)%7 + 1;
+const designedDays = rec => rec.workout.days.filter(d => SECS.some(sec => d[sec].some(it=>it.name)));
+function workoutFor(rec, date){
+  const days = designedDays(rec), n = Math.min(days.length, 7);
+  if(!n) return null;
+  const i = SCHED[n].indexOf(isoDow(date));
+  return i < 0 ? {rest:true, n} : {day:days[i], idx:i, n};
+}
+const wdName = d => new Intl.DateTimeFormat(LANGS.find(l=>l.id===LANG).html, {weekday:"short"}).format(d);
+const estMin = day => 10 + day.main.filter(it=>it.name).length * 7;
+
+const IC = {
+  home:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 11 12 4l8.5 7v8.5a1 1 0 0 1-1 1H15v-6H9v6H4.5a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>`,
+  meal:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12.5h18a9 9 0 0 1-18 0zM9 9c0-1.6 1.6-1.9 1.6-4M14 9c0-1.6 1.6-1.9 1.6-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  dumb:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 7v10M3.5 9.5v5M17.5 7v10M20.5 9.5v5M6.5 12h11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+  flame:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5c.8 3.8 5.5 5.6 5.5 10.6a5.5 5.5 0 0 1-11 0c0-3 1.8-4.6 2.2-7.3 1.4 1.1 2.4 2.6 2.8 4.2.6-2.2.5-5.2.5-7.5z" fill="currentColor"/></svg>`,
+  drop:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3s6 7 6 11.2a6 6 0 0 1-12 0C6 10 12 3 12 3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>`,
+  check:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  clock:`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7.5V12l3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`,
+  muscle:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 17c2-1 3.5-1 6 0s5 1 8-1c0-4-2-6-5-6-1 0-2 .5-3 1l-1-4-2-1-1 2 1 3c-2 1-3 3-3 6z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>`
+};
+
 /* ================= 渲染 ================= */
 const $app = document.getElementById("app");
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -1006,6 +1199,102 @@ function nav(){
     <button class="logo" data-go="home" aria-label="BurnUp">${LOGO("h")}</button>
     <div class="nav-r">${langSel()}${right}</div></div></header>`;
 }
+const inShell = () => !isCoach() && planReady(S.rec) && ["today","plan","workout"].includes(S.view);
+function appHeader(){
+  const h = new Date().getHours(), nm = S.rec.name || "";
+  return `<header class="apphd noprint"><div class="wrap narrow apphd-in">
+    <div class="me"><button class="avatar" data-menu aria-label="Menu" aria-expanded="${!!S.menu}">${esc((nm || "B").trim().charAt(0).toUpperCase())}</button>
+      <div><small>${t(h<12 ? "hi.m" : h<18 ? "hi.a" : "hi.e")}</small><b>${esc(nm || "BurnUp")}</b></div></div>
+    <div class="nav-r">${langSel()}</div>
+    ${S.menu ? `<div class="pmenu"><button data-edit>${t("menu.edit")}</button><button data-gohome>${t("menu.home")}</button>${cloudOn() ? `<button data-logout>${t("nav.logout")}</button>` : ""}</div>` : ""}
+  </div></header>`;
+}
+const bnav = active => `<nav class="bnav noprint" aria-label="App"><div class="bnav-in">
+  <button class="${active==="today"?"on":""}" data-go="today" aria-label="${t("nav.today")}">${IC.home}<span>${t("nav.today")}</span></button>
+  <button class="${active==="plan"?"on":""}" data-go="plan" aria-label="${t("tab.meal")}">${IC.meal}<span>${t("tab.meal")}</span></button>
+  <button class="${active==="workout"?"on":""}" data-workout aria-label="${t("tab.workout")}">${IC.dumb}<span>${t("tab.workout")}</span></button>
+</div></nav>`;
+
+/* ---------- 今天（学员首页） ---------- */
+function workoutCard(rec, date, compact){
+  const w = workoutFor(rec, date), L = dayLog(ymd(date));
+  if(!w) return `<section class="wkc"><div class="bolt-bg">${BOLT("w0")}</div><div class="k">${t("today.wk")}</div><h3>${t("wk.nodesign")}</h3><p>${t("fit.toast")}</p></section>`;
+  if(w.rest){
+    let nx = date; for(let i=1;i<=7;i++){ nx = new Date(date); nx.setDate(date.getDate()+i); const ww = workoutFor(rec, nx); if(ww && !ww.rest) break; }
+    return `<section class="wkc"><div class="bolt-bg">${BOLT("w1")}</div><div class="k">${t("today.wk")}</div><h3>${t("wk.restday")}</h3><p>${t("wk.restTip")}</p>
+      <div class="pills"><span>${t("wk.nextday",{d:wdName(nx)})}</span></div></section>`;
+  }
+  const exN = SECS.reduce((n,sec)=> n + w.day[sec].filter(it=>it.name).length, 0);
+  return `<section class="wkc"><div class="bolt-bg">${BOLT("w2")}</div>
+    <div class="k">${t("today.wk")} · ${wdName(date)}</div>
+    <h3>${esc(w.day.name)}</h3>
+    <div class="pills"><span>${t("wk.dayof",{n:w.idx+1, m:w.n})}</span><span>${t("wk.ex",{n:exN})}</span><span>${t("wk.min",{n:estMin(w.day)})}</span></div>
+    <div class="acts">${compact ? "" : `<button class="btn btn-y sm" data-workout>${t("wk.start")} ${ARROW}</button>`}
+      <button class="btn sm ${L.wk ? "done" : "btn-o"}" data-wkdone>${t(L.wk ? "wk.doneToday" : "wk.mark")}</button></div>
+  </section>`;
+}
+function todayView(){
+  const rec = S.rec, r = calc(rec), now = new Date(), today = ymd(now), L = dayLog(today);
+  const keys = SLOTS.filter(k => !r.meals[k].off);
+  let eaten = 0, em = [0,0,0];
+  keys.forEach(k => { if(L.meals[k]){ eaten += r.meals[k].kcal; const mm = mealMacros(k, r.meals[k]); em = em.map((v,j)=>v+mm[j]); } });
+  const tg = macroTargets(rec, r.target), left = r.target - eaten;
+  const C = 2*Math.PI*52, pct = Math.min(1, eaten / r.target);
+  // 下一餐：按现在时间找最近一餐还没吃的
+  const mins = now.getHours()*60 + now.getMinutes();
+  const tmin = k => { const tt = SLOT_INFO[k].t; return (typeof tt === "string" && /^\d/.test(tt)) ? (+tt.slice(0,2))*60 + (+tt.slice(3)) : null; };
+  const pending = keys.filter(k => !L.meals[k]);
+  const next = pending.find(k => { const m = tmin(k); return m !== null && m >= mins - 60; }) || pending[0];
+  // 本周训练完成数
+  const mon = new Date(now); mon.setDate(now.getDate() - isoDow(now) + 1);
+  let wkDone = 0; for(let i=0;i<7;i++){ const d = new Date(mon); d.setDate(mon.getDate()+i); if(dayLog(ymd(d)).wk) wkDone++; }
+  const nDesign = Math.min(designedDays(rec).length, 7);
+  const w0 = workoutFor(rec, now);
+  const strip = [1,2,3].map(i => { const d = new Date(now); d.setDate(now.getDate()+i); const w = workoutFor(rec, d); return `<div class="dday ${w && !w.rest ? "tr" : ""}"><b>${d.getDate()}</b><small>${wdName(d)}</small></div>`; }).join("");
+  return `
+  <div class="week">
+    <div class="streak"><span>${IC.flame}${streak()}</span><small>${t("streak.s")}</small></div>
+    <div class="todaychip"><span class="dot">${wdName(now)}</span><span>${t(!w0 ? "nav.today" : w0.rest ? "wk.restday" : "wk.time")}</span></div>
+    ${strip}
+  </div>
+
+  <section class="card cal">
+    <div class="cal-l">
+      <div><div class="lab">${IC.flame}${t("cal.target")}</div><div class="v"><b class="num">${r.target}</b>kcal</div></div>
+      <div><div class="lab">${IC.check}${t("cal.eaten")}</div><div class="v"><b class="num">${eaten}</b>kcal</div></div>
+    </div>
+    <div class="ring"><svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="52" fill="none" stroke="#262626" stroke-width="10"/><circle cx="60" cy="60" r="52" fill="none" stroke="${left < 0 ? "#FF8A3D" : "#FFD000"}" stroke-width="10" stroke-linecap="round" stroke-dasharray="${(C*pct).toFixed(1)} ${C.toFixed(1)}"/></svg>
+      <div class="c"><b class="num">${Math.abs(left)}</b><small>${t(left < 0 ? "cal.over" : "cal.left")}</small></div></div>
+    <div class="macs">${MAC_UI.map(([lab,col,j]) => { const e = Math.round(em[j]), g = tg[j], lf = g - e;
+      return `<div class="mac"><span>${t(lab)}</span><i><b style="width:${Math.min(100, g ? e/g*100 : 0)}%;background:${col}"></b></i><small>${lf > 0 ? t("mac.left",{n:lf}) : t("mac.done")}</small><em class="num">${e} / ${g}g</em></div>`; }).join("")}</div>
+  </section>
+
+  <div class="sqs">
+    <div class="sq hl"><div class="t">${t("sq.target")}${IC.flame}</div><b class="num">${r.target}<small>kcal</small></b></div>
+    <div class="sq"><div class="t">${t("sq.protein")}${IC.muscle}</div><b class="num">${tg[0]}<small>g</small></b></div>
+    <div class="sq"><div class="t">${t("sq.water")}${IC.drop}</div><b class="num">${(rec.a.weight*0.035).toFixed(1)}<small>L</small></b></div>
+    <div class="sq"><div class="t">${t("sq.wk")}${IC.dumb}</div><b class="num">${wkDone}<small>/ ${nDesign || "–"}</small></b></div>
+  </div>
+
+  ${next ? `<section class="card next">
+    <div class="k">${IC.clock} ${t("next.h")}</div>
+    <div class="meal-h"><div><div class="t">${tx(SLOT_INFO[next].t)}</div><h4>${tx(SLOT_INFO[next].n)}</h4></div><div class="kc num">${r.meals[next].kcal}<small>kcal</small></div></div>
+    ${mealDesc(next, r.meals[next])}
+    <div class="acts"><button class="btn btn-y sm" data-eat="${next}">${IC.check.replace('aria-hidden="true"','aria-hidden="true" width="16" height="16"')} ${t("next.mark")}</button></div>
+  </section>` : `<section class="card next"><div class="k">${IC.check} ${t("next.h")}</div><p style="margin:0;font-weight:600">${t("next.alldone")}</p></section>`}
+
+  ${workoutCard(rec, now)}
+
+  <section class="card">
+    <div class="cardh"><h3>${t("meals.h")}</h3><button data-go="plan">${t("meals.all")}</button></div>
+    <div class="mlist">${keys.map(k => `<div class="mrow ${L.meals[k] ? "done" : ""}">
+      <button class="tick ${L.meals[k] ? "on" : ""}" data-eat="${k}" aria-pressed="${!!L.meals[k]}" aria-label="${esc(tx(SLOT_INFO[k].n))}">${IC.check}</button>
+      <div class="nm"><b>${tx(SLOT_INFO[k].n)}</b><small>${tx(SLOT_INFO[k].t)}</small></div>
+      <div class="kc num">${r.meals[k].kcal}</div></div>`).join("")}</div>
+  </section>
+  <p class="foot" style="margin-top:4px">${t("foot")}</p>`;
+}
+
 function render(){
   document.documentElement.lang = LANGS.find(l=>l.id===LANG).html;
   let body = "", narrow = true;
@@ -1017,17 +1306,19 @@ function render(){
     case "login":   body = login(); break;
     case "quiz":    body = quiz(); break;
     case "plan":    body = plan(); break;
-    case "workout": if(isCoach()) body = workout(); else if(cloudOn()) body = studentWorkout(); else { body = home(); narrow = false; } break;
+    case "today":   body = planReady(S.rec) ? todayView() : quiz(); break;
+    case "workout": body = isCoach() ? workout() : studentWorkout(); break;
   }
-  $app.innerHTML = nav() + `<main class="wrap ${narrow?"narrow":""}">
+  const shell = inShell();
+  $app.innerHTML = (shell ? appHeader() : nav()) + `<main class="wrap ${narrow?"narrow":""} ${shell?"shell":""}">
     <div class="print-only print-head"><span class="logo">${LOGO("p")}</span><div class="t">BurnUp Coaching · with Herbalife<br>${S.rec.name ? esc(S.rec.name) + " · " : ""}${today()}</div></div>
-    <div id="view">${body}</div></main>`;
+    <div id="view">${body}</div></main>` + (shell ? bnav(S.view) : "");
   const inp = $app.querySelector("input.autofocus");
   if(inp) inp.focus({preventScroll:true});
   if(S.view==="plan" && S.mix && document.getElementById("mix")) requestAnimationFrame(startMix); else mixRun++;
 }
-function go(view){ S.view = view; S.mix = null; S.arm = false; S.armTpl = null; S.editMeal = null; S.editTarget = false; render(); window.scrollTo(0,0); }
-const tabs = active => (isCoach() || cloudOn()) && planReady(S.rec) ? `<div class="tabs noprint" role="tablist">
+function go(view){ S.view = view; S.menu = false; S.mix = null; S.arm = false; S.armTpl = null; S.editMeal = null; S.editTarget = false; render(); window.scrollTo(0,0); }
+const tabs = active => isCoach() && planReady(S.rec) ? `<div class="tabs noprint" role="tablist">
   <button class="${active==="plan"?"on":""}" data-go="plan" role="tab" aria-selected="${active==="plan"}">${t("tab.meal")}</button>
   <button class="${active==="workout"?"on":""}" data-workout role="tab" aria-selected="${active==="workout"}">${t("tab.workout")}</button></div>` : "";
 
@@ -1121,7 +1412,7 @@ function authErr(ex){
   return t("err.auth.other",{c: c || String(ex && ex.message || ex)});
 }
 // 训练课表（只读表格）：PDF / 档案 / 学员画面共用
-function workoutTables(days){
+function workoutTables(days, todayIdx = -1){
   const roTable = (d, sec) => {
     const rows = d[sec].filter(it=>it.name);
     if(!rows.length) return "";
@@ -1129,21 +1420,16 @@ function workoutTables(days){
       <tbody>${rows.map(it=>`<tr><td>${esc(it.name)}</td><td class="c">${esc(it.sets)}</td><td class="c">${esc(it.reps)}</td><td class="c">${esc(it.weight)}</td><td class="c">${esc(it.rest)}</td></tr>`).join("")}</tbody></table>`;
   };
   return days.filter(d => SECS.some(sec => d[sec].some(it=>it.name)))
-    .map(d=>`<div class="wd"><h4>${esc(d.name)}</h4>${SECS.map(sec=>roTable(d, sec)).join("")}</div>`).join("");
+    .map((d,i)=>`<div class="wd ${i===todayIdx?"today":""}"><h4>${i===todayIdx ? `<span class="todaytag">${t("nav.today").toUpperCase()}</span>` : ""}${esc(d.name)}</h4>${SECS.map(sec=>roTable(d, sec)).join("")}</div>`).join("");
 }
 // 学员看自己的训练课表（只读）
 function studentWorkout(){
-  const w = S.rec.workout, html = workoutTables(w.days);
-  const n = w.days.filter(d => SECS.some(sec => d[sec].some(it=>it.name))).length;
+  const rec = S.rec, w = rec.workout, now = new Date();
+  if(!cloudOn()) return workoutCard(rec, now) + `<div class="empty">${t("fit.toast")}</div>`;
+  const today = workoutFor(rec, now), html = workoutTables(designedDays(rec), today && !today.rest ? today.idx : -1);
   return `
-  ${tabs("workout")}
-  ${S.rec.name ? `<p class="client">${esc(S.rec.name)}</p>` : ""}
-  <section class="target">
-    <div class="k">${t("wk.k")}</div>
-    <div class="big num">${n}<small>${t("wk.days")}</small></div>
-    <div class="math">${t("wk.by")}</div>
-  </section>
-  ${html ? `<div class="wro screen">${html}</div>` : `<div class="empty">${t("wk.none")}</div>`}
+  ${workoutCard(rec, now, true)}
+  ${html ? `<div class="sec-h"><h3>${t("wk.title")}</h3><span>${designedDays(rec).length} ${t("wk.days")}</span></div><div class="wro screen">${html}</div>` : ""}
   ${w.note ? `<div class="sec-h"><h3>${t("wk.notes")}</h3></div><div class="box notes-print" style="color:var(--fg)">${esc(w.note)}</div>` : ""}
   ${html ? `<div class="actions noprint">
     <button class="btn btn-y block" data-pdf>${t("pdf")} ${ARROW}</button>
@@ -1305,6 +1591,10 @@ function plan(){
     <div><span>${t("sum.plan")}</span><b>${r.total}</b></div>
     <div><span>${t("sum.gap")}</span><b style="color:${Math.abs(r.diff)<=100?"var(--good)":"var(--warn)"}">${diffTxt}</b></div>
   </div>
+  ${(() => { const tg = macroTargets(rec, r.target), pm = SLOTS.reduce((a,k)=>{ const mm = mealMacros(k, r.meals[k]); return a.map((v,j)=>v+mm[j]); }, [0,0,0]);
+    return `<section class="card"><div class="cardh"><h3>${t("macros.h")}</h3></div><div class="macs flat">${MAC_UI.map(([lab,col,j]) => { const pv = Math.round(pm[j]), g = tg[j];
+      return `<div class="mac"><span>${t(lab)}</span><i><b style="width:${Math.min(100, g ? pv/g*100 : 0)}%;background:${col}"></b></i><small class="num">${t("macros.plan",{p:pv, g})}</small></div>`; }).join("")}</div>
+      <p class="hint" style="margin-top:12px;font-size:12px">${t("macros.note",{k:proPerKg(a.goal)})}</p></section>`; })()}
   ${r.tooLow ? `<div class="note">${t("note.over",{n:r.diff})} ${t(coach?"note.over.c":"note.over.s")}</div>` : ""}
   ${r.tooHigh ? `<div class="note">${t("note.under",{n:-r.diff})} ${t(coach?"note.under.c":"note.under.s")}</div>` : ""}
 
@@ -1598,7 +1888,7 @@ function snapshot(){
 function finishQuiz(){
   if(!isCoach() && !cloudOn()) S.rec.mo = {};   // 本机学员重新计算时加餐恢复自动；云端会保留教练的调整
   if(isCoach() && !S.rec.id){ S.rec.id = cloudOn() ? FB.newId() : "s" + Date.now().toString(36); S.rec.created = Date.now(); }
-  saveRec(); go("plan");
+  saveRec(); go(isCoach() ? "plan" : "today");
 }
 function nextStep(){ if(S.step < quizSteps().length-1){ S.step++; go("quiz"); } else finishQuiz(); }
 const tplGoalFor = g => (g==="gain"||g==="keepGain") ? "build" : "burn";
@@ -1627,11 +1917,15 @@ $app.addEventListener("click", e=>{
     if(!S.arm){ S.arm=true; return render(); }
     LS.del(K_PIN); LS.del(K_STU); S.arm=false; toast(t("toast.reset")); return render();
   }
-  if("start" in d && cloudOn() && !isCoach()){ S.step=0; return go(planReady(S.rec) ? "plan" : "quiz"); }
+  if("start" in d && cloudOn() && !isCoach()){ S.step=0; return go(planReady(S.rec) ? "today" : "quiz"); }
   if("start" in d){ if(!isCoach()){ S.role="student"; SS.set("bu_role","student"); S.rec = selfRec(); } S.step=0; return go("quiz"); }
-  if("myplan" in d){ if(!cloudOn()) S.rec = selfRec(); S.step=0; return go(planReady(S.rec) ? "plan" : "quiz"); }
+  if("myplan" in d){ if(!cloudOn()) S.rec = selfRec(); S.step=0; return go(planReady(S.rec) ? "today" : "quiz"); }
   if("fitlocked" in d){ if(cloudOn() && planReady(S.rec)) return go("workout"); return toast(t("fit.toast")); }
-  if("workout" in d && cloudOn() && !isCoach()) return go("workout");
+  if("workout" in d && !isCoach()) return go("workout");
+  if("menu" in d){ S.menu = !S.menu; return render(); }
+  if("gohome" in d){ S.menu = false; if(!cloudOn()) S.rec = selfRec(); return go("home"); }
+  if(d.eat){ const k = d.eat; setDayLog(ymd(new Date()), x => { x.meals[k] = !x.meals[k]; }); return render(); }
+  if("wkdone" in d){ setDayLog(ymd(new Date()), x => { x.wk = !x.wk; }); return render(); }
   if(d.mix){ S.mix = S.mix===d.mix ? null : d.mix; render(); if(S.mix) document.getElementById("mix")?.scrollIntoView({block:"nearest", behavior:"smooth"}); return; }
   if("mixreplay" in d) return render();
   if("new" in d){ S.rec = blankRec(); S.step=0; return go("quiz"); }
@@ -1854,7 +2148,7 @@ function onUser(u){
     }
     if(S.dirty || (typing() && !first)) return;
     S.rec = normalize(Object.assign({}, data, {id:u.uid}));
-    if(first){ first = false; S.step = 0; return go(planReady(S.rec) ? "plan" : "quiz"); }
+    if(first){ first = false; S.step = 0; return go(planReady(S.rec) ? "today" : "quiz"); }
     softRender(pending);
   }, onCloudErr);
 }

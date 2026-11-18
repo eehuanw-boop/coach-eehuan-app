@@ -1,0 +1,43 @@
+rules_version = '2';
+
+// BurnUp Coaching — Firestore 安全规则
+// 1. 把下面 COACH 名单里的 email 换成你的教练 email（全部小写），要和 coaching.html 的 COACH_EMAILS 一样。
+// 2. 在 Firebase Console → Firestore Database → 规则（Rules）贴上整份内容 → 发布（Publish）。
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // 教练：email 在名单里，而且已经验证过
+    function isCoach() {
+      return signedIn()
+        && request.auth.token.email_verified == true
+        && request.auth.token.email.lower() in ['coach@example.com'];
+    }
+
+    // 学员自己可以改的栏位（基本资料、奶昔配方、训练日开关、加餐选择）
+    // 每日热量、教练调整、训练课表、教练备注只有教练能改
+    function studentFields() {
+      return ['name', 'a', 'shake', 'training', 'mo', 'updated'];
+    }
+
+    match /clients/{id} {
+      // 学员只能看自己的档案；教练可以看全部
+      allow read: if isCoach() || (signedIn() && request.auth.uid == id);
+
+      allow create: if isCoach()
+        || (signedIn() && request.auth.uid == id
+            && request.resource.data.keys().hasOnly(studentFields().concat(['email', 'created']))
+            && request.resource.data.email == request.auth.token.email.lower());
+
+      allow update: if isCoach()
+        || (signedIn() && request.auth.uid == id
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(studentFields()));
+
+      allow delete: if isCoach();
+    }
+  }
+}

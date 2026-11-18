@@ -335,6 +335,22 @@ textarea{width:100%;min-height:84px;background:var(--panel);border:1px solid var
 .tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px}
 .tabs button{border:0;background:none;border-radius:9px;padding:10px;font-family:var(--head);font-weight:800;font-size:14px;color:var(--muted)}
 .tabs button.on{background:var(--yellow);color:var(--ink)}
+/* ---------- account / login ---------- */
+.inp{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;color:var(--fg);font:inherit;font-size:16px}
+.inp:focus{outline:none;border-color:var(--yellow)}
+.lbl2{display:block;font-family:var(--head);font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--muted);margin:0 0 6px}
+.authf{display:grid;gap:14px}
+.authlinks{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
+.authlinks button,.guestlink{background:none;border:0;color:var(--muted);text-decoration:underline;text-underline-offset:3px;padding:4px 0;font-size:13px}
+.authlinks button:hover,.guestlink:hover{color:var(--fg)}
+.guest{border-top:1px solid var(--line);padding-top:14px;display:grid;gap:4px;justify-items:start}
+.guest p{margin:0;font-size:12px;color:var(--muted)}
+.acct{font-size:12px;color:var(--muted);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:480px){.acct{display:none}}
+.loading{display:grid;place-items:center;min-height:50vh;color:var(--muted);font-family:var(--head);font-weight:700}
+.loading i{width:28px;height:28px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--yellow);animation:spin 0.8s linear infinite;margin-bottom:12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.wro.screen{gap:12px}
 /* ---------- shake mixing animation ---------- */
 .mixbtn{display:inline-flex;align-items:center;gap:6px;margin-top:10px;background:rgba(255,208,0,.1);border:1px solid rgba(255,208,0,.5);color:var(--yellow);border-radius:999px;padding:6px 12px;font-family:var(--head);font-weight:700;font-size:12px}
 .mixbtn svg{width:10px;height:10px}
@@ -384,6 +400,17 @@ textarea{width:100%;min-height:84px;background:var(--panel);border:1px solid var
 <input type="file" id="importFile" accept="application/json,.json" hidden />
 
 <script>
+/* ================= 云端登入设定（Firebase） =================
+   填好后：学员用 email 登入，餐单和训练课表存在云端，换手机也能看到。
+   留空（null）= 本机模式：资料只存在这台设备的浏览器。
+   设定步骤见 SETUP-LOGIN.md。web config 本来就是公开的，安全由 firestore.rules 控制。 */
+const FIREBASE_CONFIG = null;   // 例：{apiKey:"…", authDomain:"xxx.firebaseapp.com", projectId:"xxx", appId:"…"}
+const COACH_EMAILS = [];        // 教练 email（要和 firestore.rules 里的一样），例：["coach@gmail.com"]
+const FB_VER = "10.12.2";
+let CLOUD = !!((FIREBASE_CONFIG && FIREBASE_CONFIG.apiKey) || window.__FB_MOCK);
+const STUDENT_FIELDS = ["name","a","shake","training","mo","updated"];
+const COACH_FIELDS = STUDENT_FIELDS.concat(["kcalOverride","workout","note","created"]);
+
 /* ================= 本机存储 ================= */
 const LS = {
   get(k, d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
@@ -633,6 +660,48 @@ const T = {
   "toast.badfile":["Wrong file. Choose a BurnUp backup .json.","文件格式不对，请选 BurnUp 备份 .json","檔案格式不對，請選 BurnUp 備份 .json","Fail salah. Pilih fail sandaran BurnUp .json."],
   "txt.target":["Daily target","每日摄入","每日攝入","Sasaran harian"],
   "txt.total":["Total about {n} kcal","合计约 {n} kcal","合計約 {n} kcal","Jumlah kira-kira {n} kcal"],
+  "auth.signin.h":["Log in","登入","登入","Log masuk"],
+  "auth.signup.h":["Create your account","注册账号","註冊帳號","Daftar akaun"],
+  "auth.reset.h":["Reset password","重设密码","重設密碼","Tetapkan semula kata laluan"],
+  "auth.sub":["Log in with your email. Your details, meal plan and workout are saved, so you only fill them in once.","用 email 登入。你的资料、餐单和训练课表都会保存，只需要填一次。","用 email 登入。你的資料、餐單和訓練課表都會保存，只需要填一次。","Log masuk dengan e-mel. Butiran, pelan makan dan latihan anda disimpan, jadi anda hanya isi sekali."],
+  "auth.reset.sub":["Enter your email and we'll send you a link to set a new password.","输入 email，我们会寄一封重设密码的邮件给你。","輸入 email，我們會寄一封重設密碼的郵件給你。","Masukkan e-mel anda dan kami akan hantar pautan untuk menetapkan kata laluan baharu."],
+  "auth.email":["Email","Email","Email","E-mel"],
+  "auth.password":["Password","密码","密碼","Kata laluan"],
+  "auth.name":["Your name","你的名字","你的名字","Nama anda"],
+  "auth.pw.hint":["At least 6 characters","至少 6 个字符","至少 6 個字元","Sekurang-kurangnya 6 aksara"],
+  "auth.signin.btn":["Log in","登入","登入","Log masuk"],
+  "auth.signup.btn":["Create account","注册","註冊","Daftar"],
+  "auth.reset.btn":["Send reset email","发送重设邮件","發送重設郵件","Hantar e-mel"],
+  "auth.toSignup":["New here? Create an account","第一次来？注册账号","第一次來？註冊帳號","Baru di sini? Daftar akaun"],
+  "auth.toSignin":["Already have an account? Log in","已经有账号？登入","已經有帳號？登入","Sudah ada akaun? Log masuk"],
+  "auth.forgot":["Forgot password?","忘记密码？","忘記密碼？","Lupa kata laluan?"],
+  "auth.guest":["Try without an account","先不注册，直接试用","先不註冊，直接試用","Cuba tanpa akaun"],
+  "auth.guest.note":["Without an account, your plan is saved on this device only.","不注册的话，餐单只存在这台设备。","不註冊的話，餐單只存在這台設備。","Tanpa akaun, pelan anda disimpan pada peranti ini sahaja."],
+  "auth.resetSent":["Reset email sent. Check your inbox and spam folder.","重设邮件已发送，请查看邮箱（包括垃圾邮件）。","重設郵件已發送，請查看郵箱（包括垃圾郵件）。","E-mel telah dihantar. Semak peti masuk dan folder spam."],
+  "auth.loading":["Loading…","载入中…","載入中…","Memuatkan…"],
+  "auth.offline":["Couldn't connect to the login service. Using this device only for now.","连不上登入服务，暂时用本机模式。","連不上登入服務，暫時用本機模式。","Tidak dapat menyambung ke perkhidmatan log masuk. Menggunakan peranti ini sahaja buat masa ini."],
+  "err.auth.cred":["Wrong email or password.","Email 或密码不正确。","Email 或密碼不正確。","E-mel atau kata laluan salah."],
+  "err.auth.inuse":["This email already has an account. Log in instead.","这个 email 已经注册过，请直接登入。","這個 email 已經註冊過，請直接登入。","E-mel ini sudah berdaftar. Sila log masuk."],
+  "err.auth.weak":["The password needs at least 6 characters.","密码至少要 6 个字符。","密碼至少要 6 個字元。","Kata laluan perlu sekurang-kurangnya 6 aksara."],
+  "err.auth.email":["Enter a valid email.","请输入正确的 email。","請輸入正確的 email。","Masukkan e-mel yang sah."],
+  "err.auth.many":["Too many attempts. Try again in a few minutes.","尝试次数太多，请几分钟后再试。","嘗試次數太多，請幾分鐘後再試。","Terlalu banyak cubaan. Cuba lagi dalam beberapa minit."],
+  "err.auth.net":["No connection. Check your internet and try again.","网络连接失败，请检查网络后再试。","網路連線失敗，請檢查網路後再試。","Tiada sambungan. Semak internet dan cuba lagi."],
+  "err.auth.other":["Something went wrong ({c}). Try again.","出错了（{c}），请再试一次。","出錯了（{c}），請再試一次。","Ralat ({c}). Cuba lagi."],
+  "err.save":["Couldn't save. Check your connection.","保存失败，请检查网络。","保存失敗，請檢查網路。","Gagal menyimpan. Semak sambungan anda."],
+  "err.perm":["No access to the cloud data. Check the Firestore rules (see SETUP-LOGIN.md).","没有云端资料的权限，请检查 Firestore 规则（见 SETUP-LOGIN.md）。","沒有雲端資料的權限，請檢查 Firestore 規則（見 SETUP-LOGIN.md）。","Tiada akses kepada data awan. Semak peraturan Firestore (lihat SETUP-LOGIN.md)."],
+  "verify.h":["Verify your coach email","验证教练 email","驗證教練 email","Sahkan e-mel jurulatih"],
+  "verify.p":["We sent a verification link to {e}. Open it, then tap “I've verified”.","验证链接已发送到 {e}。点开链接后，再按「我已验证」。","驗證連結已發送到 {e}。點開連結後，再按「我已驗證」。","Pautan pengesahan telah dihantar ke {e}. Buka pautan itu, kemudian tekan “Saya sudah sahkan”."],
+  "verify.done":["I've verified","我已验证","我已驗證","Saya sudah sahkan"],
+  "verify.resend":["Resend email","重新发送","重新發送","Hantar semula"],
+  "verify.sent":["Verification email sent.","验证邮件已发送。","驗證郵件已發送。","E-mel pengesahan dihantar."],
+  "verify.notyet":["Not verified yet. Open the link in your email first.","还没验证成功，请先点开邮件里的链接。","還沒驗證成功，請先點開郵件裡的連結。","Belum disahkan. Buka pautan dalam e-mel dahulu."],
+  "nav.myplan":["My plan","我的计划","我的計劃","Pelan saya"],
+  "nav.login":["Log in","登入","登入","Log masuk"],
+  "hero.myplan":["Open my plan","打开我的计划","打開我的計劃","Buka pelan saya"],
+  "hero.login":["Log in / Sign up","登入 / 注册","登入 / 註冊","Log masuk / Daftar"],
+  "fit.open":["Open my workout","打开我的训练课表","打開我的訓練課表","Buka latihan saya"],
+  "wk.none":["Your coach hasn't designed your workout yet. Check back soon.","教练还没为你设计训练课表，请稍后再来看看。","教練還沒為你設計訓練課表，請稍後再來看看。","Jurulatih anda belum mereka bentuk latihan anda. Sila semak semula nanti."],
+  "dash.cloud":["Client files are saved in the cloud and sync across your devices. Clients with the APP tag log in with their own email.","学员档案存在云端，换设备也能看到。有 APP 标签的学员是用自己的 email 登入。","學員檔案存在雲端，換設備也能看到。有 APP 標籤的學員是用自己的 email 登入。","Fail klien disimpan di awan dan disegerakkan antara peranti. Klien bertanda APP log masuk dengan e-mel sendiri."],
   "mix.btn":["How to mix","冲泡示范","沖泡示範","Cara bancuh"],
   "mix.replay":["Replay","重播","重播","Main semula"],
   "mix.open":["Open the lids","打开盖子","打開蓋子","Buka penutup"],
@@ -812,12 +881,22 @@ const planReady = r => !!(r && r.a && r.a.goal && r.a.weight && r.a.activity!=nu
 const S = {
   role: SS.get("bu_role") || "student",
   authed: SS.get("bu_auth") === "1",
-  view: "home", step: 0, rec: selfRec(), editMeal: null, editTarget: false,
-  arm: false, armTpl: null, q: "", tplGoal: "burn"
+  view: CLOUD ? "loading" : "home", step: 0, rec: selfRec(), editMeal: null, editTarget: false,
+  arm: false, armTpl: null, q: "", tplGoal: "burn",
+  user: null, clients: [], authMode: "signin", unsub: null, dirty: false
 };
 const isCoach = () => S.role==="coach" && S.authed;
+const cloudOn = () => CLOUD && !!S.user && !!FB;
+const isCoachEmail = e => COACH_EMAILS.map(x=>x.trim().toLowerCase()).includes((e||"").toLowerCase());
+const pick = (o, keys) => { const r = {}; keys.forEach(k=>{ if(o[k] !== undefined) r[k] = o[k]; }); return r; };
+const clean = o => JSON.parse(JSON.stringify(o));
 function saveRec(){
-  const r = S.rec; r.updated = Date.now();
+  const r = S.rec; r.updated = Date.now(); S.dirty = false;
+  if(cloudOn()){
+    if(!r.id) return;
+    FB.save(r.id, clean(pick(r, isCoach() ? COACH_FIELDS : STUDENT_FIELDS))).catch(e=>{ console.warn(e); toast(t("err.save")); });
+    return;
+  }
   if(isCoach()){
     if(!r.id) return;
     const list = students(); const i = list.findIndex(x=>x.id===r.id);
@@ -825,7 +904,7 @@ function saveRec(){
     LS.set(K_STU, list);
   } else LS.set(K_SELF, r);
 }
-const saveSoon = () => { clearTimeout(saveSoon._t); saveSoon._t = setTimeout(saveRec, 400); };
+const saveSoon = () => { S.dirty = true; clearTimeout(saveSoon._t); saveSoon._t = setTimeout(saveRec, 500); };
 
 function quizSteps(){
   const base = [
@@ -836,7 +915,7 @@ function quizSteps(){
     {key:"activity", q:"q.act", hint:"q.act.hint", type:"choice", opts:ACT.map(x=>({v:x.v, n:tx(x.n), s:tx(x.s)}))},
     {key:"goal", q:"q.goal", type:"choice", opts:Object.entries(GOALS).map(([v,g])=>({v, n:tx(g.n), s:tx(g.s)}))}
   ];
-  if(isCoach()) base.unshift({key:"name", q:"q.name", type:"text"});
+  if(isCoach() || (cloudOn() && !S.rec.name)) base.unshift({key:"name", q:"q.name", type:"text"});
   return base;
 }
 
@@ -911,6 +990,8 @@ function langSel(){
 function nav(){
   let right;
   if(isCoach()) right = `<span class="badge">COACH</span>${S.view!=="home" ? `<button class="nlink" data-go="home">${t("nav.students")}</button>` : `<button class="nlink" data-logout>${t("nav.logout")}</button>`}`;
+  else if(cloudOn()) right = `<span class="acct">${esc(S.user.email)}</span>${S.view!=="plan" && planReady(S.rec) ? `<button class="nlink" data-myplan>${t("nav.myplan")}</button>` : ""}<button class="nlink" data-logout>${t("nav.logout")}</button>`;
+  else if(CLOUD && S.view==="home") right = `<button class="nlink" data-coach>${t("nav.coach")}</button><button class="nbtn" data-auth="signin">${t("nav.login")} ${ARROW}</button>`;
   else if(S.view==="home") right = `<button class="nlink" data-coach>${t("nav.coach")}</button><button class="nbtn" data-start>${t("nav.start")} ${ARROW}</button>`;
   else right = `<button class="nlink" data-go="home">${t("nav.home")}</button>`;
   return `<header class="nav noprint"><div class="nav-in">
@@ -921,11 +1002,14 @@ function render(){
   document.documentElement.lang = LANGS.find(l=>l.id===LANG).html;
   let body = "", narrow = true;
   switch(S.view){
+    case "loading": body = `<div class="loading"><div style="display:grid;justify-items:center"><i></i>${t("auth.loading")}</div></div>`; break;
+    case "auth":    body = authView(); break;
+    case "verify":  body = verifyView(); break;
     case "home":    if(isCoach()) body = dash(); else { body = home(); narrow = false; } break;
     case "login":   body = login(); break;
     case "quiz":    body = quiz(); break;
     case "plan":    body = plan(); break;
-    case "workout": if(isCoach()) body = workout(); else { body = home(); narrow = false; } break;
+    case "workout": if(isCoach()) body = workout(); else if(cloudOn()) body = studentWorkout(); else { body = home(); narrow = false; } break;
   }
   $app.innerHTML = nav() + `<main class="wrap ${narrow?"narrow":""}">
     <div class="print-only print-head"><span class="logo">${LOGO("p")}</span><div class="t">BurnUp Coaching · with Herbalife<br>${S.rec.name ? esc(S.rec.name) + " · " : ""}${today()}</div></div>
@@ -935,13 +1019,13 @@ function render(){
   if(S.view==="plan" && S.mix && document.getElementById("mix")) requestAnimationFrame(startMix); else mixRun++;
 }
 function go(view){ S.view = view; S.mix = null; S.arm = false; S.armTpl = null; S.editMeal = null; S.editTarget = false; render(); window.scrollTo(0,0); }
-const tabs = active => isCoach() && planReady(S.rec) ? `<div class="tabs noprint" role="tablist">
+const tabs = active => (isCoach() || cloudOn()) && planReady(S.rec) ? `<div class="tabs noprint" role="tablist">
   <button class="${active==="plan"?"on":""}" data-go="plan" role="tab" aria-selected="${active==="plan"}">${t("tab.meal")}</button>
   <button class="${active==="workout"?"on":""}" data-workout role="tab" aria-selected="${active==="workout"}">${t("tab.workout")}</button></div>` : "";
 
 /* ---------- 首页 ---------- */
 function home(){
-  const has = planReady(LS.get(K_SELF, null));
+  const has = cloudOn() ? planReady(S.rec) : planReady(LS.get(K_SELF, null));
   const phone = y => `<div class="phone"><div class="card ${y?"y":""}"></div><i class="w8"></i><i class="w6"></i><div class="row"><span class="dot"></span><i class="w8" style="flex:1"></i></div><div class="row"><span class="dot"></span><i class="w6" style="flex:1"></i></div><div class="row"><span class="dot"></span><i class="w8" style="flex:1"></i></div></div>`;
   const feat = n => `<li>${CHECK}<div>${t("f"+n)}<small>${t("f"+n+"s")}</small></div></li>`;
   return `
@@ -956,8 +1040,10 @@ function home(){
         <li>${CHECK} ${t("check1")}</li><li>${CHECK} ${t("check2")}</li><li>${CHECK} ${t("check3")}</li>
       </ul>
       <div class="hero-cta">
-        <button class="btn btn-y" data-start>${t("hero.student")} ${ARROW}</button>
-        <button class="btn btn-o" data-coach>${t("hero.coach")}</button>
+        ${cloudOn() ? `<button class="btn btn-y" data-myplan>${t("hero.myplan")} ${ARROW}</button>`
+          : CLOUD ? `<button class="btn btn-y" data-auth="signin">${t("hero.login")} ${ARROW}</button>`
+          : `<button class="btn btn-y" data-start>${t("hero.student")} ${ARROW}</button>`}
+        ${cloudOn() ? "" : `<button class="btn btn-o" data-coach>${t("hero.coach")}</button>`}
       </div>
     </div>
   </section>
@@ -975,17 +1061,86 @@ function home(){
       </div>
       <ul class="feat">${feat(1)}${feat(2)}${feat(3)}${feat(4)}</ul>
       <div class="nutri-cta">
-        <button class="btn btn-y" data-start>${t("nutri.start")} ${ARROW}</button>
-        ${has ? `<button class="linkbtn" data-myplan>${t("nutri.saved")}</button>` : ""}
+        ${cloudOn() && has ? `<button class="btn btn-y" data-myplan>${t("hero.myplan")} ${ARROW}</button>` : `<button class="btn btn-y" ${CLOUD && !cloudOn() ? 'data-auth="signup"' : "data-start"}>${t("nutri.start")} ${ARROW}</button>`}
+        ${has && !cloudOn() ? `<button class="linkbtn" data-myplan>${t("nutri.saved")}</button>` : ""}
       </div>
     </div>
     <button class="fitcard" data-fitlocked>
-      <span class="lock">${LOCK} ${t("fit.lock")}</span>
+      ${cloudOn() ? `<span class="lock">${t("fit.open")} →</span>` : `<span class="lock">${LOCK} ${t("fit.lock")}</span>`}
       <div><div class="k">${t("fit.k")}</div><h3>${t("fit.h")}</h3></div>
       <p>${t("fit.p")}</p>
     </button>
   </div>
   <p class="foot">${t("foot")}</p>`;
+}
+
+/* ---------- 云端登入 / 注册 ---------- */
+function authView(){
+  const m = S.authMode;
+  return `
+  <button class="back" data-go="home">${t("back.home")}</button>
+  <form class="login authf" id="authf" novalidate>
+    <h2>${t("auth."+m+".h")}</h2>
+    <p class="hint">${t(m==="reset" ? "auth.reset.sub" : "auth.sub")}</p>
+    ${m==="signup" ? `<div><label class="lbl2" for="au-name">${t("auth.name")}</label><input class="inp autofocus" id="au-name" autocomplete="name" maxlength="40" /></div>` : ""}
+    <div><label class="lbl2" for="au-email">${t("auth.email")}</label><input class="inp ${m==="signup"?"":"autofocus"}" id="au-email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" /></div>
+    ${m!=="reset" ? `<div><label class="lbl2" for="au-pw">${t("auth.password")}${m==="signup" ? ` · ${t("auth.pw.hint")}` : ""}</label><input class="inp" id="au-pw" type="password" autocomplete="${m==="signup"?"new-password":"current-password"}" /></div>` : ""}
+    <p class="err" id="err"></p>
+    <button class="btn btn-y block" type="submit" id="au-btn">${t("auth."+m+".btn")} ${ARROW}</button>
+    <div class="authlinks">
+      ${m==="signin" ? `<button type="button" data-auth="signup">${t("auth.toSignup")}</button><button type="button" data-auth="reset">${t("auth.forgot")}</button>` : `<button type="button" data-auth="signin">${t("auth.toSignin")}</button>`}
+    </div>
+    <div class="guest"><button type="button" class="guestlink" data-start>${t("auth.guest")}</button><p>${t("auth.guest.note")}</p></div>
+  </form>`;
+}
+function verifyView(){
+  return `
+  <div class="login">
+    <h2>${t("verify.h")}</h2>
+    <p class="hint">${t("verify.p",{e:esc(S.user ? S.user.email : "")})}</p>
+    <button class="btn btn-y block" data-verified>${t("verify.done")} ${ARROW}</button>
+    <div class="row"><button class="sbtn" data-resend>${t("verify.resend")}</button><button class="sbtn" data-logout>${t("nav.logout")}</button></div>
+  </div>`;
+}
+function authErr(ex){
+  const c = (ex && ex.code) || "";
+  if(/invalid-credential|wrong-password|user-not-found|invalid-login/.test(c)) return t("err.auth.cred");
+  if(/email-already-in-use/.test(c)) return t("err.auth.inuse");
+  if(/weak-password/.test(c)) return t("err.auth.weak");
+  if(/invalid-email|missing-email/.test(c)) return t("err.auth.email");
+  if(/too-many-requests/.test(c)) return t("err.auth.many");
+  if(/network-request-failed/.test(c)) return t("err.auth.net");
+  return t("err.auth.other",{c: c || String(ex && ex.message || ex)});
+}
+// 训练课表（只读表格）：PDF / 档案 / 学员画面共用
+function workoutTables(days){
+  const roTable = (d, sec) => {
+    const rows = d[sec].filter(it=>it.name);
+    if(!rows.length) return "";
+    return `<h5>${t("sec."+sec)}</h5><table><thead><tr><th>${t("col.ex")}</th><th class="c">${t("col.sets")}</th><th class="c">${t("col.reps")}</th><th class="c">${t("col.weight")}</th><th class="c">${t("col.rest")}</th></tr></thead>
+      <tbody>${rows.map(it=>`<tr><td>${esc(it.name)}</td><td class="c">${esc(it.sets)}</td><td class="c">${esc(it.reps)}</td><td class="c">${esc(it.weight)}</td><td class="c">${esc(it.rest)}</td></tr>`).join("")}</tbody></table>`;
+  };
+  return days.filter(d => SECS.some(sec => d[sec].some(it=>it.name)))
+    .map(d=>`<div class="wd"><h4>${esc(d.name)}</h4>${SECS.map(sec=>roTable(d, sec)).join("")}</div>`).join("");
+}
+// 学员看自己的训练课表（只读）
+function studentWorkout(){
+  const w = S.rec.workout, html = workoutTables(w.days);
+  const n = w.days.filter(d => SECS.some(sec => d[sec].some(it=>it.name))).length;
+  return `
+  ${tabs("workout")}
+  ${S.rec.name ? `<p class="client">${esc(S.rec.name)}</p>` : ""}
+  <section class="target">
+    <div class="k">${t("wk.k")}</div>
+    <div class="big num">${n}<small>${t("wk.days")}</small></div>
+    <div class="math">${t("wk.by")}</div>
+  </section>
+  ${html ? `<div class="wro screen">${html}</div>` : `<div class="empty">${t("wk.none")}</div>`}
+  ${w.note ? `<div class="sec-h"><h3>${t("wk.notes")}</h3></div><div class="box notes-print" style="color:var(--fg)">${esc(w.note)}</div>` : ""}
+  ${html ? `<div class="actions noprint">
+    <button class="btn btn-y block" data-pdf>${t("pdf")} ${ARROW}</button>
+    <div class="row"><button class="sbtn" data-dl>${t("dl")}<small>${t("dl.s")}</small></button><button class="sbtn" data-copy="fit">${t("copy")}<small>${t("copy.s")}</small></button></div>
+  </div>` : ""}`;
 }
 
 /* ---------- 教练登入 ---------- */
@@ -1006,7 +1161,7 @@ function login(){
 
 /* ---------- 教练后台 ---------- */
 function dash(){
-  const all = students(), q = S.q.trim().toLowerCase();
+  const all = cloudOn() ? S.clients : students(), q = S.q.trim().toLowerCase();
   const list = q ? all.filter(s => (s.name||"").toLowerCase().includes(q)) : all;
   const row = s => {
     const r = normalize(s);
@@ -1014,7 +1169,7 @@ function dash(){
     const g = GOALS[r.a.goal], wd = r.workout.days.length;
     return `<button class="stu" data-open="${esc(r.id)}">
       <div class="av">${esc((r.name||"?").trim().charAt(0).toUpperCase())}</div>
-      <div><b>${esc(r.name||t("unnamed"))}</b><span>${g ? tx(g.n) : t("incomplete")} · ${r.a.weight ?? "–"} kg · ${fmtDate(r.updated)}${wd ? `<span class="tag">${wd}D WORKOUT</span>` : ""}</span></div>
+      <div><b>${esc(r.name||t("unnamed"))}</b><span>${g ? tx(g.n) : t("incomplete")} · ${r.a.weight ?? "–"} kg · ${fmtDate(r.updated)}${r.email ? `<span class="tag">APP</span>` : ""}${wd ? `<span class="tag">${wd}D WORKOUT</span>` : ""}</span></div>
       <div class="kc num">${kc}<small>${t("kcalday")}</small></div></button>`;
   };
   return `
@@ -1026,7 +1181,7 @@ function dash(){
     <button class="sbtn" data-export>${t("dash.backup")}<small>.json</small></button>
     <button class="sbtn" data-import>${t("dash.restore")}<small>.json</small></button>
   </div>
-  <p class="foot" style="margin-top:8px">${t("dash.note")}</p>`;
+  <p class="foot" style="margin-top:8px">${t(cloudOn() ? "dash.cloud" : "dash.note")}</p>`;
 }
 
 /* ---------- 问答 ---------- */
@@ -1193,14 +1348,8 @@ function workout(){
       </div>
       ${SECS.map(sec=>secHTML(d, i, sec)).join("")}
     </div>`;
-  const roTable = (d, sec) => {
-    const rows = d[sec].filter(it=>it.name);
-    if(!rows.length) return "";
-    return `<h5>${t("sec."+sec)}</h5><table><thead><tr><th>${t("col.ex")}</th><th class="c">${t("col.sets")}</th><th class="c">${t("col.reps")}</th><th class="c">${t("col.weight")}</th><th class="c">${t("col.rest")}</th></tr></thead>
-      <tbody>${rows.map(it=>`<tr><td>${esc(it.name)}</td><td class="c">${esc(it.sets)}</td><td class="c">${esc(it.reps)}</td><td class="c">${esc(it.weight)}</td><td class="c">${esc(it.rest)}</td></tr>`).join("")}</tbody></table>`;
-  };
-  const printDays = days.filter(d => SECS.some(sec => d[sec].some(it=>it.name)));
-  const ro = printDays.length ? `<div class="wro print-only blockp">${printDays.map(d=>`<div class="wd"><h4>${esc(d.name)}</h4>${SECS.map(sec=>roTable(d, sec)).join("")}</div>`).join("")}</div>` : "";
+  const roHTML = workoutTables(days);
+  const ro = roHTML ? `<div class="wro print-only blockp">${roHTML}</div>` : "";
   return `
   ${tabs("workout")}
   ${S.rec.name ? `<p class="client">${esc(S.rec.name)}</p>` : ""}
@@ -1439,8 +1588,8 @@ function snapshot(){
 
 /* ================= 流程 ================= */
 function finishQuiz(){
-  if(!isCoach()) S.rec.mo = {};   // 学员重新计算时加餐恢复自动；教练的调整会保留
-  if(isCoach() && !S.rec.id){ S.rec.id = "s" + Date.now().toString(36); S.rec.created = Date.now(); }
+  if(!isCoach() && !cloudOn()) S.rec.mo = {};   // 本机学员重新计算时加餐恢复自动；云端会保留教练的调整
+  if(isCoach() && !S.rec.id){ S.rec.id = cloudOn() ? FB.newId() : "s" + Date.now().toString(36); S.rec.created = Date.now(); }
   saveRec(); go("plan");
 }
 function nextStep(){ if(S.step < quizSteps().length-1){ S.step++; go("quiz"); } else finishQuiz(); }
@@ -1456,22 +1605,29 @@ $app.addEventListener("click", e=>{
   const b = e.target.closest("button"); if(!b) return;
   const d = b.dataset;
   if(d.go){
-    if(d.go==="home") S.rec = isCoach() ? blankRec() : selfRec();
+    if(d.go==="home"){ if(isCoach()) S.rec = blankRec(); else if(!cloudOn()) S.rec = selfRec(); }
     return go(d.go);
   }
+  if(d.auth){ S.authMode = d.auth; return go("auth"); }
+  if("coach" in d && CLOUD && FB){ S.authMode = "signin"; return go("auth"); }
+  if("logout" in d && cloudOn()){ FB.signOut(); return; }
+  if("verified" in d){ FB.reloadUser().then(u=>{ if(u && u.verified) onUser(u); else toast(t("verify.notyet")); }).catch(ex=>toast(authErr(ex))); return; }
+  if("resend" in d){ FB.sendVerify().then(()=>toast(t("verify.sent"))).catch(ex=>toast(authErr(ex))); return; }
   if("coach" in d){ S.role="coach"; SS.set("bu_role","coach"); S.rec=blankRec(); return go(S.authed ? "home" : "login"); }
   if("logout" in d){ S.authed=false; SS.del("bu_auth"); S.role="student"; SS.set("bu_role","student"); S.rec=selfRec(); return go("home"); }
   if("reset" in d){
     if(!S.arm){ S.arm=true; return render(); }
     LS.del(K_PIN); LS.del(K_STU); S.arm=false; toast(t("toast.reset")); return render();
   }
+  if("start" in d && cloudOn() && !isCoach()){ S.step=0; return go(planReady(S.rec) ? "plan" : "quiz"); }
   if("start" in d){ if(!isCoach()){ S.role="student"; SS.set("bu_role","student"); S.rec = selfRec(); } S.step=0; return go("quiz"); }
-  if("myplan" in d){ S.rec = selfRec(); return go("plan"); }
-  if("fitlocked" in d) return toast(t("fit.toast"));
+  if("myplan" in d){ if(!cloudOn()) S.rec = selfRec(); S.step=0; return go(planReady(S.rec) ? "plan" : "quiz"); }
+  if("fitlocked" in d){ if(cloudOn() && planReady(S.rec)) return go("workout"); return toast(t("fit.toast")); }
+  if("workout" in d && cloudOn() && !isCoach()) return go("workout");
   if(d.mix){ S.mix = S.mix===d.mix ? null : d.mix; render(); if(S.mix) document.getElementById("mix")?.scrollIntoView({block:"nearest", behavior:"smooth"}); return; }
   if("mixreplay" in d) return render();
   if("new" in d){ S.rec = blankRec(); S.step=0; return go("quiz"); }
-  if(d.open){ const s = students().find(x=>x.id===d.open); if(!s) return; S.rec = normalize(s); S.step=0; return go(planReady(S.rec) ? "plan" : "quiz"); }
+  if(d.open){ const s = (cloudOn() ? S.clients : students()).find(x=>x.id===d.open); if(!s) return; S.rec = normalize(s); S.step=0; return go(planReady(S.rec) ? "plan" : "quiz"); }
   if("back" in d){ S.step=Math.max(0,S.step-1); return go("quiz"); }
   if("edit" in d){ S.step=0; return go("quiz"); }
   if(d.pick !== undefined){
@@ -1487,10 +1643,11 @@ $app.addEventListener("click", e=>{
   if("dl" in d) return snapshot();
   if("del" in d){
     if(!S.arm){ S.arm=true; return render(); }
-    LS.set(K_STU, students().filter(x=>x.id!==S.rec.id)); toast(t("toast.deleted",{n:S.rec.name||""})); S.rec=blankRec(); return go("home");
+    if(cloudOn()) FB.del(S.rec.id).catch(()=>toast(t("err.save"))); else LS.set(K_STU, students().filter(x=>x.id!==S.rec.id));
+    toast(t("toast.deleted",{n:S.rec.name||""})); S.rec=blankRec(); return go("home");
   }
   if("export" in d){
-    const data = {app:"burnup-coach", version:3, exported:new Date().toISOString(), students:students()};
+    const data = {app:"burnup-coach", version:3, exported:new Date().toISOString(), students: cloudOn() ? S.clients : students()};
     return downloadBlob(JSON.stringify(data, null, 2), "application/json", `BurnUp_Clients_Backup_${new Date().toISOString().slice(0,10)}.json`);
   }
   if("import" in d) return document.getElementById("importFile").click();
@@ -1553,6 +1710,19 @@ $app.addEventListener("click", e=>{
 $app.addEventListener("submit", async e=>{
   e.preventDefault();
   const err = document.getElementById("err");
+  if(e.target.id==="authf"){
+    const val = id => (document.getElementById(id) || {}).value || "";
+    const email = val("au-email").trim().toLowerCase(), pw = val("au-pw"), name = val("au-name").trim();
+    const btn = document.getElementById("au-btn"); err.textContent = "";
+    if(S.authMode==="signup" && !name){ err.textContent = t("err.name"); return; }
+    btn.disabled = true;
+    try{
+      if(S.authMode==="signin") await FB.signIn(email, pw);
+      else if(S.authMode==="signup"){ S.pendingName = name; await FB.signUp(email, pw); if(isCoachEmail(email)) await FB.sendVerify(); }
+      else { await FB.resetPw(email); toast(t("auth.resetSent")); S.authMode = "signin"; return render(); }
+    }catch(ex){ err.textContent = authErr(ex); btn.disabled = false; }
+    return;
+  }
   if(e.target.id==="loginf"){
     const p1 = document.getElementById("pin1").value.trim();
     const stored = LS.get(K_PIN, null);
@@ -1602,7 +1772,13 @@ document.getElementById("importFile").addEventListener("change", e=>{
       const data = JSON.parse(rd.result);
       const inc = Array.isArray(data) ? data : data.students;
       if(!Array.isArray(inc)) throw 0;
-      const list = students(); let n=0;
+      let n=0;
+      if(cloudOn()){
+        inc.forEach(s=>{ if(!s) return; const r = normalize(s); const data = clean(pick(r, COACH_FIELDS)); if(s.email) data.email = s.email;
+          FB.save(s.id || FB.newId(), data).catch(()=>toast(t("err.save"))); n++; });
+        toast(t("toast.imported",{n})); return;
+      }
+      const list = students();
       inc.forEach(s=>{ if(!s || !s.id) return; const i=list.findIndex(x=>x.id===s.id); if(i>=0) list[i]=s; else list.push(s); n++; });
       LS.set(K_STU, list); toast(t("toast.imported",{n})); render();
     }catch(_){ toast(t("toast.badfile")); }
@@ -1611,7 +1787,76 @@ document.getElementById("importFile").addEventListener("change", e=>{
   rd.readAsText(f);
 });
 
-if(S.role==="coach"){ S.rec = blankRec(); S.view = S.authed ? "home" : "login"; }
+/* ================= 云端（Firebase） ================= */
+let FB = null;
+async function loadFirebase(){
+  if(window.__FB_MOCK) return window.__FB_MOCK;
+  const base = `https://www.gstatic.com/firebasejs/${FB_VER}/`;
+  const [AppM, A, F] = await Promise.all([import(base+"firebase-app.js"), import(base+"firebase-auth.js"), import(base+"firebase-firestore.js")]);
+  const app = AppM.initializeApp(FIREBASE_CONFIG), auth = A.getAuth(app), db = F.getFirestore(app), col = F.collection(db, "clients");
+  const me = u => u ? {uid:u.uid, email:(u.email||"").toLowerCase(), verified:u.emailVerified} : null;
+  return {
+    onAuth: cb => A.onAuthStateChanged(auth, u => cb(me(u))),
+    signIn: (e,p) => A.signInWithEmailAndPassword(auth, e, p),
+    signUp: (e,p) => A.createUserWithEmailAndPassword(auth, e, p),
+    signOut: () => A.signOut(auth),
+    resetPw: e => A.sendPasswordResetEmail(auth, e),
+    sendVerify: () => A.sendEmailVerification(auth.currentUser),
+    reloadUser: async () => { await auth.currentUser.reload(); await auth.currentUser.getIdToken(true); return me(auth.currentUser); },
+    watchDoc: (id, cb, err) => F.onSnapshot(F.doc(col, id), sn => cb(sn.exists() ? sn.data() : null, sn.metadata.hasPendingWrites), err),
+    watchAll: (cb, err) => F.onSnapshot(col, sn => cb(sn.docs.map(x=>Object.assign(x.data(), {id:x.id})), sn.metadata.hasPendingWrites), err),
+    save: (id, data) => F.setDoc(F.doc(col, id), data, {mergeFields: Object.keys(data)}),   // 只覆盖传入的栏位
+    newId: () => F.doc(col).id,
+    del: id => F.deleteDoc(F.doc(col, id))
+  };
+}
+const typing = () => { const a = document.activeElement; return !!(a && $app.contains(a) && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)); };
+// 云端资料更新：用户正在输入或在问答中时不重画，避免光标跳掉
+function softRender(pending){ if(pending || S.view==="quiz" || S.view==="auth" || typing()) return; render(); }
+function onCloudErr(ex){ console.warn(ex); toast(/permission/i.test(ex && ex.code || "") ? t("err.perm") : t("err.save")); }
+function onUser(u){
+  if(S.unsub){ S.unsub(); S.unsub = null; }
+  S.user = u;
+  if(!u){
+    S.role = "student"; S.authed = false; S.clients = []; S.rec = selfRec();
+    if(S.view !== "auth") S.view = "home";
+    return render();
+  }
+  if(isCoachEmail(u.email)){
+    S.role = "coach";
+    if(!u.verified){ S.authed = false; return go("verify"); }
+    S.authed = true; S.rec = blankRec(); go("home");
+    S.unsub = FB.watchAll((list, pending) => {
+      S.clients = list.map(normalize).sort((a,b)=>(b.updated||0)-(a.updated||0));
+      if(S.rec.id && !pending && !S.dirty && !typing()){ const fresh = S.clients.find(c=>c.id===S.rec.id); if(fresh) S.rec = fresh; }
+      softRender(pending);
+    }, onCloudErr);
+    return;
+  }
+  S.role = "student"; S.authed = false;
+  let first = true;
+  S.unsub = FB.watchDoc(u.uid, (data, pending) => {
+    if(!data){
+      // 第一次登入：建立学员档案；如果之前在本机试用过，把资料带过来
+      const local = selfRec();
+      const rec = planReady(local) ? local : blankRec();
+      rec.name = S.pendingName || rec.name || "";
+      FB.save(u.uid, Object.assign(clean(pick(rec, STUDENT_FIELDS)), {email:u.email, created:Date.now(), updated:Date.now()})).catch(onCloudErr);
+      return;
+    }
+    if(S.dirty || (typing() && !first)) return;
+    S.rec = normalize(Object.assign({}, data, {id:u.uid}));
+    if(first){ first = false; S.step = 0; return go(planReady(S.rec) ? "plan" : "quiz"); }
+    softRender(pending);
+  }, onCloudErr);
+}
+
+if(S.role==="coach" && !CLOUD){ S.rec = blankRec(); S.view = S.authed ? "home" : "login"; }
+if(CLOUD){
+  if(S.role==="coach" && !S.authed) S.role = "student";
+  loadFirebase().then(fb => { FB = fb; FB.onAuth(onUser); })
+    .catch(ex => { console.warn(ex); CLOUD = false; S.view = "home"; render(); toast(t("auth.offline")); });
+}
 render();
 </script>
 </body>

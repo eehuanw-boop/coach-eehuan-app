@@ -520,6 +520,27 @@ button.sq:hover{border-color:#555}
 .install p{margin:0;color:#bdbdbd;font-size:13px}
 .install .acts{grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
 .install .ios{grid-column:1/-1;margin:4px 0 0;font-size:13px;color:var(--yellow)}
+/* ---------- Get App ---------- */
+.gabtn{display:inline-flex;align-items:center;gap:6px;background:none;border:1.5px solid var(--yellow);color:var(--yellow);border-radius:999px;padding:7px 12px;font-family:var(--head);font-weight:800;font-size:12px;letter-spacing:.02em;white-space:nowrap}
+.gabtn svg{width:15px;height:15px;flex:none}
+.gabtn:hover{background:var(--yellow);color:var(--ink)}
+@media (max-width:420px){.nav .gabtn span{display:none}.nav .gabtn{padding:7px 9px}}
+.gahead{display:flex;align-items:center;gap:14px}
+.gahead img{width:60px;height:60px;border-radius:16px;flex:none}
+.gahead b{display:block;font-family:var(--head);font-size:18px;font-weight:800;line-height:1.2}
+.gahead small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.gaos{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:#1b1b1b;border:1px solid var(--line);border-radius:12px;padding:4px}
+.gaos button{border:0;background:none;border-radius:9px;padding:9px;font-weight:700;font-size:13px;color:var(--muted)}
+.gaos button.on{background:var(--yellow);color:var(--ink)}
+.gasteps{list-style:none;margin:0;padding:0;display:grid;gap:10px;counter-reset:st}
+.gasteps li{counter-increment:st;display:grid;grid-template-columns:30px 1fr auto;gap:12px;align-items:center;background:#1b1b1b;border:1px solid var(--line);border-radius:16px;padding:12px 14px;font-size:14px;line-height:1.4}
+.gasteps li::before{content:counter(st);width:30px;height:30px;border-radius:50%;background:var(--yellow);color:var(--ink);display:grid;place-items:center;font-family:var(--head);font-weight:800}
+.gasteps .ico{width:40px;height:40px;border-radius:10px;background:#2a2a2a;display:grid;place-items:center;color:#4da3ff}
+.gasteps .ico svg{width:22px;height:22px}
+.gasteps .ico.app{background:none}
+.gasteps .ico.app img{width:40px;height:40px;border-radius:10px}
+.ganote{border:1px solid rgba(255,176,32,.6);background:rgba(255,176,32,.08);color:var(--warn);border-radius:12px;padding:11px 14px;font-size:13px;display:grid;gap:10px}
+.ganote .btn{justify-self:start}
 /* ---------- shake mixing animation ---------- */
 .mixbtn{display:inline-flex;align-items:center;gap:6px;margin-top:10px;background:rgba(255,208,0,.1);border:1px solid rgba(255,208,0,.5);color:var(--yellow);border-radius:999px;padding:6px 12px;font-family:var(--head);font-weight:700;font-size:12px}
 .mixbtn svg{width:10px;height:10px}
@@ -972,6 +993,23 @@ const T = {
   "carb.brown":["Brown rice","糙米饭","糙米飯","Nasi perang"],
   "carb.potato":["Smashed potato","薯泥 / 土豆","薯泥 / 馬鈴薯","Kentang lenyek"],
   "carb.white":["White rice","白饭","白飯","Nasi putih"],
+  "ga.btn":["Get App","下载 App","下載 App","Dapatkan App"],
+  "ga.h":["Put BurnUp on your home screen","把 BurnUp 放到手机主屏幕","把 BurnUp 放到手機主畫面","Letak BurnUp di skrin utama"],
+  "ga.sub":["Free, no app store needed. Opens full screen and works without internet.","免费，不用去 App Store 下载。全屏打开，没网络也能看。","免費，不用去 App Store 下載。全螢幕打開，沒網路也能看。","Percuma, tanpa app store. Buka skrin penuh dan boleh guna tanpa internet."],
+  "ga.install":["Install now","立即安装","立即安裝","Pasang sekarang"],
+  "ga.android":["Android","Android","Android","Android"],
+  "ga.iphone":["iPhone","iPhone","iPhone","iPhone"],
+  "ga.i1":["Tap the Share button at the bottom of Safari","按 Safari 下方的「分享」按钮","按 Safari 下方的「分享」按鈕","Tekan butang Kongsi di bawah Safari"],
+  "ga.i2":["Scroll down and tap “Add to Home Screen”","往下滑，选「加入主画面」","往下滑，選「加入主畫面」","Skrol ke bawah, tekan “Add to Home Screen”"],
+  "ga.i3":["Tap “Add”. The BurnUp icon appears on your home screen.","按「新增」，主画面就会出现 BurnUp 图标","按「新增」，主畫面就會出現 BurnUp 圖示","Tekan “Add”. Ikon BurnUp akan muncul di skrin utama."],
+  "ga.a1":["Tap the ⋮ menu at the top right of Chrome","按 Chrome 右上角的 ⋮","按 Chrome 右上角的 ⋮","Tekan menu ⋮ di kanan atas Chrome"],
+  "ga.a2":["Tap “Install app” or “Add to Home screen”","选「安装应用」或「添加到主屏幕」","選「安裝應用程式」或「新增至主畫面」","Tekan “Install app” atau “Add to Home screen”"],
+  "ga.a3":["Tap “Install”. The BurnUp icon appears on your home screen.","按「安装」，主屏幕就会出现 BurnUp 图标","按「安裝」，主畫面就會出現 BurnUp 圖示","Tekan “Install”. Ikon BurnUp akan muncul di skrin utama."],
+  "ga.inapp":["You opened this inside WhatsApp, Instagram or Facebook. Apps can't be installed from there: copy the link and open it in {b}.","你现在是在 WhatsApp / Instagram / Facebook 里面打开的，这里没办法安装。请复制链接，用 {b} 打开。","你現在是在 WhatsApp / Instagram / Facebook 裡面打開的，這裡沒辦法安裝。請複製連結，用 {b} 打開。","Anda membuka halaman ini dalam WhatsApp, Instagram atau Facebook. Aplikasi tidak boleh dipasang di sini: salin pautan dan buka dalam {b}."],
+  "ga.iosother":["On iPhone, use Safari for the most reliable install. Copy the link and open it in Safari.","iPhone 建议用 Safari 安装最稳定。请复制链接，用 Safari 打开。","iPhone 建議用 Safari 安裝最穩定。請複製連結，用 Safari 打開。","Di iPhone, guna Safari untuk pemasangan paling stabil. Salin pautan dan buka dalam Safari."],
+  "ga.copy":["Copy link","复制链接","複製連結","Salin pautan"],
+  "ga.copied":["Link copied. Paste it in {b}.","链接已复制，贴到 {b} 打开","連結已複製，貼到 {b} 打開","Pautan disalin. Tampal dalam {b}."],
+  "ga.desk":["On a computer: click the install icon at the right of the address bar, or ⋮ → “Install BurnUp”.","电脑：按网址列右边的安装图标，或 ⋮ →「安装 BurnUp」。","電腦：按網址列右邊的安裝圖示，或 ⋮ →「安裝 BurnUp」。","Di komputer: klik ikon pasang di kanan bar alamat, atau ⋮ → “Install BurnUp”."],
   "pwa.h":["Get the BurnUp app","安装 BurnUp App","安裝 BurnUp App","Pasang aplikasi BurnUp"],
   "pwa.p":["Add it to your home screen: one tap to open, full screen, works without internet.","加到主屏幕：一键打开、全屏显示，没网络也能看。","加到主畫面：一鍵打開、全螢幕顯示，沒網路也能看。","Tambah ke skrin utama: buka dengan satu sentuhan, skrin penuh, boleh guna tanpa internet."],
   "pwa.btn":["Install","安装","安裝","Pasang"],
@@ -1347,18 +1385,44 @@ const carbGallery = () => `<section class="card"><div class="cardh"><h3>${t("car
 
 /* ================= PWA：安装到主屏幕 ================= */
 const isStandalone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
-const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const isAndroid = () => /android/i.test(navigator.userAgent);
+const inAppBrowser = () => /FBAN|FBAV|FB_IAB|Instagram|WhatsApp|Line\/|MicroMessenger|TikTok|Messenger/i.test(navigator.userAgent);
+const iosNotSafari = () => isIOS() && /CriOS|FxiOS|EdgiOS|OPiOS/i.test(navigator.userAgent);
+const DL = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19.5h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const SHARE_I = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 9H6.5a1.5 1.5 0 0 0-1.5 1.5v8A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 17.5 9H16M12 14V3.5m0 0L8.5 7M12 3.5 15.5 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const ADDSQ_I = `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 8.5v7M8.5 12h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`;
+const DOTS_I = `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5.5" r="1.8" fill="currentColor"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/><circle cx="12" cy="18.5" r="1.8" fill="currentColor"/></svg>`;
+const gaBtn = () => isStandalone() ? "" : `<button class="gabtn" data-getapp aria-label="${t("ga.btn")}">${DL}<span>${t("ga.btn")}</span></button>`;
+function getAppSheet(){
+  const os = S.gaOS || (isIOS() ? "ios" : "android");
+  const browser = os === "ios" ? "Safari" : "Chrome";
+  const appIco = `<span class="ico app"><img src="icons/icon-192.png" alt="" /></span>`;
+  const steps = os === "ios"
+    ? [["ga.i1", `<span class="ico">${SHARE_I}</span>`], ["ga.i2", `<span class="ico">${ADDSQ_I}</span>`], ["ga.i3", appIco]]
+    : [["ga.a1", `<span class="ico" style="color:#ddd">${DOTS_I}</span>`], ["ga.a2", `<span class="ico" style="color:#ddd">${ADDSQ_I}</span>`], ["ga.a3", appIco]];
+  const warn = inAppBrowser() ? t("ga.inapp",{b:browser}) : (os === "ios" && iosNotSafari()) ? t("ga.iosother") : "";
+  return `<div class="sheet-bg" data-sheetclose></div>
+  <div class="sheet ${S.sheetFresh ? "anim" : ""}" role="dialog" aria-modal="true" aria-label="${t("ga.h")}">
+    <div class="grab"></div>
+    <div class="sheet-hd"><button class="circ" data-sheetclose aria-label="${t("close")}">×</button><div><b>${t("ga.btn")}</b><small>BurnUp Coaching</small></div><span></span></div>
+    <div class="gahead"><img src="icons/icon-192.png" alt="" /><div><b>${t("ga.h")}</b><small>${t("ga.sub")}</small></div></div>
+    ${installEvt && !inAppBrowser() ? `<button class="btn btn-y block" data-install>${DL} ${t("ga.install")}</button>` : ""}
+    ${warn ? `<div class="ganote">${warn}<button class="btn btn-o sm" data-copylink="${browser}">${t("ga.copy")}</button></div>` : ""}
+    <div class="gaos" role="tablist"><button class="${os==="android"?"on":""}" data-gaos="android" role="tab" aria-selected="${os==="android"}">${t("ga.android")}</button><button class="${os==="ios"?"on":""}" data-gaos="ios" role="tab" aria-selected="${os==="ios"}">${t("ga.iphone")}</button></div>
+    <ol class="gasteps">${steps.map(([k, ico]) => `<li><span>${t(k)}</span>${ico}</li>`).join("")}</ol>
+    ${!isIOS() && !isAndroid() ? `<p class="hint" style="margin:0;font-size:12px">${t("ga.desk")}</p>` : ""}
+  </div>`;
+}
 let installEvt = null;
 window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; if(["home","today"].includes(S.view)) render(); });
 window.addEventListener("appinstalled", () => { installEvt = null; LS.set("bu_pwa_off", true); toast(t("pwa.done")); render(); });
 function installCard(){
   if(isStandalone() || LS.get("bu_pwa_off", false)) return "";
-  if(!installEvt && !isIOS()) return "";
   return `<section class="card install noprint">
     <img src="icons/icon-192.png" alt="" />
     <b>${t("pwa.h")}</b><p>${t("pwa.p")}</p>
-    ${installEvt ? "" : `<p class="ios">${t("pwa.ios")}</p>`}
-    <div class="acts">${installEvt ? `<button class="btn btn-y sm" data-install>${t("pwa.btn")} ${ARROW}</button>` : ""}<button class="btn btn-o sm" data-installoff>${t("pwa.later")}</button></div>
+    <div class="acts"><button class="btn btn-y sm" data-getapp>${DL} ${t("ga.btn")}</button><button class="btn btn-o sm" data-installoff>${t("pwa.later")}</button></div>
   </section>`;
 }
 
@@ -1380,7 +1444,7 @@ function nav(){
   else right = `<button class="nlink" data-go="home">${t("nav.home")}</button>`;
   return `<header class="nav noprint"><div class="nav-in">
     <button class="logo" data-go="home" aria-label="BurnUp">${LOGO("h")}</button>
-    <div class="nav-r">${langSel()}${right}</div></div></header>`;
+    <div class="nav-r">${gaBtn()}${langSel()}${right}</div></div></header>`;
 }
 const inShell = () => !isCoach() && planReady(S.rec) && ["today","plan","workout"].includes(S.view);
 function appHeader(){
@@ -1388,7 +1452,7 @@ function appHeader(){
   return `<header class="apphd noprint"><div class="wrap narrow apphd-in">
     <div class="me"><button class="avatar" data-menu aria-label="Menu" aria-expanded="${!!S.menu}">${esc((nm || "B").trim().charAt(0).toUpperCase())}</button>
       <div><small>${t(h<12 ? "hi.m" : h<18 ? "hi.a" : "hi.e")}</small><b>${esc(nm || "BurnUp")}</b></div></div>
-    <div class="nav-r">${langSel()}</div>
+    <div class="nav-r">${gaBtn()}${langSel()}</div>
     ${S.menu ? `<div class="pmenu"><button data-edit>${t("menu.edit")}</button><button data-gohome>${t("menu.home")}</button>${cloudOn() ? `<button data-logout>${t("nav.logout")}</button>` : ""}</div>` : ""}
   </div></header>`;
 }
@@ -1425,6 +1489,7 @@ function openSleep(date){
   S.sheet = "sleep"; S.sheetFresh = true;
 }
 function sheetHTML(){
+  if(S.sheet === "getapp") return getAppSheet();
   if(S.sheet === "water"){
     const today = ymd(new Date()), ml = dayLog(today).water, g = waterGoal(S.rec), left = g*1000 - ml;
     return `<div class="sheet-bg" data-sheetclose></div>
@@ -1551,7 +1616,7 @@ function render(){
   const shell = inShell();
   $app.innerHTML = (shell ? appHeader() : nav()) + `<main class="wrap ${narrow?"narrow":""} ${shell?"shell":""}">
     <div class="print-only print-head"><span class="logo">${LOGO("p")}</span><div class="t">BurnUp Coaching · with Herbalife<br>${S.rec.name ? esc(S.rec.name) + " · " : ""}${today()}</div></div>
-    <div id="view">${body}</div></main>` + (shell ? bnav(S.view) + sheetHTML() : "");
+    <div id="view">${body}</div></main>` + (shell ? bnav(S.view) : "") + sheetHTML();
   const inp = $app.querySelector("input.autofocus");
   if(inp) inp.focus({preventScroll:true});
   S.sheetFresh = false;
@@ -2158,7 +2223,11 @@ $app.addEventListener("click", e=>{
   if("fitlocked" in d){ if(cloudOn() && planReady(S.rec)) return go("workout"); return toast(t("fit.toast")); }
   if("workout" in d && !isCoach()) return go("workout");
   if("menu" in d){ S.menu = !S.menu; return render(); }
-  if("install" in d && installEvt){ installEvt.prompt(); installEvt.userChoice.finally(() => { installEvt = null; render(); }); return; }
+  if("install" in d && installEvt){ installEvt.prompt(); installEvt.userChoice.finally(() => { installEvt = null; S.sheet = null; render(); }); return; }
+  if("getapp" in d){ S.sheet = "getapp"; S.sheetFresh = true; S.gaOS = null; return render(); }
+  if(d.gaos){ S.gaOS = d.gaos; return render(); }
+  if(d.copylink){ const b = d.copylink, url = location.origin + location.pathname, done = () => toast(t("ga.copied",{b}));
+    if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, () => toast(url)); else toast(url); return; }
   if("installoff" in d){ LS.set("bu_pwa_off", true); return render(); }
   if("gohome" in d){ S.menu = false; if(!cloudOn()) S.rec = selfRec(); return go("home"); }
   if(d.eat){ const k = d.eat; let on; setDayLog(ymd(new Date()), x => { on = x.meals[k] = !x.meals[k]; }); render(); if(on) toast(t("photo.toast")); return; }

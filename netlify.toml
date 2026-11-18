@@ -1,0 +1,27 @@
+# Netlify 部署设定：网站只发布 App 需要的档案，首页直接打开 BurnUp Coaching
+[build]
+  command = "rm -rf _site && mkdir -p _site && cp index.html coaching.html manifest.webmanifest sw.js _site/ && cp -r icons _site/icons && cp index.html _site/tracker.html"
+  publish = "_site"
+
+# 网址首页 → BurnUp Coaching App（比赛排行榜在 /tracker.html）
+[[redirects]]
+  from = "/"
+  to = "/coaching.html"
+  status = 301
+  force = true   # 首页已经有 index.html（比赛排行榜），要强制才会转到 App
+
+# 离线功能档每次都检查新版，确保学员拿到最新网页
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/coaching.html"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json"

@@ -1,5 +1,9 @@
 # BurnUp 减重比赛排行 · 独立网页版
 
+> 🆕 **`coaching.html` — BurnUp Coaching**：4 种语言（简体中文 / 繁體中文 / English / Bahasa Melayu）。学员端：问答 → 每日热量 → 一日餐单，可下载 PDF。教练端：本机 PIN 登入、学员档案、调整热量与每一餐、训练设计（热身 / 主训练 / 拉伸放松，含组数、次数、重量、休息），PDF / WhatsApp 发送。纯 HTML/JS 单文件。部署后网址：`<你的 Pages 网址>/coaching.html`。
+> 🔐 **学员 email 登入（云端）**：按 [`SETUP-LOGIN.md`](SETUP-LOGIN.md) 开好 Firebase 后，学员资料、餐单、训练课表存在云端，换设备也能看到；安全规则在 [`firestore.rules`](firestore.rules)。没设定时自动用本机模式。
+
+
 BurnUp FitCamp 的减重比赛排行榜 —— 记录学员的体重、体脂率、内脏脂肪、肌肉量、基础代谢、代谢年龄、身体水分等指标，按 **体脂下降比例** 自动排名。
 
 原本是 Claude Artifact（依赖 `window.storage` 沙盒环境），现已改造为 **完全独立、可离线运行的单一网页**。

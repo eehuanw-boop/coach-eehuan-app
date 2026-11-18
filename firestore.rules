@@ -15,7 +15,7 @@ service cloud.firestore {
     function isCoach() {
       return signedIn()
         && request.auth.token.email_verified == true
-        && request.auth.token.email.lower() in ['coach@example.com'];
+        && request.auth.token.email.lower() in ['eehuanw@gmail.com'];
     }
 
     // 学员自己可以改的栏位（基本资料、奶昔配方、训练日开关、加餐选择）

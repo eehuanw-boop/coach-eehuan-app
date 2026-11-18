@@ -5,197 +5,305 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>BurnUp Coach</title>
 <meta name="claude:viewport-fit-sides" content="cover" />
-<meta name="theme-color" content="#0B0A09" />
-<meta name="description" content="BurnUp × Herbalife 学员教练工具：算出每日卡路里，生成一日餐单与训练计划。" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%94%A5%3C/text%3E%3C/svg%3E" />
+<meta name="theme-color" content="#050505" />
+<meta name="description" content="BurnUp × Herbalife Coaching — 80% Nutrition + 20% Fitness. 每日热量、一日餐单、训练课表。" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23F5B800' d='M14.5 1 4 13.5h6.2L8.5 23 20 9.8h-6.3z'/%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Noto+Sans+SC:wght@400;500;700;900&family=JetBrains+Mono:wght@500;700&display=swap" />
-<style>
-/* Layout: one mobile app column; one question per screen → one result screen. BurnUp dark, single theme by choice. */
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,500;0,700;0,800;1,800;1,900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" />
+<style id="app-style">
+/* Layout: mobile app column on black with gold light streaks. Home = 80% nutrition card + 20% fitness strip. Single dark theme by choice (brand); print = clean white. */
 :root{
-  --bg:#0B0A09;          /* gym-floor black, warm */
-  --panel:#171412;
-  --line:#2C2621;
-  --fg:#F7F3EE;
-  --muted:#A39A90;
-  --orange:#FF6A00;      /* BurnUp orange */
-  --yellow:#FFC300;      /* energy yellow */
-  --ink:#140B02;         /* text on orange */
-  --good:#3DDC84;
+  --bg:#050505;
+  --panel:#121110;
+  --line:#2B2720;
+  --fg:#F6F3EC;
+  --muted:#A09887;
+  --gold:#F5B800;       /* BurnUp gold */
+  --gold-hi:#FFD966;
+  --gold-lo:#C98A00;
+  --ink:#1A1200;        /* text on gold */
+  --good:#46D98A;
   --warn:#FFB020;
-  --display:"Anton","Impact","Arial Narrow",sans-serif;
-  --body:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
-  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --danger:#FF7B6B;
+  --en:"Montserrat","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --zh:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
   color-scheme:dark;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{background:var(--bg);color:var(--fg)}
-body{margin:0;font-family:var(--body);font-size:15px;line-height:1.55;
+body{margin:0;font-family:"Montserrat","Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;font-size:15px;line-height:1.55;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));}
-.app{max-width:560px;margin:0 auto;padding-block:16px 48px;display:flex;flex-direction:column;gap:20px}
+.glow{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(120% 40% at -10% 8%, rgba(245,184,0,.22), transparent 55%),
+    radial-gradient(90% 30% at 110% 95%, rgba(245,184,0,.18), transparent 60%),
+    radial-gradient(60% 12% at -5% 30%, rgba(255,170,40,.12), transparent 70%);}
+.app{position:relative;z-index:1;max-width:560px;margin:0 auto;padding-block:16px 48px;display:flex;flex-direction:column;gap:18px}
+#view{display:flex;flex-direction:column;gap:18px}
 button{font:inherit;color:inherit;cursor:pointer}
-button:focus-visible,input:focus-visible{outline:2px solid var(--yellow);outline-offset:2px}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--gold-hi);outline-offset:2px}
 [hidden]{display:none!important}
 .num{font-variant-numeric:tabular-nums}
+.en{font-family:var(--en);letter-spacing:.02em}
+.gold-text{background:linear-gradient(180deg,var(--gold-hi),var(--gold) 55%,var(--gold-lo));-webkit-background-clip:text;background-clip:text;color:transparent}
+.print-only{display:none}
 
-/* top bar */
+/* header + logo */
 .top{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.brand{font-family:var(--display);font-size:22px;letter-spacing:.04em;line-height:1;background:none;border:0;padding:0}
-.brand b{color:var(--orange);font-weight:400}
-.brand small{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--muted);margin-left:8px;vertical-align:middle}
-.ghost{background:none;border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:13px;color:var(--muted)}
+.logo{display:flex;align-items:center;gap:2px;background:none;border:0;padding:0;text-align:left}
+.logo svg{width:26px;height:34px;flex:none}
+.wm{display:grid;line-height:1}
+.wm b{font-family:var(--en);font-weight:300;font-size:22px;letter-spacing:-.01em;color:var(--fg)}
+.wm b strong{font-weight:500}
+.wm i{font-family:var(--en);font-weight:900;font-style:italic;font-size:10px;letter-spacing:.06em;color:var(--fg);margin-left:22px;margin-top:-1px}
+.pill{background:none;border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:12px;color:var(--muted)}
+.badge{font-size:10px;font-weight:800;letter-spacing:.14em;color:var(--ink);background:var(--gold);border-radius:4px;padding:3px 6px}
 
-/* home */
-.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,11vw,60px);line-height:.98;margin:8px 0 10px;text-transform:uppercase;text-wrap:balance}
-.hero h1 em{font-style:normal;color:var(--orange)}
-.hero p{margin:0;color:var(--muted);max-width:40ch}
-.paths{display:grid;gap:12px}
-.path{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;text-align:left;
-  background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}
-.path:hover{border-color:var(--orange)}
-.path .k{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--orange)}
-.path h2{margin:4px 0 4px;font-size:22px;font-weight:900}
-.path p{margin:0;color:var(--muted);font-size:13px}
-.path .go{font-family:var(--display);font-size:28px;color:var(--orange)}
-.path.primary{background:var(--orange);border-color:var(--orange);color:var(--ink)}
-.path.primary .k,.path.primary p,.path.primary .go{color:var(--ink)}
+/* role switch */
+.roles{display:grid;grid-template-columns:1fr 1fr;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px;gap:4px}
+.roles button{border:0;background:none;border-radius:9px;padding:9px 8px;font-size:14px;font-weight:700;color:var(--muted);line-height:1.3}
+.roles button small{display:block;font-size:11px;font-weight:500;font-family:var(--zh)}
+.roles button.on{background:var(--gold);color:var(--ink)}
+
+/* hero */
+.hero{text-align:center;display:grid;gap:8px;padding-top:6px}
+.hero h1{margin:0;font-family:var(--en);font-weight:900;font-style:italic;font-size:clamp(28px,8.4vw,42px);line-height:1.05;letter-spacing:-.01em;text-wrap:balance}
+.hero h1 .x{font-style:normal;font-weight:300;color:var(--gold);margin:0 .12em}
+.hero .zh{font-family:var(--zh);font-weight:900;font-size:clamp(20px,5.6vw,26px);letter-spacing:.06em}
+.swoosh{display:block;margin:-4px auto 0;width:58%;height:10px}
+.tft{display:flex;align-items:center;justify-content:center;gap:10px;font-family:var(--en);font-weight:800;font-style:italic;font-size:12px;letter-spacing:.26em}
+.tft i{color:var(--gold);font-style:normal}
+.tft::before,.tft::after{content:"";flex:1;max-width:48px;height:1px;background:linear-gradient(90deg,transparent,var(--muted))}
+.tft::after{transform:scaleX(-1)}
+
+/* 80 / 20 */
+.split{display:grid;gap:12px}
+.split-k{display:flex;justify-content:space-between;font-size:11px;font-weight:800;letter-spacing:.12em;color:var(--muted)}
+.split-k span:first-child{color:var(--gold)}
+.ratio{display:flex;height:6px;border-radius:6px;overflow:hidden;gap:3px}
+.ratio i{background:var(--gold);flex:4}
+.ratio i+i{background:var(--line);flex:1}
+.nutri{position:relative;overflow:hidden;border-radius:18px;padding:22px 20px 20px;color:var(--ink);
+  background:linear-gradient(150deg,var(--gold-hi) 0%,var(--gold) 45%,var(--gold-lo) 100%);display:grid;gap:16px;min-height:340px;align-content:space-between}
+.nutri .bolt-bg{position:absolute;right:-24px;top:-6px;width:180px;opacity:.18}
+.nutri .bolt-bg svg{width:100%;height:auto}
+.nutri .k{font-size:11px;font-weight:800;letter-spacing:.16em}
+.nutri h2{margin:4px 0 0;font-family:var(--en);font-weight:900;font-style:italic;font-size:34px;line-height:1}
+.nutri h2 small{display:block;font-family:var(--zh);font-style:normal;font-size:22px;font-weight:900;margin-top:6px}
+.nutri ul{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:14px;font-weight:700;position:relative}
+.nutri li{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.nutri li::before{content:"";flex:none;width:7px;height:7px;transform:rotate(45deg) translateY(-1px);background:var(--ink)}
+.nutri li span{opacity:.75;font-family:var(--zh);font-weight:500}
+.btn-ink{display:flex;justify-content:space-between;align-items:center;width:100%;background:var(--ink);color:var(--gold-hi);border:0;border-radius:12px;padding:15px 18px;font-weight:800;font-size:16px;position:relative}
+.btn-ink small{font-family:var(--zh);font-weight:700;color:var(--fg);margin-left:6px}
+.link-ink{background:none;border:0;padding:2px 0;color:var(--ink);font-weight:700;text-decoration:underline;text-underline-offset:3px;font-size:14px;justify-self:start;position:relative}
+.fit-strip{display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:left;width:100%;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.fit-strip:hover{border-color:var(--gold)}
+.fit-strip .k{font-size:10px;font-weight:800;letter-spacing:.16em;color:var(--gold)}
+.fit-strip b{display:block;font-size:16px}
+.fit-strip b small{font-family:var(--zh);font-weight:700;margin-left:6px;color:var(--muted)}
+.fit-strip .go{color:var(--gold);font-size:22px;font-weight:800}
+.foot{font-size:11px;color:var(--muted);text-align:center;margin:0}
 
 /* quiz */
 .bar{height:4px;background:var(--line);border-radius:4px;overflow:hidden}
-.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--orange),var(--yellow));transition:width .3s}
-.step-k{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.12em}
-.q{font-size:clamp(26px,7vw,34px);font-weight:900;line-height:1.2;margin:6px 0 4px;text-wrap:balance}
-.hint{color:var(--muted);margin:0;font-size:13px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold-lo),var(--gold-hi));transition:width .3s}
+.step-k{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.14em}
+.q{margin:6px 0 4px;line-height:1.15}
+.q .en{display:block;font-weight:900;font-style:italic;font-size:clamp(28px,8vw,38px)}
+.q .zh{display:block;font-family:var(--zh);font-weight:700;font-size:20px;color:var(--gold);margin-top:4px}
+.hint{color:var(--muted);margin:0;font-size:13px;font-family:var(--zh)}
 .opts{display:grid;gap:10px}
-.opt{display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;
-  background:var(--panel);border:1.5px solid var(--line);border-radius:12px;padding:16px 18px;font-size:17px;font-weight:700}
-.opt span{font-weight:400;font-size:13px;color:var(--muted)}
-.opt:hover,.opt.on{border-color:var(--orange)}
-.opt.on{background:rgba(255,106,0,.12)}
-.field{display:flex;align-items:baseline;gap:10px;border-bottom:2px solid var(--orange);padding-bottom:6px}
-.field input{flex:1;min-width:0;background:none;border:0;color:var(--fg);font-family:var(--display);font-size:64px;line-height:1;padding:0;outline:none}
-.field input::placeholder{color:#3a332d}
-.field .u{font-family:var(--mono);color:var(--muted);font-size:18px}
-.err{color:var(--warn);font-size:13px;min-height:1.2em;margin:0}
-.cta{width:100%;background:var(--orange);color:var(--ink);border:0;border-radius:12px;padding:16px;font-size:17px;font-weight:900;letter-spacing:.04em}
-.cta:disabled{opacity:.35;cursor:default}
-.cta.alt{background:none;color:var(--fg);border:1.5px solid var(--line)}
-.back{align-self:flex-start;background:none;border:0;color:var(--muted);padding:4px 0;font-size:14px}
+.opt{display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;background:var(--panel);border:1.5px solid var(--line);border-radius:12px;padding:15px 18px;font-size:16px;font-weight:700}
+.opt .zh{font-family:var(--zh);font-weight:700;margin-left:6px}
+.opt span.s{font-weight:400;font-size:12px;color:var(--muted);font-family:var(--zh);text-align:right}
+.opt:hover,.opt.on{border-color:var(--gold)}
+.opt.on{background:rgba(245,184,0,.1)}
+.field{display:flex;align-items:baseline;gap:10px;border-bottom:2px solid var(--gold);padding-bottom:6px}
+.field input{flex:1;min-width:0;background:none;border:0;color:var(--fg);font-family:var(--en);font-weight:800;font-size:56px;line-height:1.1;padding:0;outline:none}
+.field input.txt{font-size:30px;font-family:var(--zh)}
+.field input.sm{font-size:22px}
+.field input::placeholder{color:#3b352b}
+.field .u{color:var(--muted);font-size:16px;font-weight:700}
+.err{color:var(--warn);font-size:13px;min-height:1.2em;margin:6px 0 0;font-family:var(--zh)}
+.cta{display:block;width:100%;background:linear-gradient(180deg,var(--gold-hi),var(--gold));color:var(--ink);border:0;border-radius:12px;padding:15px;font-size:16px;font-weight:800;letter-spacing:.02em}
+.cta small{font-family:var(--zh);font-weight:700;margin-left:6px;font-size:15px}
+.back{align-self:flex-start;background:none;border:0;color:var(--muted);padding:4px 0;font-size:13px}
 
 /* result */
-.target{background:var(--orange);color:var(--ink);border-radius:16px;padding:20px 20px 18px;display:grid;gap:6px}
-.target .k{font-family:var(--mono);font-size:11px;letter-spacing:.16em}
-.target .big{font-family:var(--display);font-size:clamp(64px,20vw,96px);line-height:.95}
-.target .big small{font-size:.32em;margin-left:6px}
-.target .math{font-family:var(--mono);font-size:12px;line-height:1.7;opacity:.85}
-.who{font-size:13px;color:var(--muted)}
-.note{border:1px solid var(--warn);color:var(--warn);border-radius:10px;padding:10px 12px;font-size:13px}
-.sec-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:4px 0 -8px}
-.sec-h h3{margin:0;font-size:13px;font-family:var(--mono);letter-spacing:.16em;color:var(--muted);font-weight:500}
+.who{font-size:13px;color:var(--muted);font-family:var(--zh)}
+.who b{color:var(--fg)}
+.client{font-family:var(--zh);font-size:24px;font-weight:900;margin:0}
+.target{background:linear-gradient(150deg,var(--gold-hi),var(--gold) 50%,var(--gold-lo));color:var(--ink);border-radius:16px;padding:18px 20px;display:grid;gap:4px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.target .k{font-size:11px;font-weight:800;letter-spacing:.16em}
+.target .k span{font-family:var(--zh);letter-spacing:.04em;margin-left:6px}
+.target .big{font-family:var(--en);font-weight:900;font-style:italic;font-size:clamp(60px,18vw,88px);line-height:1}
+.target .big small{font-size:.28em;font-style:normal;font-weight:800;margin-left:6px}
+.target .math{font-size:12px;font-weight:500;opacity:.85;font-family:var(--zh)}
+.note{border:1px solid var(--warn);color:var(--warn);border-radius:10px;padding:10px 12px;font-size:13px;font-family:var(--zh)}
+.sec-h{display:flex;align-items:baseline;gap:8px;margin:6px 0 -6px;flex-wrap:wrap}
+.sec-h h3{margin:0;font-size:12px;letter-spacing:.14em;color:var(--gold);font-weight:800}
+.sec-h span{font-family:var(--zh);font-size:13px;color:var(--muted)}
 
-.toggle{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.toggle{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:13px 16px}
 .toggle b{display:block;font-size:15px}
-.toggle span{font-size:12px;color:var(--muted)}
+.toggle b small{font-family:var(--zh);margin-left:6px}
+.toggle span{font-size:12px;color:var(--muted);font-family:var(--zh)}
 .sw{flex:none;width:46px;height:26px;border-radius:99px;background:var(--line);position:relative;transition:background .2s}
 .sw::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--fg);transition:transform .2s}
-.toggle[aria-pressed="true"] .sw{background:var(--orange)}
+.toggle[aria-pressed="true"] .sw{background:var(--gold)}
 .toggle[aria-pressed="true"] .sw::after{transform:translateX(20px)}
 
-.shake{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:10px}
-.shake p{margin:0;font-size:13px;color:var(--muted)}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:13px 16px;display:grid;gap:10px}
+.box p{margin:0;font-size:13px;color:var(--muted);font-family:var(--zh)}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{border:1.5px solid var(--line);background:none;border-radius:99px;padding:7px 12px;font-size:13px;color:var(--muted)}
-.chip.on{border-color:var(--yellow);color:var(--fg);background:rgba(255,195,0,.1)}
+.chip{border:1.5px solid var(--line);background:none;border-radius:99px;padding:6px 12px;font-size:13px;color:var(--muted);font-weight:600}
+.chip.on{border-color:var(--gold);color:var(--fg);background:rgba(245,184,0,.12)}
 .chip.lock{cursor:default}
-.chip i{font-style:normal;font-family:var(--mono);font-size:11px;margin-left:4px;opacity:.8}
+.chip i{font-style:normal;font-size:11px;margin-left:4px;opacity:.75}
 
-.day{list-style:none;margin:0;padding:0;border-left:2px solid var(--line);margin-left:6px}
-.meal{position:relative;padding:0 0 18px 20px}
+.day{list-style:none;margin:0 0 0 6px;padding:0;border-left:2px solid var(--line)}
+.meal{position:relative;padding:0 0 18px 20px;break-inside:avoid}
 .meal:last-child{padding-bottom:0}
-.meal::before{content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--orange)}
-.meal.fixed::before{border-color:var(--yellow)}
+.meal::before{content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--gold)}
+.meal.fixed::before{background:var(--gold)}
 .meal-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
-.meal-h .t{font-family:var(--mono);font-size:12px;color:var(--muted)}
-.meal-h h4{margin:0;font-size:17px;font-weight:900}
-.meal-h .kc{font-family:var(--display);font-size:24px;color:var(--orange);white-space:nowrap}
-.meal-h .kc small{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:2px}
+.meal-h .t{font-size:12px;color:var(--muted);font-weight:700}
+.meal-h h4{margin:0;font-size:17px;font-weight:800}
+.meal-h h4 small{font-family:var(--zh);font-weight:700;font-size:15px;margin-left:6px}
+.meal-h .kc{font-family:var(--en);font-weight:900;font-style:italic;font-size:24px;color:var(--gold);white-space:nowrap}
+.meal-h .kc small{font-size:11px;font-style:normal;color:var(--muted);margin-left:2px;font-weight:700}
 .meal .what{margin:4px 0 0;font-size:14px}
-.meal .sub{margin:2px 0 0;font-size:12px;color:var(--muted)}
+.meal .sub{margin:2px 0 0;font-size:12px;color:var(--muted);font-family:var(--zh)}
+.meal .chips{margin-top:8px}
 .plate{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.plate span{font-size:12px;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:3px 8px}
-.plate span b{color:var(--yellow);font-weight:700}
+.plate span{font-size:12px;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:3px 8px;font-family:var(--zh)}
+.plate span b{color:var(--gold);font-weight:700}
 
 .sum{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
 .sum div{background:var(--panel);padding:12px;display:grid;gap:2px}
-.sum span{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--muted)}
-.sum b{font-family:var(--display);font-weight:400;font-size:26px;line-height:1}
+.sum span{font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--muted)}
+.sum b{font-family:var(--en);font-weight:900;font-style:italic;font-size:24px;line-height:1.1}
 
 .menu{display:grid;gap:10px}
-.menu div{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
-.menu h5{margin:0 0 4px;font-size:12px;font-family:var(--mono);letter-spacing:.12em;color:var(--orange);font-weight:500}
+.menu div{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;break-inside:avoid}
+.menu h5{margin:0 0 4px;font-size:12px;letter-spacing:.1em;color:var(--gold);font-weight:800}
+.menu h5 span{font-family:var(--zh);letter-spacing:0;margin-left:6px}
 .menu p{margin:0;font-size:14px}
-.guide{margin:0;padding-left:18px;font-size:13px;color:var(--muted);display:grid;gap:4px}
+.guide{margin:0;padding-left:18px;font-size:13px;color:var(--muted);display:grid;gap:4px;font-family:var(--zh)}
 .guide b{color:var(--fg)}
 .actions{display:grid;gap:10px}
-.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 18px;border-radius:99px;font-weight:700;font-size:14px;z-index:20}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}
+.sbtn{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:11px 8px;font-size:13px;font-weight:700;text-align:center}
+.sbtn small{display:block;font-family:var(--zh);font-weight:500;font-size:11px;color:var(--muted)}
+.sbtn.danger{color:var(--danger)}
+.sbtn.danger.arm{background:var(--danger);color:var(--ink);border-color:var(--danger)}
+.sbtn.danger.arm small{color:var(--ink)}
+textarea{width:100%;min-height:80px;background:var(--panel);border:1px solid var(--line);border-radius:12px;color:var(--fg);font:inherit;font-family:var(--zh);padding:12px;resize:vertical}
+.notes-print{white-space:pre-wrap;font-family:var(--zh);font-size:14px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 18px;border-radius:99px;font-weight:700;font-size:14px;z-index:20;font-family:var(--zh);max-width:calc(100% - 32px);text-align:center}
+
+/* coach */
+.login{display:grid;gap:14px;padding-top:12px}
+.login h2{margin:0;font-weight:900;font-style:italic;font-size:30px;line-height:1.1}
+.login h2 small{display:block;font-family:var(--zh);font-style:normal;font-size:18px;color:var(--gold);margin-top:4px}
+.dash-h h2{margin:0;font-weight:900;font-style:italic;font-size:28px;line-height:1}
+.dash-h h2 small{display:block;font-family:var(--zh);font-style:normal;font-size:15px;color:var(--muted);margin-top:6px;font-weight:700}
+.list{display:grid;gap:8px}
+.stu{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.stu:hover{border-color:var(--gold)}
+.stu > div{min-width:0}
+.av{width:38px;height:38px;border-radius:50%;background:var(--gold);color:var(--ink);display:grid;place-items:center;font-weight:900;font-family:var(--zh)}
+.stu b{display:block;font-family:var(--zh);font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stu span{font-size:12px;color:var(--muted);font-family:var(--zh)}
+.stu .kc{font-weight:900;font-style:italic;color:var(--gold);font-size:18px;text-align:right;line-height:1.1}
+.stu .kc small{display:block;font-size:10px;color:var(--muted);font-style:normal;font-weight:700}
+.empty{border:1.5px dashed var(--line);border-radius:12px;padding:22px;text-align:center;color:var(--muted);font-family:var(--zh);font-size:14px}
+.search{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:11px 14px;color:var(--fg);font:inherit;font-family:var(--zh)}
 
 /* fitness */
 .wk{display:grid;gap:12px}
-.wd{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.wd-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}
-.wd-h b{font-size:16px}
-.wd-h span{font-family:var(--mono);font-size:11px;color:var(--orange);letter-spacing:.1em}
+.wd{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;break-inside:avoid}
+.wd-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:11px 14px;border-bottom:1px solid var(--line)}
+.wd-h b{font-size:15px}
+.wd-h b small{font-family:var(--zh);margin-left:6px}
+.wd-h span{font-size:10px;font-weight:800;color:var(--gold);letter-spacing:.12em}
 .ex{list-style:none;margin:0;padding:6px 14px 10px}
 .ex li{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px dashed var(--line);font-size:14px}
 .ex li:last-child{border-bottom:0}
-.ex li em{font-style:normal;font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
+.ex li small{font-family:var(--zh);color:var(--muted);margin-left:6px}
+.ex li em{font-style:normal;font-size:12px;color:var(--muted);white-space:nowrap;font-weight:700}
 .rules{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .rules div{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px}
-.rules span{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--muted)}
-.rules b{font-size:15px}
-.foot{font-size:11px;color:var(--muted);text-align:center;margin-top:8px}
+.rules span{display:block;font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--muted)}
+.rules b{font-size:14px;font-family:var(--zh)}
+
+/* print / PDF + downloaded file */
+.print-head{align-items:center;justify-content:space-between;gap:12px;border-bottom:2px solid var(--gold);padding-bottom:10px}
+.print-head .t{font-size:12px;color:var(--muted);text-align:right;font-family:var(--zh)}
+.snapshot .print-only{display:flex}
+.snapshot .notes-print.print-only{display:block}
+@media print{
+  :root{--bg:#fff;--panel:#fff;--line:#d9d3c4;--fg:#111;--muted:#5b5446;--gold:#B98300;--gold-hi:#F5C842;--gold-lo:#C98A00;color-scheme:light}
+  body{padding:0}
+  .glow,.noprint,.toast{display:none!important}
+  .print-only{display:flex!important}
+  .notes-print.print-only{display:block!important}
+  .app{max-width:none;padding:0;gap:12px}
+  .wm b,.wm i{color:#111}
+  @page{margin:12mm}
+}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
+<div class="glow"></div>
 <div class="app" id="app"></div>
 <div class="toast" id="toast" hidden></div>
+<input type="file" id="importFile" accept="application/json,.json" hidden />
 
 <script>
-/* ============ 数据与公式 ============ */
+/* ================= 品牌元素 ================= */
+const BOLT = id => `<svg viewBox="0 0 24 32" aria-hidden="true"><defs><linearGradient id="bolt-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE38A"/><stop offset=".5" stop-color="#F5B800"/><stop offset="1" stop-color="#A86F00"/></linearGradient></defs><path fill="url(#bolt-${id})" d="M17 0 3 18h8.2L7.5 32 22 12.6h-8.3z"/></svg>`;
+const LOGO = id => `${BOLT(id)}<span class="wm"><b>Burn<strong>UP</strong></b><i>COACHING</i></span>`;
+
+/* ================= 公式与选项 ================= */
 const ACT = [
-  {v:1.2,  t:"久坐",   s:"办公室，几乎不运动"},
-  {v:1.375,t:"轻度活动",s:"每周运动 1–3 次"},
-  {v:1.55, t:"中度活动",s:"每周运动 3–5 次"},
-  {v:1.725,t:"高度活动",s:"每周运动 6–7 次"},
-  {v:1.9,  t:"极高活动",s:"体力劳动 + 每天训练"}
+  {v:1.2,  en:"Sedentary",  zh:"久坐",    s:"办公室，几乎不运动"},
+  {v:1.375,en:"Light",      zh:"轻度活动", s:"每周运动 1–3 次"},
+  {v:1.55, en:"Moderate",   zh:"中度活动", s:"每周运动 3–5 次"},
+  {v:1.725,en:"Active",     zh:"高度活动", s:"每周运动 6–7 次"},
+  {v:1.9,  en:"Very Active",zh:"极高活动", s:"体力劳动 + 每天训练"}
 ];
 const GOALS = {
-  gain:    {t:"增肌增重", s:"想长肉、变壮"},
-  lose:    {t:"减脂减重", s:"想掉秤、瘦下来"},
-  keepLose:{t:"维持体重 · 减脂", s:"体重不变，体脂下降"},
-  keepGain:{t:"维持体重 · 增肌", s:"体重不变，肌肉增加"}
+  gain:    {en:"Muscle Gain",     zh:"增肌增重",       s:"想长肉、变壮"},
+  lose:    {en:"Fat Loss",        zh:"减脂减重",       s:"想掉秤、瘦下来"},
+  keepLose:{en:"Recomp · Lean",   zh:"维持体重 · 减脂", s:"体重不变，体脂下降"},
+  keepGain:{en:"Recomp · Muscle", zh:"维持体重 · 增肌", s:"体重不变，肌肉增加"}
 };
 function adjust(goal, age){
   const over40 = age >= 40;
-  switch(goal){
-    case "gain": return over40 ? 300 : 500;
-    case "lose": return over40 ? -300 : -500;
-    case "keepLose": return -200;
-    case "keepGain": return 200;
-  }
+  if(goal==="gain") return over40 ? 300 : 500;
+  if(goal==="lose") return over40 ? -300 : -500;
+  if(goal==="keepLose") return -200;
+  if(goal==="keepGain") return 200;
   return 0;
 }
-// Mifflin-St Jeor
-function bmr(a){ return 10*a.weight + 6.25*a.height - 5*a.age + (a.gender==="m" ? 5 : -161); }
+const bmr = a => 10*a.weight + 6.25*a.height - 5*a.age + (a.gender==="m" ? 5 : -161); // Mifflin-St Jeor
 
 const SHAKE_ITEMS = [
-  {id:"f1",   t:"Formula 1 奶昔", k:100, lock:true},
-  {id:"f3",   t:"+ Formula 3",    k:40},
-  {id:"milk", t:"250ml 低脂牛奶", k:120},
-  {id:"banana",t:"半条香蕉",      k:60}
+  {id:"f1",    en:"Formula 1",          zh:"F1 奶昔",   k:100, lock:true},
+  {id:"f3",    en:"Formula 3",          zh:"F3 蛋白粉", k:40},
+  {id:"milk",  en:"Low-fat Milk 250ml", zh:"低脂牛奶",  k:120},
+  {id:"banana",en:"½ Banana",           zh:"半条香蕉",  k:60}
 ];
+const SNACKS = [
+  {id:"banana",  en:"Banana",   zh:"香蕉",   k:150},
+  {id:"apple",   en:"Apple",    zh:"苹果",   k:100},
+  {id:"sandwich",en:"Sandwich", zh:"三文治", k:250}
+];
+const SNACK_LINE = 2500;   // 每日目标超过 2500 kcal 才开放 10:00 和晚餐后加餐
 const WHEY = 165;
 const LUNCH = [800,600,400];
 const DINNER = [800,600,400,300];
@@ -207,375 +315,628 @@ const PORTION = {
 };
 const FLOOR = {f:1200, m:1500};
 
-/* ============ 状态 ============ */
-const S = {
-  view:"home",
-  step:0,
-  a:{gender:null, age:null, height:null, weight:null, activity:null, goal:null},
-  shake:{f1:true, f3:true, milk:true, banana:false},
-  training:true,
-  fit:{goal:null, days:null, step:0}
+/* ================= 本机存储 ================= */
+const LS = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); return true; }catch(e){ return false; } },
+  del(k){ try{ localStorage.removeItem(k); }catch(e){} }
 };
+const SS = {
+  get(k){ try{ return sessionStorage.getItem(k); }catch(e){ return null; } },
+  set(k,v){ try{ sessionStorage.setItem(k,v); }catch(e){} },
+  del(k){ try{ sessionStorage.removeItem(k); }catch(e){} }
+};
+const K_SELF="bu_self", K_STU="bu_students", K_PIN="bu_coach_pin";
 
-const STEPS = [
-  {key:"gender", q:"性别？", type:"choice", opts:[{v:"f",t:"女生"},{v:"m",t:"男生"}]},
-  {key:"age", q:"今年几岁？", hint:"40 岁以上，热量调整幅度会更温和。", type:"num", unit:"岁", min:15, max:90},
-  {key:"height", q:"身高多少？", type:"num", unit:"cm", min:120, max:220},
-  {key:"weight", q:"现在体重？", hint:"早上空腹称最准。", type:"num", unit:"kg", min:30, max:250, dec:true},
-  {key:"activity", q:"平时的活动量？", hint:"选最接近你平常一周的状态。", type:"choice", opts:ACT.map(x=>({v:x.v,t:x.t,s:x.s}))},
-  {key:"goal", q:"你的目标是？", type:"choice", opts:Object.entries(GOALS).map(([v,g])=>({v,t:g.t,s:g.s}))}
-];
+async function hashPin(pin, salt){
+  const data = new TextEncoder().encode(salt + ":" + pin);
+  if(window.crypto && crypto.subtle){
+    const buf = await crypto.subtle.digest("SHA-256", data);
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
+  }
+  let h = 5381; for(const b of data) h = ((h<<5) + h + b) >>> 0; return "x" + h.toString(16);
+}
 
-/* ============ 计算餐单 ============ */
-function calc(){
-  const a = S.a;
-  const b = bmr(a);
-  const tdee = Math.round(b * a.activity);
+function blankRec(){
+  return {id:null, name:"", a:{gender:null, age:null, height:null, weight:null, activity:null, goal:null},
+    shake:{f1:true, f3:true, milk:true, banana:false}, training:true, snacks:{am:null, pm:null},
+    fit:{goal:null, days:null}, note:"", created:null, updated:null};
+}
+function normalize(r){
+  const b = blankRec();
+  return Object.assign(b, r, {a:Object.assign(b.a, r && r.a), shake:Object.assign(b.shake, r && r.shake),
+    snacks:Object.assign(b.snacks, r && r.snacks), fit:Object.assign(b.fit, r && r.fit)});
+}
+const selfRec = () => normalize(LS.get(K_SELF, null));
+const students = () => LS.get(K_STU, []);
+const planReady = r => !!(r && r.a && r.a.goal && r.a.weight);
+
+/* ================= 状态 ================= */
+const S = {
+  role: SS.get("bu_role") || "student",
+  authed: SS.get("bu_auth") === "1",
+  view: "home",
+  step: 0,
+  rec: selfRec(),
+  fitStep: 0,
+  arm: false,     // 二次确认（删除 / 重置）
+  q: ""
+};
+const isCoach = () => S.role==="coach" && S.authed;
+
+function saveRec(){
+  const r = S.rec; r.updated = Date.now();
+  if(isCoach()){
+    if(!r.id) return;
+    const list = students(); const i = list.findIndex(x=>x.id===r.id);
+    if(i>=0) list[i]=r; else list.unshift(r);
+    LS.set(K_STU, list);
+  } else LS.set(K_SELF, r);
+}
+
+function quizSteps(){
+  const base = [
+    {key:"gender", en:"Gender", zh:"性别？", type:"choice", opts:[{v:"f",en:"Female",zh:"女生"},{v:"m",en:"Male",zh:"男生"}]},
+    {key:"age", en:"Age", zh:"今年几岁？", hint:"40 岁以上，热量调整幅度会更温和。", type:"num", unit:"yrs 岁", min:15, max:90},
+    {key:"height", en:"Height", zh:"身高多少？", type:"num", unit:"cm", min:120, max:220},
+    {key:"weight", en:"Weight", zh:"现在体重？", hint:"早上空腹称最准。", type:"num", unit:"kg", min:30, max:250, dec:true},
+    {key:"activity", en:"Activity Level", zh:"平时的活动量？", hint:"选最接近平常一周的状态。", type:"choice", opts:ACT.map(x=>({v:x.v,en:x.en,zh:x.zh,s:x.s}))},
+    {key:"goal", en:"Your Goal", zh:"你的目标是？", type:"choice", opts:Object.entries(GOALS).map(([v,g])=>({v,en:g.en,zh:g.zh,s:g.s}))}
+  ];
+  if(isCoach()) base.unshift({key:"name", en:"Student Name", zh:"学员名字", type:"text"});
+  return base;
+}
+
+/* ================= 计算 ================= */
+function calc(rec){
+  const a = rec.a;
+  const tdee = Math.round(bmr(a) * a.activity);
   const adj = adjust(a.goal, a.age);
-  let target = tdee + adj;
-  let floored = false;
+  let target = tdee + adj, floored = false;
   if(target < FLOOR[a.gender]){ target = FLOOR[a.gender]; floored = true; }
   target = Math.round(target/10)*10;
 
-  const shakeK = SHAKE_ITEMS.reduce((s,i)=> s + (S.shake[i.id] ? i.k : 0), 0);
-  const fixed = shakeK*2 + (S.training ? WHEY : 0);
+  const big = target > SNACK_LINE;
+  const shake = Object.assign({}, rec.shake); if(big) shake.milk = true;   // 高热量：奶昔先固定加牛奶
+  const shakeK = SHAKE_ITEMS.reduce((s,i)=> s + (shake[i.id] ? i.k : 0), 0);
+  const fixed = shakeK*2 + (rec.training ? WHEY : 0);
   const remaining = target - fixed;
 
-  // 选出最接近的午餐+晚餐组合；同分时偏向「午餐 ≥ 晚餐」
+  const slot = ov => {
+    if(!big || ov === "none") return [null];
+    if(ov) return [SNACKS.find(s=>s.id===ov) || null];
+    return [null, ...SNACKS];
+  };
   let best = null;
-  for(const L of LUNCH) for(const D of DINNER){
-    const score = Math.abs(L + D - remaining) + (D > L ? 30 : 0);
-    if(!best || score < best.score) best = {L, D, score};
+  for(const L of LUNCH) for(const D of DINNER) for(const am of slot(rec.snacks.am)) for(const pm of slot(rec.snacks.pm)){
+    const sum = L + D + (am?am.k:0) + (pm?pm.k:0);
+    // 先用正餐填满，还不够才加餐；同分时偏向午餐 ≥ 晚餐
+    const score = Math.abs(sum - remaining) + (D > L ? 30 : 0) + (am ? 40 : 0) + (pm ? 40 : 0);
+    if(!best || score < best.score) best = {L, D, am, pm, score};
   }
-  // 热量需求很高时追加加餐
-  const extras = [];
-  let gap = remaining - best.L - best.D;
-  let wheyAdded = false;
-  while(gap >= 150 && extras.length < 4){
-    if(!S.training && !wheyAdded){ extras.push({t:"RS Pro Whey 蛋白", k:WHEY}); gap -= WHEY; wheyAdded = true; }
-    else { extras.push({t:"Formula 1 奶昔（同早餐配方）", k:shakeK}); gap -= shakeK; }
-  }
-  const total = fixed + best.L + best.D + extras.reduce((s,e)=>s+e.k,0);
-  return {bmr:Math.round(b), tdee, adj, target, floored, shakeK, L:best.L, D:best.D, extras, total, diff: total - target, tooLow: remaining - 700 <= -150, tooHigh: total - target <= -300};
+  const total = fixed + best.L + best.D + (best.am?best.am.k:0) + (best.pm?best.pm.k:0);
+  const diff = total - target;
+  return {tdee, adj, target, floored, big, shake, shakeK, L:best.L, D:best.D, am:best.am, pm:best.pm, total, diff,
+    tooLow: diff >= 150, tooHigh: diff <= -300};
 }
 
-/* ============ 渲染 ============ */
+/* ================= 渲染 ================= */
 const $app = document.getElementById("app");
-const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const topBar = () => `<div class="top"><button class="brand" data-go="home" aria-label="回到首页"><b>BURN</b>UP<small>COACH</small></button>${S.view!=="home" ? `<button class="ghost" data-go="home">首页</button>` : ""}</div>`;
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const today = () => new Date().toLocaleDateString("en-GB");
+const fmtDate = t => t ? new Date(t).toLocaleDateString("en-GB") : "";
 
+function header(){
+  return `<div class="top noprint">
+    <button class="logo" data-go="home" aria-label="BurnUp home">${LOGO("h")}</button>
+    <div style="display:flex;gap:8px;align-items:center">
+      ${isCoach() ? `<span class="badge">COACH</span>` : ""}
+      ${S.view!=="home" ? `<button class="pill" data-go="home">Home 首页</button>` : (isCoach() ? `<button class="pill" data-logout>Log out 登出</button>` : "")}
+    </div></div>
+    <div class="print-only print-head"><span class="logo">${LOGO("p")}</span><div class="t">BurnUp × Herbalife Coaching<br>${S.rec.name ? esc(S.rec.name) + " · " : ""}${today()}</div></div>`;
+}
 function render(){
-  if(S.view==="home") $app.innerHTML = topBar() + home();
-  else if(S.view==="quiz") $app.innerHTML = topBar() + quiz();
-  else if(S.view==="plan") $app.innerHTML = topBar() + plan();
-  else if(S.view==="fitq") $app.innerHTML = topBar() + fitQuiz();
-  else if(S.view==="fit") $app.innerHTML = topBar() + fitPlan();
-  const inp = $app.querySelector("input");
-  if(inp) inp.focus({preventScroll:true});
-  window.scrollTo(0,0);
-}
-
-function home(){
-  return `
-  <section class="hero">
-    <h1>吃对 + 练对<br><em>结果自然来</em></h1>
-    <p>BurnUp × Herbalife 教练工具。回答 6 个问题，拿到你的每日卡路里和一日餐单。</p>
-  </section>
-  <div class="paths">
-    <button class="path primary" data-go="quiz">
-      <div><div class="k">MEAL PLAN COACHING</div><h2>我的一日餐单</h2><p>算出 TDEE 与每日摄入目标，自动配好三餐分量</p></div>
-      <div class="go">→</div>
-    </button>
-    <button class="path" data-go="fitq">
-      <div><div class="k">FITNESS COACHING</div><h2>我的训练计划</h2><p>按目标和每周天数，给你一份照着练的课表</p></div>
-      <div class="go">→</div>
-    </button>
-  </div>
-  <p class="foot">计算结果为参考值，特殊健康状况请先咨询医生。</p>`;
-}
-
-function quiz(){
-  const st = STEPS[S.step];
-  const val = S.a[st.key];
-  const pct = ((S.step) / STEPS.length) * 100;
   let body = "";
+  switch(S.view){
+    case "home":  body = isCoach() ? dash() : home(); break;
+    case "login": body = login(); break;
+    case "quiz":  body = quiz(); break;
+    case "plan":  body = plan(); break;
+    case "fitq":  body = fitQuiz(); break;
+    case "fit":   body = fitPlan(); break;
+  }
+  $app.innerHTML = header() + `<main id="view">${body}</main>`;
+  const inp = $app.querySelector("input.autofocus");
+  if(inp) inp.focus({preventScroll:true});
+}
+function go(view){ S.view = view; S.arm = false; render(); window.scrollTo(0,0); }
+
+function roleSwitch(){
+  return `<div class="roles noprint" role="tablist">
+    <button class="${S.role==="student"?"on":""}" data-role="student" role="tab" aria-selected="${S.role==="student"}">Student<small>学员</small></button>
+    <button class="${S.role==="coach"?"on":""}" data-role="coach" role="tab" aria-selected="${S.role==="coach"}">Coach<small>教练</small></button>
+  </div>`;
+}
+
+/* ---------- 学员首页 ---------- */
+function home(){
+  const has = planReady(LS.get(K_SELF, null));
+  return `
+  ${roleSwitch()}
+  <section class="hero">
+    <h1>BurnUp<span class="x">×</span>Herbalife<br>Coaching</h1>
+    <div class="zh gold-text">燃动训练 · 健康蜕变</div>
+    <svg class="swoosh" viewBox="0 0 200 10" preserveAspectRatio="none" aria-hidden="true"><path d="M2 8 Q100 -2 198 4" stroke="#F5B800" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+    <div class="tft">TRAIN <i>/</i> FUEL <i>/</i> TRANSFORM</div>
+  </section>
+
+  <section class="split">
+    <div class="split-k"><span>80% NUTRITION 营养</span><span>20% FITNESS 训练</span></div>
+    <div class="ratio" aria-hidden="true"><i></i><i></i></div>
+
+    <div class="nutri">
+      <div class="bolt-bg">${BOLT("n")}</div>
+      <div style="position:relative">
+        <div class="k">NUTRITION COACHING · 80%</div>
+        <h2>Daily Meal Plan<small>你的一日餐单</small></h2>
+      </div>
+      <ul>
+        <li>Daily calorie target <span>每日热量目标</span></li>
+        <li>Lunch & dinner portions <span>午晚餐分量自动配</span></li>
+        <li>Herbalife shake recipe <span>Herbalife 奶昔配方</span></li>
+        <li>Download as PDF <span>下载 PDF 存档</span></li>
+      </ul>
+      <div style="display:grid;gap:10px;position:relative">
+        <button class="btn-ink" data-start><span>Start · 6 questions<small>开始 · 6 题</small></span><span>→</span></button>
+        ${has ? `<button class="link-ink" data-myplan>View my saved plan · 查看我的餐单</button>` : ""}
+      </div>
+    </div>
+
+    <button class="fit-strip" data-fit>
+      <div><div class="k">FITNESS COACHING · 20%</div><b>Training Plan<small>训练课表</small></b></div>
+      <div class="go">→</div>
+    </button>
+  </section>
+  <p class="foot">Results are estimates · 计算结果为参考值，特殊健康状况请先咨询医生。</p>`;
+}
+
+/* ---------- 教练登入 ---------- */
+function login(){
+  const hasPin = !!LS.get(K_PIN, null);
+  return `
+  ${roleSwitch()}
+  <form class="login" id="loginf" novalidate>
+    <h2>${hasPin ? "Coach Login" : "Set Coach PIN"}<small>${hasPin ? "教练登入" : "设置教练 PIN（只存在这台设备）"}</small></h2>
+    <p class="hint">${hasPin ? "输入这台设备的教练 PIN。" : "第一次使用：设一个 4–8 位数字 PIN。之后要输入 PIN 才能在这台设备打开学员档案。"}</p>
+    <label class="field" for="pin1"><input id="pin1" class="autofocus" type="password" inputmode="numeric" autocomplete="off" maxlength="8" placeholder="••••" aria-label="PIN" /></label>
+    ${hasPin ? "" : `<label class="field" for="pin2"><input id="pin2" class="sm" type="password" inputmode="numeric" autocomplete="off" maxlength="8" placeholder="Confirm 再输入一次" aria-label="Confirm PIN" /></label>`}
+    <p class="err" id="err"></p>
+    <button class="cta" type="submit">${hasPin ? "Log in<small>登入</small>" : "Save PIN<small>保存</small>"}</button>
+    ${hasPin ? `<button type="button" class="back" data-reset>${S.arm ? "⚠ Tap again: erase PIN + ALL student files · 再按一次：清空 PIN 和本机所有学员档案" : "Forgot PIN? 忘记 PIN"}</button>` : ""}
+  </form>`;
+}
+
+/* ---------- 教练后台 ---------- */
+function dash(){
+  const all = students();
+  const q = S.q.trim().toLowerCase();
+  const list = q ? all.filter(s => (s.name||"").toLowerCase().includes(q)) : all;
+  const item = s => {
+    let kc = "—"; try{ if(planReady(s)) kc = calc(normalize(s)).target; }catch(e){}
+    const g = GOALS[s.a && s.a.goal];
+    return `<button class="stu" data-open="${esc(s.id)}">
+      <div class="av">${esc((s.name||"?").trim().charAt(0).toUpperCase())}</div>
+      <div><b>${esc(s.name||"未命名")}</b><span>${g ? g.zh : "未完成"} · ${(s.a && s.a.weight) ?? "–"} kg · ${fmtDate(s.updated)}</span></div>
+      <div class="kc num">${kc}<small>kcal/day</small></div></button>`;
+  };
+  return `
+  ${roleSwitch()}
+  <div class="dash-h"><h2>Students<small>学员档案 · ${all.length} 位</small></h2></div>
+  <button class="cta" data-new>+ New Student<small>新增学员</small></button>
+  ${all.length > 5 ? `<input class="search" id="search" type="search" placeholder="Search 搜索名字" value="${esc(S.q)}" />` : ""}
+  <div class="list">${list.length ? list.map(item).join("") : `<div class="empty">${all.length ? "找不到这个名字" : "还没有学员。按上面「新增学员」开始第一份档案。"}</div>`}</div>
+  <div class="row">
+    <button class="sbtn" data-export>Backup<small>备份全部 (.json)</small></button>
+    <button class="sbtn" data-import>Restore<small>导入备份</small></button>
+  </div>
+  <p class="foot">学员档案只存在这台设备的浏览器。换手机或清除浏览器资料前，请先「备份全部」。</p>`;
+}
+
+/* ---------- 问答 ---------- */
+function quiz(){
+  const steps = quizSteps(); const st = steps[S.step];
+  const val = st.key==="name" ? S.rec.name : S.rec.a[st.key];
+  let body;
   if(st.type === "choice"){
     body = `<div class="opts">${st.opts.map(o=>`
-      <button class="opt ${val===o.v?"on":""}" data-pick="${o.v}">${esc(o.t)}${o.s?`<span>${esc(o.s)}</span>`:""}</button>`).join("")}</div>`;
+      <button class="opt ${val==o.v?"on":""}" data-pick="${o.v}"><span>${o.en}<span class="zh">${o.zh}</span></span>${o.s?`<span class="s">${esc(o.s)}</span>`:""}</button>`).join("")}</div>`;
   } else {
-    body = `
-    <form id="numf" novalidate>
+    const txt = st.type==="text";
+    body = `<form id="numf" novalidate>
       <label class="field" for="in-${st.key}">
-        <input id="in-${st.key}" type="number" inputmode="${st.dec?"decimal":"numeric"}" step="${st.dec?"0.1":"1"}" placeholder="0" value="${val ?? ""}" aria-label="${esc(st.q)}" />
-        <span class="u">${st.unit}</span>
+        <input id="in-${st.key}" class="autofocus ${txt?"txt":""}" type="${txt?"text":"number"}" ${txt?'autocomplete="off" maxlength="40"':`inputmode="${st.dec?"decimal":"numeric"}" step="${st.dec?"0.1":"1"}"`} placeholder="${txt?"例如 Amanda":"0"}" value="${esc(val ?? "")}" aria-label="${esc(st.en)}" />
+        ${st.unit?`<span class="u">${st.unit}</span>`:""}
       </label>
       <p class="err" id="err"></p>
-      <button class="cta" type="submit">下一步</button>
+      <button class="cta" type="submit">Next<small>下一步</small></button>
     </form>`;
   }
   return `
-  <div class="bar"><i style="width:${pct}%"></i></div>
-  ${S.step>0 ? `<button class="back" data-back>← 上一题</button>` : ""}
+  <div class="bar"><i style="width:${(S.step/steps.length)*100}%"></i></div>
+  ${S.step>0 ? `<button class="back" data-back>← Back 上一题</button>` : `<button class="back" data-go="home">← Home 首页</button>`}
   <div>
-    <div class="step-k num">问题 ${S.step+1} / ${STEPS.length}</div>
-    <div class="q">${esc(st.q)}</div>
+    <div class="step-k num">QUESTION ${S.step+1} / ${steps.length}</div>
+    <div class="q"><span class="en">${st.en}</span><span class="zh">${st.zh}</span></div>
     ${st.hint ? `<p class="hint">${esc(st.hint)}</p>` : ""}
   </div>
   ${body}`;
 }
 
-function mealBlock(time, name, kcal, inner, fixed){
+/* ---------- 餐单 ---------- */
+const shakeEn = sh => SHAKE_ITEMS.filter(i=>sh[i.id]).map(i=>i.en).join(" + ");
+const shakeZh = sh => SHAKE_ITEMS.filter(i=>sh[i.id]).map(i=>i.zh).join(" + ");
+function mealBlock(time, en, zh, kcal, inner, fixed){
   return `<li class="meal ${fixed?"fixed":""}">
-    <div class="meal-h"><div><div class="t">${time}</div><h4>${name}</h4></div><div class="kc num">${kcal}<small>kcal</small></div></div>
+    <div class="meal-h"><div><div class="t">${time}</div><h4>${en}<small>${zh}</small></h4></div><div class="kc num">${kcal}<small>kcal</small></div></div>
     ${inner}</li>`;
-}
-function shakeText(){
-  return SHAKE_ITEMS.filter(i=>S.shake[i.id]).map(i=>i.t.replace(/^\+ /,"")).join(" + ");
 }
 function plateHTML(k){
   const p = PORTION[k];
   return `<div class="plate">
-    ${p.rice ? `<span>碳水 <b>${p.rice}</b></span>` : `<span>碳水 <b>不吃</b></span>`}
-    <span>蛋白质 <b>${p.pro}</b></span>
-    <span>蔬菜 <b>${p.veg}</b></span></div>`;
+    <span>Carbs 碳水 <b>${p.rice || "不吃"}</b></span>
+    <span>Protein 蛋白质 <b>${p.pro}</b></span>
+    <span>Veg 蔬菜 <b>${p.veg}</b></span></div>`;
 }
-
+function snackBlock(slotKey, time, en, zh, pick){
+  const cur = pick ? pick.id : "none";
+  const chips = SNACKS.map(s=>`<button class="chip ${cur===s.id?"on":""}" data-snack="${slotKey}:${s.id}">${s.en} ${s.zh}<i>${s.k}</i></button>`).join("")
+    + `<button class="chip ${cur==="none"?"on":""}" data-snack="${slotKey}:none">None 不加</button>`;
+  return mealBlock(time, en, zh, pick ? pick.k : 0,
+    `<p class="what">${pick ? pick.en + " · " + pick.zh : "No snack · 不加"}</p><div class="chips noprint">${chips}</div>`, true);
+}
 function plan(){
-  const a = S.a, r = calc();
-  const g = GOALS[a.goal];
-  const act = ACT.find(x=>x.v===a.activity);
+  const rec = S.rec, a = rec.a, r = calc(rec);
+  const g = GOALS[a.goal], act = ACT.find(x=>x.v===a.activity);
   const adjTxt = (r.adj>0?"+":"") + r.adj;
-  const shakeLine = `<p class="what">${esc(shakeText())}</p>${S.shake.milk?`<p class="sub">只用低脂牛奶冲泡，不用全脂</p>`:`<p class="sub">用清水冲泡</p>`}`;
+  const shakeLine = `<p class="what">${esc(shakeEn(r.shake))}</p><p class="sub">${shakeZh(r.shake)} · ${r.shake.milk ? "只用低脂牛奶冲泡，不用全脂" : "用清水冲泡"}</p>`;
+
+  let meals = mealBlock("07:30","Breakfast","早餐 · 营养奶昔", r.shakeK, shakeLine, true);
+  if(r.big) meals += snackBlock("am","10:00","Morning Snack","早上加餐", r.am);
+  meals += mealBlock("12:30","Lunch","午餐", r.L, plateHTML(r.L));
+  meals += mealBlock("16:00","Afternoon Shake","下午茶 · 营养奶昔", r.shakeK, shakeLine, true);
+  if(rec.training) meals += mealBlock("Post-workout","RS Pro Whey","运动后蛋白", WHEY, `<p class="sub">重训 / 运动后 30 分钟内喝</p>`, true);
+  meals += mealBlock("19:00","Dinner","晚餐", r.D, plateHTML(r.D));
+  if(r.big) meals += snackBlock("pm","21:00","Evening Snack","晚餐后加餐", r.pm);
+
   const diffTxt = (r.diff>0?"+":"") + r.diff;
-
-  let meals = "";
-  meals += mealBlock("07:30","早餐 · 营养奶昔", r.shakeK, shakeLine, true);
-  meals += mealBlock("12:30","午餐", r.L, plateHTML(r.L));
-  meals += mealBlock("16:00","下午茶 · 营养奶昔", r.shakeK, shakeLine, true);
-  if(S.training) meals += mealBlock("训练后","RS Pro Whey 蛋白", WHEY, `<p class="what">重训 / 运动后 30 分钟内喝</p>`, true);
-  meals += mealBlock("19:00","晚餐", r.D, plateHTML(r.D));
-  r.extras.forEach(e => meals += mealBlock("21:00","加餐", e.k, `<p class="what">${esc(e.t)}</p><p class="sub">你的热量需求较高，三餐之外补这一份</p>`, true));
-
   return `
-  <button class="back" data-go="quiz-edit">← 修改资料</button>
-  <div class="who">${a.gender==="m"?"男":"女"} · ${a.age} 岁 · ${a.height} cm · ${a.weight} kg · ${act.t} · <b style="color:var(--fg)">${g.t}</b></div>
+  <button class="back noprint" data-edit>← Edit details 修改资料</button>
+  ${rec.name ? `<p class="client">${esc(rec.name)}</p>` : ""}
+  <div class="who">${a.gender==="m"?"Male 男":"Female 女"} · ${a.age} 岁 · ${a.height} cm · ${a.weight} kg · ${act.en} ${act.zh} · <b>${g.en} ${g.zh}</b></div>
   <section class="target">
-    <div class="k">每日摄入目标</div>
+    <div class="k">DAILY CALORIE TARGET<span>每日摄入目标</span></div>
     <div class="big num">${r.target}<small>kcal</small></div>
-    <div class="math num">TDEE 维持热量 ${r.tdee} kcal　${adjTxt} kcal（${g.t}${(a.goal==="gain"||a.goal==="lose")&&a.age>=40?" · 40+":""}）</div>
+    <div class="math num">TDEE 维持热量 ${r.tdee} kcal　${adjTxt} kcal（${g.zh}${(a.goal==="gain"||a.goal==="lose")&&a.age>=40?" · 40+":""}）</div>
   </section>
   ${r.floored ? `<div class="note">计算值低于安全下限，已调整为 ${FLOOR[a.gender]} kcal。长期吃太少会掉肌肉、代谢变慢。</div>` : ""}
 
-  <div class="sec-h"><h3>今日设置</h3></div>
-  <button class="toggle" data-train aria-pressed="${S.training}">
-    <div><b>今天有训练</b><span>开启会加入运动后 RS Pro Whey（${WHEY} kcal），午晚餐自动调整</span></div><div class="sw"></div>
+  <div class="sec-h noprint"><h3>TODAY'S SETUP</h3><span>今日设置</span></div>
+  <button class="toggle noprint" data-train aria-pressed="${rec.training}">
+    <div><b>Training day<small>今天有训练</small></b><span>加入运动后 RS Pro Whey（${WHEY} kcal），午晚餐自动调整</span></div><div class="sw"></div>
   </button>
-  <div class="shake">
-    <p>早餐 & 下午茶奶昔配方（两餐一致）</p>
-    <div class="chips">${SHAKE_ITEMS.map(i=>`<button class="chip ${S.shake[i.id]?"on":""} ${i.lock?"lock":""}" data-shake="${i.id}" ${i.lock?'aria-disabled="true"':""}>${i.t}<i>${i.k}</i></button>`).join("")}</div>
+  <div class="box noprint">
+    <p>Shake recipe · 早餐 & 下午茶奶昔配方（两餐一致）${r.big ? "<br>每日目标超过 2500 kcal：奶昔固定加低脂牛奶，还不够才加餐" : ""}</p>
+    <div class="chips">${SHAKE_ITEMS.map(i=>{ const locked = i.lock || (r.big && i.id==="milk"); return `<button class="chip ${r.shake[i.id]?"on":""} ${locked?"lock":""}" data-shake="${i.id}" ${locked?'aria-disabled="true"':""}>${i.en}<i>${i.k}</i></button>`; }).join("")}</div>
   </div>
 
-  <div class="sec-h"><h3>一日餐单</h3></div>
+  <div class="sec-h"><h3>ONE-DAY MEAL PLAN</h3><span>一日餐单</span></div>
   <ul class="day">${meals}</ul>
 
   <div class="sum num">
-    <div><span>目标</span><b>${r.target}</b></div>
-    <div><span>餐单合计</span><b>${r.total}</b></div>
-    <div><span>差距</span><b style="color:${Math.abs(r.diff)<=100?"var(--good)":"var(--warn)"}">${diffTxt}</b></div>
+    <div><span>TARGET 目标</span><b>${r.target}</b></div>
+    <div><span>PLAN 合计</span><b>${r.total}</b></div>
+    <div><span>GAP 差距</span><b style="color:${Math.abs(r.diff)<=100?"var(--good)":"var(--warn)"}">${diffTxt}</b></div>
   </div>
-  ${r.tooLow ? `<div class="note">午晚餐已是最小分量。可以把奶昔改成清水冲泡、或去掉香蕉，让总热量更贴近目标。</div>` : ""}
-
+  ${r.tooLow ? `<div class="note">午晚餐已是最小分量。可以把奶昔改成清水冲泡，或去掉香蕉，让总热量更贴近目标。</div>` : ""}
   ${r.tooHigh ? `<div class="note">热量需求很高。午餐和晚餐可以各多加半碗饭或一份蛋白质，补足差距。</div>` : ""}
 
-  <div class="sec-h"><h3>午餐 / 晚餐怎么选</h3></div>
+  <div class="sec-h"><h3>LUNCH & DINNER OPTIONS</h3><span>午晚餐怎么选</span></div>
   <div class="menu">
-    <div><h5>碳水（选 1）</h5><p>白饭 · 糙米饭 · Soba 荞麦面 · 土豆</p></div>
-    <div><h5>蛋白质（选 1–2）</h5><p>鸡肉 · 鱼肉 · 鸡蛋 · 瘦牛肉<br>素食：豆腐 · Tempeh</p></div>
-    <div><h5>蔬菜</h5><p>各种绿色蔬菜，越多颜色越好</p></div>
+    <div><h5>CARBS<span>碳水（选 1）</span></h5><p>White rice 白饭 · Brown rice 糙米饭 · Soba 荞麦面 · Potato 土豆</p></div>
+    <div><h5>PROTEIN<span>蛋白质</span></h5><p>Chicken 鸡肉 · Fish 鱼肉 · Egg 鸡蛋 · Lean beef 瘦牛肉<br>Vegetarian 素食：Tofu 豆腐 · Tempeh</p></div>
+    <div><h5>VEGETABLES<span>蔬菜</span></h5><p>All green vegetables · 各种绿色蔬菜，颜色越多越好</p></div>
   </div>
   <ul class="guide">
-    <li><b>一份蛋白质</b> ≈ 一个手掌的大小和厚度（约 2 颗蛋）</li>
-    <li><b>一份蔬菜</b> ≈ 两个拳头</li>
-    <li><b>一碗饭</b> = 一碗糙米饭 = 一份熟 Soba = 一个中型土豆</li>
+    <li><b>1 份蛋白质</b> ≈ 一个手掌的大小和厚度（约 2 颗蛋）</li>
+    <li><b>1 份蔬菜</b> ≈ 两个拳头</li>
+    <li><b>1 碗饭</b> = 一碗糙米饭 = 一份熟 Soba = 一个中型土豆</li>
     <li>少油少酱，煎炸改成蒸、烤、水煮</li>
   </ul>
 
-  <div class="actions">
-    <button class="cta" data-copy="meal">复制餐单发给学员</button>
-    <button class="cta alt" data-go="fitq">下一步：看训练计划 →</button>
+  ${isCoach() ? `<div class="sec-h"><h3>COACH NOTES</h3><span>教练备注（会印在 PDF 上）</span></div>
+  <textarea id="note" class="noprint" placeholder="例如：每周一量体重，先戒含糖饮料…">${esc(rec.note)}</textarea>
+  ${rec.note ? `<div class="box print-only notes-print">${esc(rec.note)}</div>` : ""}` : ""}
+
+  <div class="actions noprint">
+    <button class="cta" data-pdf>Download PDF<small>下载 PDF</small></button>
+    <div class="row">
+      <button class="sbtn" data-dl>Save file<small>下载档案</small></button>
+      <button class="sbtn" data-copy="meal">Copy text<small>复制到 WhatsApp</small></button>
+      <button class="sbtn" data-fit>Training<small>训练课表 →</small></button>
+    </div>
+    ${isCoach() ? `<button class="sbtn danger ${S.arm?"arm":""}" data-del>${S.arm ? "Tap again to delete<small>再按一次确认删除</small>" : "Delete student<small>删除这位学员</small>"}</button>` : ""}
   </div>`;
 }
 
-/* ============ 训练 ============ */
+/* ---------- 训练 ---------- */
 const FIT_GOALS = [
-  {v:"build", t:"增肌 / 变壮", s:"对应：增肌增重、维持体重增肌"},
-  {v:"burn",  t:"减脂 / 变瘦", s:"对应：减脂减重、维持体重减脂"}
+  {v:"build", en:"Build Muscle", zh:"增肌 / 变壮", s:"增肌增重、维持体重增肌"},
+  {v:"burn",  en:"Burn Fat",     zh:"减脂 / 变瘦", s:"减脂减重、维持体重减脂"}
 ];
 const DAYS = [
-  {v:3, t:"每周 3 天", s:"新手首选，全身训练"},
-  {v:4, t:"每周 4 天", s:"上肢 / 下肢分开练"},
-  {v:5, t:"每周 5 天", s:"推 / 拉 / 腿 + 上 / 下"}
+  {v:3, en:"3 days / week", zh:"每周 3 天", s:"新手首选，全身训练"},
+  {v:4, en:"4 days / week", zh:"每周 4 天", s:"上肢 / 下肢分开练"},
+  {v:5, en:"5 days / week", zh:"每周 5 天", s:"推 / 拉 / 腿 + 上 / 下"}
 ];
+const E = (en, zh, fixed) => ({en, zh, fixed});
 const SPLITS = {
   3:[
-    {n:"Day 1 · 全身 A", f:"FULL BODY", ex:["杠铃 / 高脚杯深蹲","哑铃卧推","坐姿划船","哑铃肩推","平板支撑 3×40秒"]},
-    {n:"Day 2 · 全身 B", f:"FULL BODY", ex:["罗马尼亚硬拉","高位下拉","哑铃弓步蹲","上斜哑铃卧推","死虫 3×12"]},
-    {n:"Day 3 · 全身 C", f:"FULL BODY", ex:["腿举","器械推胸 / 俯卧撑","单臂哑铃划船","臀桥","侧平板 3×30秒"]}
+    {en:"Day 1 · Full Body A", zh:"全身 A", f:"FULL BODY", ex:[E("Goblet / Barbell Squat","深蹲"),E("Dumbbell Bench Press","哑铃卧推"),E("Seated Row","坐姿划船"),E("DB Shoulder Press","哑铃肩推"),E("Plank","平板支撑","3×40s")]},
+    {en:"Day 2 · Full Body B", zh:"全身 B", f:"FULL BODY", ex:[E("Romanian Deadlift","罗马尼亚硬拉"),E("Lat Pulldown","高位下拉"),E("Dumbbell Lunge","哑铃弓步蹲"),E("Incline DB Press","上斜哑铃卧推"),E("Dead Bug","死虫","3×12")]},
+    {en:"Day 3 · Full Body C", zh:"全身 C", f:"FULL BODY", ex:[E("Leg Press","腿举"),E("Chest Press / Push-up","推胸 / 俯卧撑"),E("One-arm DB Row","单臂哑铃划船"),E("Glute Bridge","臀桥"),E("Side Plank","侧平板","3×30s")]}
   ],
   4:[
-    {n:"Day 1 · 上肢 A", f:"UPPER", ex:["杠铃 / 哑铃卧推","坐姿划船","哑铃肩推","高位下拉","哑铃弯举","绳索下压"]},
-    {n:"Day 2 · 下肢 A", f:"LOWER", ex:["深蹲","罗马尼亚硬拉","哑铃弓步蹲","腿弯举","提踵"]},
-    {n:"Day 3 · 上肢 B", f:"UPPER", ex:["上斜哑铃卧推","引体向上 / 辅助引体","单臂哑铃划船","侧平举","锤式弯举","俯卧撑"]},
-    {n:"Day 4 · 下肢 B", f:"LOWER", ex:["腿举","臀推","保加利亚分腿蹲","腿屈伸","平板支撑 3×40秒"]}
+    {en:"Day 1 · Upper A", zh:"上肢 A", f:"UPPER", ex:[E("Bench Press","卧推"),E("Seated Row","坐姿划船"),E("DB Shoulder Press","哑铃肩推"),E("Lat Pulldown","高位下拉"),E("DB Curl","哑铃弯举"),E("Triceps Pushdown","绳索下压")]},
+    {en:"Day 2 · Lower A", zh:"下肢 A", f:"LOWER", ex:[E("Squat","深蹲"),E("Romanian Deadlift","罗马尼亚硬拉"),E("DB Lunge","哑铃弓步蹲"),E("Leg Curl","腿弯举"),E("Calf Raise","提踵")]},
+    {en:"Day 3 · Upper B", zh:"上肢 B", f:"UPPER", ex:[E("Incline DB Press","上斜哑铃卧推"),E("Assisted Pull-up","辅助引体向上"),E("One-arm DB Row","单臂哑铃划船"),E("Lateral Raise","侧平举"),E("Hammer Curl","锤式弯举"),E("Push-up","俯卧撑")]},
+    {en:"Day 4 · Lower B", zh:"下肢 B", f:"LOWER", ex:[E("Leg Press","腿举"),E("Hip Thrust","臀推"),E("Bulgarian Split Squat","保加利亚分腿蹲"),E("Leg Extension","腿屈伸"),E("Plank","平板支撑","3×40s")]}
   ],
   5:[
-    {n:"Day 1 · 推", f:"PUSH", ex:["杠铃 / 哑铃卧推","上斜哑铃卧推","哑铃肩推","侧平举","绳索下压"]},
-    {n:"Day 2 · 拉", f:"PULL", ex:["高位下拉","坐姿划船","单臂哑铃划船","面拉","哑铃弯举"]},
-    {n:"Day 3 · 腿", f:"LEGS", ex:["深蹲","罗马尼亚硬拉","腿举","腿弯举","提踵"]},
-    {n:"Day 4 · 上肢", f:"UPPER", ex:["器械推胸","引体向上 / 辅助引体","阿诺德推举","绳索划船","超级组：弯举 + 下压"]},
-    {n:"Day 5 · 下肢 + 核心", f:"LOWER", ex:["臀推","保加利亚分腿蹲","腿屈伸","悬垂举腿","平板支撑 3×40秒"]}
+    {en:"Day 1 · Push", zh:"推", f:"PUSH", ex:[E("Bench Press","卧推"),E("Incline DB Press","上斜哑铃卧推"),E("DB Shoulder Press","哑铃肩推"),E("Lateral Raise","侧平举"),E("Triceps Pushdown","绳索下压")]},
+    {en:"Day 2 · Pull", zh:"拉", f:"PULL", ex:[E("Lat Pulldown","高位下拉"),E("Seated Row","坐姿划船"),E("One-arm DB Row","单臂哑铃划船"),E("Face Pull","面拉"),E("DB Curl","哑铃弯举")]},
+    {en:"Day 3 · Legs", zh:"腿", f:"LEGS", ex:[E("Squat","深蹲"),E("Romanian Deadlift","罗马尼亚硬拉"),E("Leg Press","腿举"),E("Leg Curl","腿弯举"),E("Calf Raise","提踵")]},
+    {en:"Day 4 · Upper", zh:"上肢", f:"UPPER", ex:[E("Machine Chest Press","器械推胸"),E("Assisted Pull-up","辅助引体向上"),E("Arnold Press","阿诺德推举"),E("Cable Row","绳索划船"),E("Curl + Pushdown","弯举 + 下压")]},
+    {en:"Day 5 · Lower + Core", zh:"下肢 + 核心", f:"LOWER", ex:[E("Hip Thrust","臀推"),E("Bulgarian Split Squat","保加利亚分腿蹲"),E("Leg Extension","腿屈伸"),E("Hanging Leg Raise","悬垂举腿"),E("Plank","平板支撑","3×40s")]}
   ]
 };
 const FIT_RULES = {
-  build:{main:"4 组 × 6–10 次", acc:"3 组 × 10–12 次", rest:"90–120 秒", extra:"每周加重量或次数", cardio:"每周 2 次 · 20 分钟快走", steps:"7,000+ 步/天"},
-  burn: {main:"3 组 × 10–12 次", acc:"3 组 × 12–15 次", rest:"45–60 秒", extra:"重量不掉，休息缩短", cardio:"每次训练后 15–20 分钟", steps:"8,000–10,000 步/天"}
+  build:{main:"4×6–10", acc:"3×10–12", rest:"90–120 秒", prog:"每周加重量或次数", cardio:"每周 2 次 · 20 分钟快走", steps:"7,000+ 步/天"},
+  burn: {main:"3×10–12", acc:"3×12–15", rest:"45–60 秒", prog:"重量不掉，休息缩短", cardio:"每次训练后 15–20 分钟", steps:"8,000–10,000 步/天"}
 };
-function mapGoal(g){ return (g==="gain"||g==="keepGain") ? "build" : (g ? "burn" : null); }
+const mapGoal = g => (g==="gain"||g==="keepGain") ? "build" : (g ? "burn" : null);
 
 function fitQuiz(){
-  const st = S.fit.step;
-  const isGoal = st===0;
+  const isGoal = S.fitStep===0;
   const opts = isGoal ? FIT_GOALS : DAYS;
-  const cur = isGoal ? S.fit.goal : S.fit.days;
+  const cur = isGoal ? S.rec.fit.goal : S.rec.fit.days;
   return `
-  <div class="bar"><i style="width:${st*50}%"></i></div>
-  ${st>0 ? `<button class="back" data-fback>← 上一题</button>` : ""}
+  <div class="bar"><i style="width:${S.fitStep*50}%"></i></div>
+  ${S.fitStep>0 ? `<button class="back" data-fback>← Back 上一题</button>` : `<button class="back" data-go="home">← Home 首页</button>`}
+  ${S.rec.name ? `<p class="client">${esc(S.rec.name)}</p>` : ""}
   <div>
-    <div class="step-k num">问题 ${st+1} / 2</div>
-    <div class="q">${isGoal ? "训练目标？" : "每周能练几天？"}</div>
-    <p class="hint">${isGoal ? "选一个主要目标。" : "选你真的做得到的，坚持比天数重要。"}</p>
+    <div class="step-k">QUESTION ${S.fitStep+1} / 2</div>
+    <div class="q">${isGoal ? `<span class="en">Training Goal</span><span class="zh">训练目标？</span>` : `<span class="en">Days per Week</span><span class="zh">每周能练几天？</span>`}</div>
+    <p class="hint">${isGoal ? "选一个主要目标。" : "选真的做得到的，坚持比天数重要。"}</p>
   </div>
-  <div class="opts">${opts.map(o=>`<button class="opt ${cur==o.v?"on":""}" data-fpick="${o.v}">${o.t}<span>${o.s}</span></button>`).join("")}</div>`;
+  <div class="opts">${opts.map(o=>`<button class="opt ${cur==o.v?"on":""}" data-fpick="${o.v}"><span>${o.en}<span class="zh">${o.zh}</span></span><span class="s">${o.s}</span></button>`).join("")}</div>`;
 }
-
 function fitPlan(){
-  const R = FIT_RULES[S.fit.goal];
-  const split = SPLITS[S.fit.days];
-  const gT = FIT_GOALS.find(x=>x.v===S.fit.goal).t;
+  const f = S.rec.fit, R = FIT_RULES[f.goal], G = FIT_GOALS.find(x=>x.v===f.goal);
   return `
-  <button class="back" data-go="fitq">← 修改选择</button>
+  <button class="back noprint" data-refit>← Change 修改选择</button>
+  ${S.rec.name ? `<p class="client">${esc(S.rec.name)}</p>` : ""}
   <section class="target">
-    <div class="k">训练计划</div>
-    <div class="big">${S.fit.days}<small>天 / 周</small></div>
-    <div class="math">${gT} · 每次约 45–60 分钟</div>
+    <div class="k">TRAINING PLAN<span>训练计划</span></div>
+    <div class="big">${f.days}<small>days / week · 天/周</small></div>
+    <div class="math">${G.en} · ${G.zh} · 每次约 45–60 分钟</div>
   </section>
   <div class="rules">
-    <div><span>主动作（每天前 2 个）</span><b>${R.main}</b></div>
-    <div><span>辅助动作</span><b>${R.acc}</b></div>
-    <div><span>组间休息</span><b>${R.rest}</b></div>
-    <div><span>进步方式</span><b>${R.extra}</b></div>
-    <div><span>有氧</span><b>${R.cardio}</b></div>
-    <div><span>每日步数</span><b>${R.steps}</b></div>
+    <div><span>MAIN LIFTS 主动作（前 2 个）</span><b class="num">${R.main} 次</b></div>
+    <div><span>ACCESSORY 辅助动作</span><b class="num">${R.acc} 次</b></div>
+    <div><span>REST 组间休息</span><b>${R.rest}</b></div>
+    <div><span>PROGRESS 进步方式</span><b>${R.prog}</b></div>
+    <div><span>CARDIO 有氧</span><b>${R.cardio}</b></div>
+    <div><span>STEPS 每日步数</span><b>${R.steps}</b></div>
   </div>
-  <div class="sec-h"><h3>每周课表</h3></div>
-  <div class="wk">${split.map((d,i)=>`
-    <div class="wd"><div class="wd-h"><b>${d.n}</b><span>${d.f}</span></div>
-      <ul class="ex">${d.ex.map((e,j)=>`<li>${esc(e)}<em>${/×/.test(e)?"":(j<2?R.main.replace(/ /g,""):R.acc.replace(/ /g,""))}</em></li>`).join("")}</ul></div>`).join("")}</div>
+  <div class="sec-h"><h3>WEEKLY SCHEDULE</h3><span>每周课表</span></div>
+  <div class="wk">${SPLITS[f.days].map(d=>`
+    <div class="wd"><div class="wd-h"><b>${d.en}<small>${d.zh}</small></b><span>${d.f}</span></div>
+      <ul class="ex">${d.ex.map((e,j)=>`<li><span>${e.en}<small>${e.zh}</small></span><em class="num">${e.fixed || (j<2 ? R.main : R.acc)}</em></li>`).join("")}</ul></div>`).join("")}</div>
   <ul class="guide">
     <li>每次先热身 5–8 分钟：快走 + 动态拉伸</li>
     <li>最后 2 次要「有点吃力但姿势不跑」，才是对的重量</li>
     <li><b>训练后 30 分钟内喝 RS Pro Whey</b>，帮助肌肉恢复</li>
-    <li>训练日之间至少隔一天休息同一部位，睡够 7 小时</li>
+    <li>同一部位至少休息一天，每晚睡够 7 小时</li>
   </ul>
-  <div class="actions">
-    <button class="cta" data-copy="fit">复制课表发给学员</button>
-    ${S.a.goal ? `<button class="cta alt" data-go="plan">← 回到餐单</button>` : `<button class="cta alt" data-go="quiz">去算我的餐单 →</button>`}
+  <div class="actions noprint">
+    <button class="cta" data-pdf>Download PDF<small>下载 PDF</small></button>
+    <div class="row">
+      <button class="sbtn" data-dl>Save file<small>下载档案</small></button>
+      <button class="sbtn" data-copy="fit">Copy text<small>复制到 WhatsApp</small></button>
+      ${planReady(S.rec) ? `<button class="sbtn" data-go="plan">Meal plan<small>← 一日餐单</small></button>` : `<button class="sbtn" data-start>Meal plan<small>算我的餐单 →</small></button>`}
+    </div>
   </div>`;
 }
 
-/* ============ 复制文字（WhatsApp 格式） ============ */
+/* ================= WhatsApp 文字 ================= */
 function mealText(){
-  const a=S.a, r=calc(), g=GOALS[a.goal];
+  const rec=S.rec, r=calc(rec), g=GOALS[rec.a.goal];
   const pl = k => { const p=PORTION[k]; return [p.rice, p.pro, p.veg].filter(Boolean).join(" / "); };
-  const milk = S.shake.milk ? "（只用低脂牛奶冲泡）" : "（清水冲泡）";
-  let t = `🔥 *BurnUp 一日餐单*\n目标：${g.t}\n每日摄入：*${r.target} kcal*（TDEE ${r.tdee} ${r.adj>0?"+":""}${r.adj}）\n\n`;
-  t += `🥤 *早餐 07:30* — ${r.shakeK} kcal\n${shakeText()}${milk}\n\n`;
-  t += `🍱 *午餐 12:30* — ${r.L} kcal\n${pl(r.L)}\n\n`;
-  t += `🥤 *下午茶 16:00* — ${r.shakeK} kcal\n${shakeText()}${milk}\n\n`;
-  if(S.training) t += `💪 *训练后* — ${WHEY} kcal\nRS Pro Whey 蛋白\n\n`;
-  t += `🍽 *晚餐 19:00* — ${r.D} kcal\n${pl(r.D)}\n\n`;
-  r.extras.forEach(e => t += `➕ *加餐 21:00* — ${e.k} kcal\n${e.t}\n\n`);
-  t += `碳水：白饭 / 糙米饭 / Soba / 土豆\n蛋白质：鸡肉 / 鱼肉 / 鸡蛋 / 瘦牛肉（素：豆腐 / Tempeh）\n蔬菜：各种绿色蔬菜\n\n`;
-  t += `📏 1份蛋白质 = 一个手掌；1份蔬菜 = 两个拳头\n合计约 ${r.total} kcal`;
+  const sh = `${shakeZh(r.shake)}${r.shake.milk ? "（只用低脂牛奶冲泡）" : "（清水冲泡）"}`;
+  const sn = p => p ? `${p.k} kcal\n${p.en} ${p.zh}` : "不加";
+  let t = `⚡ *BurnUp × Herbalife Coaching*\n${rec.name ? rec.name + " · " : ""}${g.en} ${g.zh}\nDaily target 每日摄入：*${r.target} kcal*\n\n`;
+  t += `🥤 *Breakfast 早餐 07:30* — ${r.shakeK} kcal\n${sh}\n\n`;
+  if(r.big) t += `🍎 *Morning Snack 早上加餐 10:00* — ${sn(r.am)}\n\n`;
+  t += `🍱 *Lunch 午餐 12:30* — ${r.L} kcal\n${pl(r.L)}\n\n`;
+  t += `🥤 *Afternoon Shake 下午茶 16:00* — ${r.shakeK} kcal\n${sh}\n\n`;
+  if(rec.training) t += `💪 *Post-workout 运动后* — ${WHEY} kcal\nRS Pro Whey\n\n`;
+  t += `🍽 *Dinner 晚餐 19:00* — ${r.D} kcal\n${pl(r.D)}\n\n`;
+  if(r.big) t += `🍌 *Evening Snack 晚餐后加餐 21:00* — ${sn(r.pm)}\n\n`;
+  t += `Carbs 碳水：白饭 / 糙米饭 / Soba / 土豆\nProtein 蛋白质：鸡肉 / 鱼肉 / 鸡蛋 / 瘦牛肉（素：豆腐 / Tempeh）\nVeg 蔬菜：各种绿色蔬菜\n📏 1 份蛋白质 = 一个手掌；1 份蔬菜 = 两个拳头\n\nTotal 合计约 ${r.total} kcal`;
   return t;
 }
 function fitText(){
-  const R=FIT_RULES[S.fit.goal], split=SPLITS[S.fit.days], gT=FIT_GOALS.find(x=>x.v===S.fit.goal).t;
-  let t = `💪 *BurnUp 训练计划*\n${gT} · 每周 ${S.fit.days} 天\n主动作 ${R.main}｜辅助 ${R.acc}｜休息 ${R.rest}\n有氧：${R.cardio}｜步数：${R.steps}\n\n`;
-  split.forEach(d => t += `*${d.n}*\n${d.ex.map(e=>"• "+e).join("\n")}\n\n`);
-  t += `训练后 30 分钟内：RS Pro Whey 🥤`;
-  return t;
+  const f=S.rec.fit, R=FIT_RULES[f.goal], G=FIT_GOALS.find(x=>x.v===f.goal);
+  let t = `⚡ *BurnUp Training Plan 训练计划*\n${S.rec.name ? S.rec.name + " · " : ""}${G.en} ${G.zh} · ${f.days} days/week\nMain 主动作 ${R.main}｜Accessory 辅助 ${R.acc}｜Rest 休息 ${R.rest}\nCardio 有氧：${R.cardio}｜Steps 步数：${R.steps}\n\n`;
+  SPLITS[f.days].forEach(d => t += `*${d.en} ${d.zh}*\n${d.ex.map(e=>`• ${e.en} ${e.zh}${e.fixed?" "+e.fixed:""}`).join("\n")}\n\n`);
+  return t + `Post-workout 训练后 30 分钟内：RS Pro Whey 🥤`;
 }
-function toast(msg){
-  const el=document.getElementById("toast"); el.textContent=msg; el.hidden=false;
-  clearTimeout(toast._t); toast._t=setTimeout(()=>el.hidden=true, 1800);
-}
+
+/* ================= PDF / 下载 / 复制 ================= */
+function toast(msg){ const el=document.getElementById("toast"); el.textContent=msg; el.hidden=false; clearTimeout(toast._t); toast._t=setTimeout(()=>el.hidden=true, 2400); }
 function copy(text){
   const done = () => toast("已复制，去 WhatsApp 贴上");
   const fallback = () => {
-    const ta=document.createElement("textarea"); ta.value=text; ta.setAttribute("readonly","");
-    ta.style.cssText="position:fixed;top:0;left:0;opacity:0"; document.body.appendChild(ta); ta.select();
-    let ok=false; try{ ok=document.execCommand("copy"); }catch(e){}
+    const ta=document.createElement("textarea"); ta.value=text; ta.setAttribute("readonly",""); ta.style.cssText="position:fixed;top:0;left:0;opacity:0";
+    document.body.appendChild(ta); ta.select(); let ok=false; try{ ok=document.execCommand("copy"); }catch(e){}
     ta.remove(); ok ? done() : toast("复制失败，请长按选取文字");
   };
-  if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done, fallback); }
-  else fallback();
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback); else fallback();
+}
+const fileBase = () => `BurnUp_${(S.rec.name || "MyPlan").replace(/[^\w一-龥-]+/g,"_")}_${S.view==="fit"?"Training":"MealPlan"}_${new Date().toISOString().slice(0,10)}`;
+function downloadBlob(content, type, filename){
+  try{
+    const url = URL.createObjectURL(new Blob([content], {type}));
+    const a = document.createElement("a"); a.href=url; a.download=filename; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url), 2000);
+    toast("已下载 " + filename);
+  }catch(e){ toast("这个浏览器不支持下载，请用 PDF 或复制文字"); }
+}
+function pdf(){
+  const old = document.title; document.title = fileBase();
+  toast("打印窗口选「Save as PDF / 存为 PDF」");
+  setTimeout(()=>{ window.print(); setTimeout(()=>document.title = old, 500); }, 300);
+}
+function snapshot(){
+  const node = document.getElementById("app").cloneNode(true);
+  node.querySelectorAll(".noprint").forEach(n=>n.remove());
+  const css = document.getElementById("app-style").textContent;
+  const html = `<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(fileBase())}</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,500;0,700;0,800;1,800;1,900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap">
+<style>${css}</style></head><body class="snapshot"><div class="glow"></div><div class="app">${node.innerHTML}</div></body></html>`;
+  downloadBlob(html, "text/html;charset=utf-8", fileBase() + ".html");
 }
 
-/* ============ 交互 ============ */
-function next(){
-  if(S.step < STEPS.length-1){ S.step++; S.view="quiz"; }
-  else { S.view="plan"; S.fit.goal = S.fit.goal || mapGoal(S.a.goal); }
-  render();
+/* ================= 流程 ================= */
+function finishQuiz(){
+  S.rec.snacks = {am:null, pm:null};
+  if(!S.rec.fit.goal) S.rec.fit.goal = mapGoal(S.rec.a.goal);
+  if(isCoach() && !S.rec.id){ S.rec.id = "s" + Date.now().toString(36); S.rec.created = Date.now(); }
+  saveRec(); go("plan");
 }
+function nextStep(){ if(S.step < quizSteps().length-1){ S.step++; go("quiz"); } else finishQuiz(); }
+function startFit(){ if(!S.rec.fit.goal) S.rec.fit.goal = mapGoal(S.rec.a.goal); S.fitStep = 0; go("fitq"); }
+
 $app.addEventListener("click", e=>{
   const t = e.target.closest("button"); if(!t) return;
-  if(t.dataset.go){
-    const g=t.dataset.go;
-    if(g==="quiz"){ S.step=0; S.view="quiz"; }
-    else if(g==="quiz-edit"){ S.step=0; S.view="quiz"; }
-    else if(g==="fitq"){ S.fit.step=0; if(!S.fit.goal) S.fit.goal=mapGoal(S.a.goal); S.view="fitq"; }
-    else S.view=g;
-    return render();
+  const d = t.dataset;
+
+  if(d.go){
+    if(d.go==="home" && !isCoach()) S.rec = selfRec();
+    if(d.go==="home" && isCoach()) S.rec = blankRec();
+    return go(d.go);
   }
-  if("back" in t.dataset){ S.step=Math.max(0,S.step-1); return render(); }
-  if(t.dataset.pick !== undefined){
-    const st=STEPS[S.step]; const raw=t.dataset.pick;
-    S.a[st.key] = st.key==="activity" ? parseFloat(raw) : raw;
-    return next();
+  if(d.role){
+    S.role = d.role; SS.set("bu_role", d.role);
+    if(d.role==="coach"){ S.rec = blankRec(); return go(S.authed ? "home" : "login"); }
+    S.rec = selfRec(); return go("home");
   }
-  if("train" in t.dataset){ S.training=!S.training; return render(); }
-  if(t.dataset.shake){ const id=t.dataset.shake; if(id!=="f1"){ S.shake[id]=!S.shake[id]; render(); } return; }
-  if(t.dataset.copy){ return copy(t.dataset.copy==="meal" ? mealText() : fitText()); }
-  if(t.dataset.fpick){
-    if(S.fit.step===0){ S.fit.goal=t.dataset.fpick; S.fit.step=1; S.view="fitq"; }
-    else { S.fit.days=parseInt(t.dataset.fpick,10); S.view="fit"; }
-    return render();
+  if("logout" in d){ S.authed=false; SS.del("bu_auth"); S.role="student"; SS.set("bu_role","student"); S.rec=selfRec(); return go("home"); }
+  if("reset" in d){
+    if(!S.arm){ S.arm=true; return render(); }
+    LS.del(K_PIN); LS.del(K_STU); S.arm=false; toast("已清空，请重新设置 PIN"); return render();
   }
-  if("fback" in t.dataset){ S.fit.step=0; return render(); }
-});
-$app.addEventListener("submit", e=>{
-  e.preventDefault();
-  const st=STEPS[S.step]; const inp=e.target.querySelector("input");
-  const v=parseFloat(inp.value);
-  if(isNaN(v) || v<st.min || v>st.max){
-    document.getElementById("err").textContent=`请输入 ${st.min}–${st.max} ${st.unit} 之间的数字`;
-    return;
+  if("start" in d){ if(!isCoach()) S.rec = selfRec(); S.step=0; return go("quiz"); }
+  if("myplan" in d){ S.rec = selfRec(); return go("plan"); }
+  if("new" in d){ S.rec = blankRec(); S.step=0; return go("quiz"); }
+  if(d.open){ const s = students().find(x=>x.id===d.open); if(!s) return; S.rec = normalize(s); S.step=0; return go(planReady(S.rec) ? "plan" : "quiz"); }
+  if("fit" in d) return startFit();
+  if("back" in d){ S.step=Math.max(0,S.step-1); return go("quiz"); }
+  if("edit" in d){ S.step=0; return go("quiz"); }
+  if(d.pick !== undefined){
+    const st = quizSteps()[S.step];
+    S.rec.a[st.key] = st.key==="activity" ? parseFloat(d.pick) : d.pick;
+    return nextStep();
   }
-  S.a[st.key] = st.dec ? Math.round(v*10)/10 : Math.round(v);
-  next();
+  if("train" in d){ S.rec.training=!S.rec.training; saveRec(); return render(); }
+  if(d.shake){
+    if(t.getAttribute("aria-disabled")) return;
+    S.rec.shake[d.shake]=!S.rec.shake[d.shake]; saveRec(); return render();
+  }
+  if(d.snack){ const [slot,id]=d.snack.split(":"); S.rec.snacks[slot]=id; saveRec(); return render(); }
+  if(d.copy) return copy(d.copy==="meal" ? mealText() : fitText());
+  if("pdf" in d) return pdf();
+  if("dl" in d) return snapshot();
+  if("del" in d){
+    if(!S.arm){ S.arm=true; return render(); }
+    LS.set(K_STU, students().filter(x=>x.id!==S.rec.id)); toast("已删除 " + (S.rec.name||"")); S.rec=blankRec(); return go("home");
+  }
+  if("export" in d){
+    const data = {app:"burnup-coach", version:1, exported:new Date().toISOString(), students:students()};
+    return downloadBlob(JSON.stringify(data, null, 2), "application/json", `BurnUp_Students_Backup_${new Date().toISOString().slice(0,10)}.json`);
+  }
+  if("import" in d) return document.getElementById("importFile").click();
+  if(d.fpick){
+    if(S.fitStep===0){ S.rec.fit.goal=d.fpick; S.fitStep=1; return go("fitq"); }
+    S.rec.fit.days=parseInt(d.fpick,10); saveRec(); return go("fit");
+  }
+  if("fback" in d || "refit" in d){ S.fitStep=0; return go("fitq"); }
 });
 
+$app.addEventListener("submit", async e=>{
+  e.preventDefault();
+  const err = document.getElementById("err");
+  if(e.target.id==="loginf"){
+    const p1 = document.getElementById("pin1").value.trim();
+    const stored = LS.get(K_PIN, null);
+    if(!/^\d{4,8}$/.test(p1)){ err.textContent="PIN 要 4–8 位数字"; return; }
+    if(stored){
+      if(await hashPin(p1, stored.salt) !== stored.hash){ err.textContent="PIN 不正确"; return; }
+    } else {
+      if(p1 !== document.getElementById("pin2").value.trim()){ err.textContent="两次输入不一样"; return; }
+      const salt = Math.random().toString(36).slice(2);
+      if(!LS.set(K_PIN, {salt, hash: await hashPin(p1, salt)})){ err.textContent="这个浏览器不能保存资料（可能是无痕模式）"; return; }
+    }
+    S.authed = true; SS.set("bu_auth","1"); S.rec = blankRec(); return go("home");
+  }
+  const st = quizSteps()[S.step];
+  const raw = e.target.querySelector("input").value;
+  if(st.type==="text"){
+    const v = raw.trim(); if(!v){ err.textContent="请输入学员名字"; return; }
+    S.rec.name = v; return nextStep();
+  }
+  const v = parseFloat(raw);
+  if(isNaN(v) || v<st.min || v>st.max){ err.textContent=`请输入 ${st.min}–${st.max} 之间的数字`; return; }
+  S.rec.a[st.key] = st.dec ? Math.round(v*10)/10 : Math.round(v);
+  nextStep();
+});
+
+$app.addEventListener("input", e=>{
+  if(e.target.id==="note"){ S.rec.note = e.target.value; clearTimeout(saveRec._t); saveRec._t=setTimeout(saveRec, 400); }
+  if(e.target.id==="search"){
+    S.q = e.target.value; const pos=e.target.selectionStart; render();
+    const s=document.getElementById("search"); if(s){ s.focus(); s.setSelectionRange(pos,pos); }
+  }
+});
+
+document.getElementById("importFile").addEventListener("change", e=>{
+  const f = e.target.files[0]; if(!f) return;
+  const rd = new FileReader();
+  rd.onload = () => {
+    try{
+      const data = JSON.parse(rd.result);
+      const inc = Array.isArray(data) ? data : data.students;
+      if(!Array.isArray(inc)) throw 0;
+      const list = students(); let n=0;
+      inc.forEach(s=>{ if(!s || !s.id) return; const i=list.findIndex(x=>x.id===s.id); if(i>=0) list[i]=s; else list.push(s); n++; });
+      LS.set(K_STU, list); toast(`已导入 ${n} 位学员`); render();
+    }catch(_){ toast("文件格式不对，请选 BurnUp 备份 .json"); }
+    e.target.value="";
+  };
+  rd.readAsText(f);
+});
+
+if(S.role==="coach"){ S.rec = blankRec(); S.view = S.authed ? "home" : "login"; }
 render();
 </script>
 </body>

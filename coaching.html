@@ -91,9 +91,11 @@ main{padding-block:28px 64px}
 .hero-in{position:relative;text-align:center;padding:72px 22px 64px;display:grid;justify-items:center;gap:22px;background:radial-gradient(70% 60% at 50% 40%,rgba(0,0,0,.85),rgba(0,0,0,.55) 70%,transparent)}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid #333;border-radius:999px;padding:6px 14px;font-family:var(--head);font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--fg);background:rgba(0,0,0,.6)}
 .eyebrow svg{width:10px;height:14px}
-.hero h1{margin:0;font-family:var(--head);font-weight:800;font-size:clamp(40px,8.2vw,84px);line-height:1.02;letter-spacing:-.04em;max-width:13ch;text-wrap:balance}
-.hero h1 .hx{display:inline-block;width:.5em;height:.5em;margin:0 .08em;vertical-align:.08em}
-.hero h1 .hx svg{width:100%;height:100%;display:block}
+.hero h1{margin:0;font-family:var(--head);font-weight:800;display:grid;justify-items:center;line-height:.88}
+.hero h1 .b1{font-size:clamp(68px,16vw,160px);letter-spacing:-.06em}
+.hero h1 .b2{font-size:clamp(34px,7.4vw,72px);letter-spacing:-.045em;margin-top:.12em;padding-bottom:.08em}
+.with{font-family:var(--head);font-size:11px;font-weight:600;letter-spacing:.22em;color:var(--muted);text-transform:uppercase}
+.with b{color:#d8d8d8;font-weight:700}
 .hero .sub{margin:0;max-width:44ch;font-size:clamp(16px,2.2vw,20px);line-height:1.5;color:#E6E6E6}
 .hero .sub span{display:block;font-family:var(--zh);font-size:.82em;color:var(--muted);margin-top:6px}
 .checks{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 24px;margin:0;padding:0;list-style:none}
@@ -299,6 +301,22 @@ textarea{width:100%;min-height:84px;background:var(--panel);border:1px solid var
   .logo{color:#111}
   @page{margin:12mm}
 }
+/* coach overrides */
+.mr{display:grid;justify-items:end;gap:4px}
+.ebtn{background:none;border:1px solid #3a3a3a;border-radius:7px;padding:3px 9px;font-family:var(--head);font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.04em}
+.ebtn:hover,.ebtn.on{border-color:var(--yellow);color:var(--yellow)}
+.ctag{display:inline-block;font-family:var(--head);font-size:9px;font-weight:800;letter-spacing:.12em;color:var(--yellow);border:1px solid rgba(255,208,0,.5);border-radius:4px;padding:1px 5px;margin-left:8px;vertical-align:3px}
+.meal.off{opacity:.42}
+.meal.off::before{background:var(--bg);border-color:#555}
+.medit{margin-top:12px;background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;gap:10px}
+.medit .lab{font-family:var(--head);font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--muted)}
+.cust{display:grid;grid-template-columns:1fr 84px auto;gap:8px}
+.cust input,.tedit input{min-width:0;width:100%;background:var(--bg);border:1px solid var(--line);border-radius:9px;color:var(--fg);font:inherit;font-size:14px;padding:9px 10px}
+.cust input:focus,.tedit input:focus{outline:none;border-color:var(--yellow)}
+.mini{background:var(--yellow);color:var(--ink);border:0;border-radius:9px;padding:9px 12px;font-family:var(--head);font-weight:800;font-size:12px;white-space:nowrap}
+.mini.o{background:none;color:var(--fg);border:1px solid #444}
+.tedit{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px}
+.tedit input{width:120px;font-family:var(--head);font-weight:800;font-size:18px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -316,13 +334,12 @@ const CHECK = `<svg class="ck" viewBox="0 0 18 18" aria-hidden="true"><circle cx
 const LOCK = `<svg viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="5" width="8" height="6" rx="1.5" fill="currentColor"/><path d="M4 5V3.5a2 2 0 0 1 4 0V5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>`;
 
 /* ================= 营养公式与选项 ================= */
-const ACT = [
-  {v:1.2,  en:"Sedentary",  zh:"久坐",    s:"办公室，几乎不运动"},
-  {v:1.375,en:"Light",      zh:"轻度活动", s:"每周运动 1–3 次"},
-  {v:1.55, en:"Moderate",   zh:"中度活动", s:"每周运动 3–5 次"},
-  {v:1.725,en:"Active",     zh:"高度活动", s:"每周运动 6–7 次"},
-  {v:1.9,  en:"Very Active",zh:"极高活动", s:"体力劳动 + 每天训练"}
+const ACT = [   // 运动加成：在基础维持热量上直接加，不再用倍数
+  {v:0,   en:"Light",       zh:"轻量运动",        s:"Zone 2 以上有氧每周少于 2 次 · 不加热量"},
+  {v:100, en:"Active",      zh:"规律有氧",        s:"每周 2 次以上 · 每次 30 分钟+ · Zone 2 以上 · +100 kcal"},
+  {v:200, en:"Very active", zh:"高强度 / 每天运动", s:"每周 3 次以上 · 每次 30 分钟+ · Zone 2 以上 · +200 kcal"}
 ];
+const BASE_FACTOR = 1.2;  // 基础维持热量 = BMR × 1.2（日常生活，不含运动）
 const GOALS = {
   gain:    {en:"Muscle Gain",     zh:"增肌增重",       s:"想长肉、变壮"},
   lose:    {en:"Fat Loss",        zh:"减脂减重",       s:"想掉秤、瘦下来"},
@@ -414,23 +431,33 @@ async function hashPin(pin, salt){
 }
 function blankRec(){
   return {id:null, name:"", a:{gender:null, age:null, height:null, weight:null, activity:null, goal:null},
-    shake:{f1:true, f3:true, milk:true, banana:false}, training:true, snacks:{am:null, pm:null},
+    shake:{f1:true, f3:true, milk:true, banana:false}, training:true, mo:{}, kcalOverride:null,
     workout:{days:[], note:""}, note:"", created:null, updated:null};
 }
 function normalize(r){
   const b = blankRec(); r = r || {};
-  return Object.assign(b, r, {a:Object.assign(b.a, r.a), shake:Object.assign(b.shake, r.shake),
-    snacks:Object.assign(b.snacks, r.snacks), workout:Object.assign(b.workout, r.workout)});
+  const out = Object.assign(b, r, {a:Object.assign(b.a, r.a), shake:Object.assign(b.shake, r.shake),
+    mo:Object.assign({}, r.mo), workout:Object.assign(b.workout, r.workout)});
+  // 旧版资料迁移：加餐选择 → mo；活动倍数 → 运动加成
+  if(r.snacks){
+    const m = v => v==="none" ? {off:true} : {snack:v};
+    if(r.snacks.am && !out.mo.am) out.mo.am = m(r.snacks.am);
+    if(r.snacks.pm && !out.mo.eve) out.mo.eve = m(r.snacks.pm);
+  }
+  delete out.snacks;
+  const act = out.a.activity;
+  if(typeof act==="number" && act>0 && act<3) out.a.activity = act<=1.375 ? 0 : (act<=1.55 ? 100 : 200);
+  return out;
 }
 const selfRec = () => normalize(LS.get(K_SELF, null));
 const students = () => LS.get(K_STU, []);
-const planReady = r => !!(r && r.a && r.a.goal && r.a.weight);
+const planReady = r => !!(r && r.a && r.a.goal && r.a.weight && r.a.activity!=null);
 
 /* ================= 状态 ================= */
 const S = {
   role: SS.get("bu_role") || "student",
   authed: SS.get("bu_auth") === "1",
-  view: "home", step: 0, rec: selfRec(),
+  view: "home", step: 0, rec: selfRec(), editMeal: null, editTarget: false,
   arm: false, q: "", tplGoal: "burn"
 };
 const isCoach = () => S.role==="coach" && S.authed;
@@ -451,7 +478,7 @@ function quizSteps(){
     {key:"age", en:"Age", zh:"今年几岁？", hint:"40 岁以上，热量调整幅度会更温和。", type:"num", unit:"yrs 岁", min:15, max:90},
     {key:"height", en:"Height", zh:"身高多少？", type:"num", unit:"cm", min:120, max:220},
     {key:"weight", en:"Weight", zh:"现在体重？", hint:"早上空腹称最准。", type:"num", unit:"kg", min:30, max:250, dec:true},
-    {key:"activity", en:"Activity level", zh:"平时的活动量？", hint:"选最接近平常一周的状态。", type:"choice", opts:ACT.map(x=>({v:x.v,en:x.en,zh:x.zh,s:x.s}))},
+    {key:"activity", en:"Cardio per week", zh:"每周有氧运动？", hint:"Zone 2 = 运动时有点喘、但还能讲完整句子（约最大心率 60–70%）。只算 30 分钟以上的有氧。", type:"choice", opts:ACT.map(x=>({v:x.v,en:x.en,zh:x.zh,s:x.s}))},
     {key:"goal", en:"Your goal", zh:"你的目标是？", type:"choice", opts:Object.entries(GOALS).map(([v,g])=>({v,en:g.en,zh:g.zh,s:g.s}))}
   ];
   if(isCoach()) base.unshift({key:"name", en:"Student name", zh:"学员名字", type:"text"});
@@ -459,33 +486,63 @@ function quizSteps(){
 }
 
 /* ================= 餐单计算 ================= */
+const SLOTS = ["breakfast","am","lunch","pm","whey","dinner","eve"];
+const SLOT_INFO = {
+  breakfast:{t:"07:30",       en:"Breakfast",       zh:"早餐 · 营养奶昔",   kind:"shake"},
+  am:       {t:"10:00",       en:"Morning snack",   zh:"早上加餐",         kind:"snack"},
+  lunch:    {t:"12:30",       en:"Lunch",           zh:"午餐",             kind:"plate", list:LUNCH},
+  pm:       {t:"16:00",       en:"Afternoon shake", zh:"下午茶 · 营养奶昔", kind:"shake"},
+  whey:     {t:"POST-WORKOUT",en:"RS Pro Whey",     zh:"运动后蛋白",       kind:"whey"},
+  dinner:   {t:"19:00",       en:"Dinner",          zh:"晚餐",             kind:"plate", list:DINNER},
+  eve:      {t:"21:00",       en:"Evening snack",   zh:"晚餐后加餐",       kind:"snack"}
+};
+const shakeK = sh => SHAKE_ITEMS.reduce((s,i)=> s + (sh[i.id] ? i.k : 0), 0);
+
 function calc(rec){
-  const a = rec.a;
-  const tdee = Math.round(bmr(a) * a.activity);
+  const a = rec.a, mo = rec.mo || {};
+  const bmrV = Math.round(bmr(a));
+  const maint = Math.round(bmrV * BASE_FACTOR) + (a.activity || 0);   // 维持热量 TDEE
   const adj = adjust(a.goal, a.age);
-  let target = tdee + adj, floored = false;
-  if(target < FLOOR[a.gender]){ target = FLOOR[a.gender]; floored = true; }
-  target = Math.round(target/10)*10;
+  let formula = maint + adj, floored = false;
+  if(formula < FLOOR[a.gender]){ formula = FLOOR[a.gender]; floored = true; }
+  formula = Math.round(formula/10)*10;
+  const coachSet = rec.kcalOverride > 0;
+  const target = coachSet ? rec.kcalOverride : formula;
   const big = target > SNACK_LINE;
-  const shake = Object.assign({}, rec.shake); if(big) shake.milk = true;   // 高热量：奶昔先固定加牛奶
-  const shakeK = SHAKE_ITEMS.reduce((s,i)=> s + (shake[i.id] ? i.k : 0), 0);
-  const fixed = shakeK*2 + (rec.training ? WHEY : 0);
-  const remaining = target - fixed;
-  const slot = ov => {
-    if(!big || ov === "none") return [null];
-    if(ov) return [SNACKS.find(s=>s.id===ov) || null];
-    return [null, ...SNACKS];
+  const baseShake = Object.assign({}, rec.shake); if(big) baseShake.milk = true;  // 高热量：奶昔先固定加牛奶
+
+  // 手动设定（教练调整 / 学员选择）优先，没设定的才自动
+  const manual = (o) => {
+    if(o.off) return [{kcal:0, off:true, set:true}];
+    if(o.custom) return [{kcal:+o.custom.kcal || 0, text:o.custom.text, custom:true, set:true}];
+    if(o.shake) return [{kcal:shakeK(o.shake), shake:o.shake, set:true}];
+    if(o.portion) return [{kcal:o.portion, portion:o.portion, set:true}];
+    if(o.snack){ const sn = SNACKS.find(x=>x.id===o.snack); if(sn) return [{kcal:sn.k, snack:sn, set:true}]; }
+    if(o.on) return [{kcal:WHEY, set:true}];
+    return null;
   };
+  const opts = key => {
+    const o = mo[key]; const m = o && manual(o); if(m) return m;
+    const info = SLOT_INFO[key];
+    if(info.kind==="shake") return [{kcal:shakeK(baseShake), shake:baseShake}];
+    if(info.kind==="whey")  return [rec.training ? {kcal:WHEY} : {kcal:0, off:true}];
+    if(info.kind==="plate") return info.list.map(k=>({kcal:k, portion:k}));
+    return big ? [{kcal:0, off:true}, ...SNACKS.map(sn=>({kcal:sn.k, snack:sn}))] : [{kcal:0, off:true}];
+  };
+  const fixedK = ["breakfast","pm","whey"].reduce((s,k)=> s + opts(k)[0].kcal, 0);
+  const remaining = target - fixedK;
   let best = null;
-  for(const L of LUNCH) for(const D of DINNER) for(const am of slot(rec.snacks.am)) for(const pm of slot(rec.snacks.pm)){
-    const sum = L + D + (am?am.k:0) + (pm?pm.k:0);
-    const score = Math.abs(sum - remaining) + (D > L ? 30 : 0) + (am ? 40 : 0) + (pm ? 40 : 0);  // 先正餐，不够才加餐
-    if(!best || score < best.score) best = {L, D, am, pm, score};
+  for(const L of opts("lunch")) for(const D of opts("dinner")) for(const A of opts("am")) for(const E of opts("eve")){
+    const sum = L.kcal + D.kcal + A.kcal + E.kcal;
+    const score = Math.abs(sum - remaining) + (D.kcal > L.kcal ? 30 : 0)
+      + (A.snack && !A.set ? 40 : 0) + (E.snack && !E.set ? 40 : 0);   // 先正餐，不够才加餐；同分时午餐 ≥ 晚餐
+    if(!best || score < best.score) best = {L, D, A, E, score};
   }
-  const total = fixed + best.L + best.D + (best.am?best.am.k:0) + (best.pm?best.pm.k:0);
+  const meals = {breakfast:opts("breakfast")[0], am:best.A, lunch:best.L, pm:opts("pm")[0], whey:opts("whey")[0], dinner:best.D, eve:best.E};
+  const total = SLOTS.reduce((s,k)=> s + meals[k].kcal, 0);
   const diff = total - target;
-  return {tdee, adj, target, floored, big, shake, shakeK, L:best.L, D:best.D, am:best.am, pm:best.pm, total, diff,
-    tooLow: diff >= 150, tooHigh: diff <= -300};
+  return {bmr:bmrV, maint, adj, formula, floored, coachSet, target, big, baseShake, meals, total, diff,
+    tooLow: diff >= 150, tooHigh: diff <= -300, belowFloor: coachSet && target < FLOOR[a.gender]};
 }
 
 /* ================= 渲染 ================= */
@@ -513,12 +570,12 @@ function render(){
     case "workout": body = isCoach() ? workout() : home(); break;
   }
   $app.innerHTML = nav() + `<main class="wrap ${narrow?"narrow":""}">
-    <div class="print-only print-head"><span class="logo">${LOGO("p")}</span><div class="t">BurnUp × Herbalife Coaching<br>${S.rec.name ? esc(S.rec.name) + " · " : ""}${today()}</div></div>
+    <div class="print-only print-head"><span class="logo">${LOGO("p")}</span><div class="t">BurnUp Coaching · with Herbalife<br>${S.rec.name ? esc(S.rec.name) + " · " : ""}${today()}</div></div>
     <div id="view">${body}</div></main>`;
   const inp = $app.querySelector("input.autofocus");
   if(inp) inp.focus({preventScroll:true});
 }
-function go(view){ S.view = view; S.arm = false; render(); window.scrollTo(0,0); }
+function go(view){ S.view = view; S.arm = false; S.editMeal = null; S.editTarget = false; render(); window.scrollTo(0,0); }
 
 /* ---------- 首页 ---------- */
 function home(){
@@ -528,8 +585,9 @@ function home(){
   <section class="hero">
     <div class="phones" aria-hidden="true">${phone()}${phone(1)}${phone()}${phone(1)}${phone()}</div>
     <div class="hero-in">
-      <span class="eyebrow">${BOLT("e")} BURNUP × HERBALIFE</span>
-      <h1>BurnUp <span class="hx" aria-label="×"><svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1.5 1.5l7 7M8.5 1.5l-7 7" stroke="#FFD000" stroke-width="1.6" stroke-linecap="round"/></svg></span> Herbalife <span class="gy">Coaching</span></h1>
+      <span class="eyebrow">${BOLT("e")} TRAIN / FUEL / TRANSFORM</span>
+      <h1><span class="b1">BurnUp</span><span class="b2 gy">Coaching</span></h1>
+      <div class="with">with <b>Herbalife</b> Nutrition</div>
       <p class="sub">80% nutrition, 20% training. A clear daily plan built on your own body data.<span>80% 靠吃，20% 靠练。用你的身体数据，算出每天该吃多少、怎么吃。</span></p>
       <ul class="checks">
         <li>${CHECK} Calorie target <small>每日热量</small></li>
@@ -648,44 +706,75 @@ function quiz(){
 /* ---------- 餐单 ---------- */
 const shakeEn = sh => SHAKE_ITEMS.filter(i=>sh[i.id]).map(i=>i.en).join(" + ");
 const shakeZh = sh => SHAKE_ITEMS.filter(i=>sh[i.id]).map(i=>i.zh).join(" + ");
-function mealBlock(time, en, zh, kcal, inner, fixed){
-  return `<li class="meal ${fixed?"fixed":""}">
-    <div class="meal-h"><div><div class="t">${time}</div><h4>${en}<small>${zh}</small></h4></div><div class="kc num">${kcal}<small>kcal</small></div></div>
-    ${inner}</li>`;
-}
 function plateHTML(k){
   const p = PORTION[k];
   return `<div class="plate"><span>Carbs 碳水 <b>${p.rice || "不吃"}</b></span><span>Protein 蛋白质 <b>${p.pro}</b></span><span>Veg 蔬菜 <b>${p.veg}</b></span></div>`;
 }
-function snackBlock(slotKey, time, en, zh, pick){
-  const cur = pick ? pick.id : "none";
-  const chips = SNACKS.map(s=>`<button class="chip ${cur===s.id?"on":""}" data-snack="${slotKey}:${s.id}">${s.en} ${s.zh}<i>${s.k}</i></button>`).join("")
-    + `<button class="chip ${cur==="none"?"on":""}" data-snack="${slotKey}:none">None 不加</button>`;
-  return mealBlock(time, en, zh, pick ? pick.k : 0, `<p class="what">${pick ? pick.en + " · " + pick.zh : "No snack · 不加"}</p><div class="chips noprint">${chips}</div>`, true);
+function mealDesc(key, m){
+  const kind = SLOT_INFO[key].kind;
+  if(m.off) return `<p class="sub">${kind==="snack" ? "No snack · 不加" : "Not included · 未加入"}</p>`;
+  if(m.custom) return `<p class="what">${esc(m.text || "Custom meal")}</p><p class="sub">Coach custom · 教练自定义</p>`;
+  if(m.shake) return `<p class="what">${esc(shakeEn(m.shake))}</p><p class="sub">${shakeZh(m.shake)} · ${m.shake.milk ? "只用低脂牛奶冲泡，不用全脂" : "用清水冲泡"}</p>`;
+  if(m.portion) return plateHTML(m.portion);
+  if(m.snack) return `<p class="what">${m.snack.en} · ${m.snack.zh}</p>`;
+  if(kind==="whey") return `<p class="sub">重训 / 运动后 30 分钟内喝</p>`;
+  return "";
+}
+// 教练：每一餐的编辑面板
+function mealEditor(key, m, r){
+  const info = SLOT_INFO[key], mo = S.rec.mo[key] || {};
+  let presets = "";
+  if(info.kind==="plate") presets = info.list.map(k=>`<button class="chip ${mo.portion===k?"on":""}" data-mset="${key}:portion:${k}">${k} kcal<i>${PORTION[k].rice||"无饭"}·${PORTION[k].pro}</i></button>`).join("");
+  if(info.kind==="snack") presets = SNACKS.map(sn=>`<button class="chip ${mo.snack===sn.id?"on":""}" data-mset="${key}:snack:${sn.id}">${sn.en} ${sn.zh}<i>${sn.k}</i></button>`).join("");
+  if(info.kind==="shake"){ const cur = m.shake || r.baseShake; presets = SHAKE_ITEMS.map(i=>`<button class="chip ${cur[i.id]?"on":""} ${i.lock?"lock-c":""}" data-mshake="${key}:${i.id}" ${i.lock?'aria-disabled="true"':""}>${i.en}<i>${i.k}</i></button>`).join(""); }
+  if(info.kind==="whey") presets = `<button class="chip ${mo.on?"on":""}" data-mset="whey:on:1">Include 加入<i>${WHEY}</i></button>`;
+  return `<div class="medit noprint">
+    <div class="lab">PRESET 预设</div><div class="chips">${presets}</div>
+    <div class="lab">CUSTOM 自定义（内容 + 热量）</div>
+    <div class="cust"><input id="ct-text-${key}" value="${esc(mo.custom ? mo.custom.text : "")}" placeholder="例如：鸡胸沙拉 + 半碗糙米" aria-label="Custom meal" />
+      <input id="ct-kcal-${key}" type="number" inputmode="numeric" value="${mo.custom ? esc(mo.custom.kcal) : ""}" placeholder="kcal" aria-label="kcal" />
+      <button class="mini" data-mcustom="${key}">Apply 套用</button></div>
+    <div class="chips"><button class="chip" data-mauto="${key}">Auto 恢复自动</button><button class="chip" data-moff="${key}">Remove 移除这餐</button><button class="chip" data-mclose>Done 完成</button></div>
+  </div>`;
+}
+function mealBlock(key, m, r){
+  const info = SLOT_INFO[key], coach = isCoach();
+  const visible = coach || !m.off || (info.kind==="snack" && r.big);
+  if(!visible) return "";
+  const set = !!S.rec.mo[key];
+  const editBtn = coach ? `<button class="ebtn noprint ${S.editMeal===key?"on":""}" data-medit="${key}">${S.editMeal===key?"Close":"Edit"} 编辑</button>` : "";
+  // 学员：高热量时可以自己选加餐
+  const studentSnack = (!coach && info.kind==="snack" && r.big) ? `<div class="chips noprint" style="margin-top:10px">${SNACKS.map(sn=>`<button class="chip ${m.snack&&m.snack.id===sn.id?"on":""}" data-snack="${key}:${sn.id}">${sn.en} ${sn.zh}<i>${sn.k}</i></button>`).join("")}<button class="chip ${m.off?"on":""}" data-snack="${key}:none">None 不加</button></div>` : "";
+  return `<li class="meal ${m.off?"off noprint":""} ${info.kind==="plate"?"":"fixed"}">
+    <div class="meal-h"><div><div class="t">${info.t}</div><h4>${info.en}<small>${info.zh}</small>${coach && set ? `<span class="ctag noprint">ADJUSTED</span>` : ""}</h4></div>
+      <div class="mr"><div class="kc num">${m.kcal}<small>kcal</small></div>${editBtn}</div></div>
+    ${mealDesc(key, m)}${studentSnack}${coach && S.editMeal===key ? mealEditor(key, m, r) : ""}</li>`;
 }
 function plan(){
-  const rec = S.rec, a = rec.a, r = calc(rec);
-  const g = GOALS[a.goal], act = ACT.find(x=>x.v===a.activity);
+  const rec = S.rec, a = rec.a, r = calc(rec), coach = isCoach();
+  const g = GOALS[a.goal], act = ACT.find(x=>x.v===a.activity) || ACT[0];
   const adjTxt = (r.adj>0?"+":"") + r.adj;
-  const shakeLine = `<p class="what">${esc(shakeEn(r.shake))}</p><p class="sub">${shakeZh(r.shake)} · ${r.shake.milk ? "只用低脂牛奶冲泡，不用全脂" : "用清水冲泡"}</p>`;
-  let meals = mealBlock("07:30","Breakfast","早餐 · 营养奶昔", r.shakeK, shakeLine, true);
-  if(r.big) meals += snackBlock("am","10:00","Morning snack","早上加餐", r.am);
-  meals += mealBlock("12:30","Lunch","午餐", r.L, plateHTML(r.L));
-  meals += mealBlock("16:00","Afternoon shake","下午茶 · 营养奶昔", r.shakeK, shakeLine, true);
-  if(rec.training) meals += mealBlock("POST-WORKOUT","RS Pro Whey","运动后蛋白", WHEY, `<p class="sub">重训 / 运动后 30 分钟内喝</p>`, true);
-  meals += mealBlock("19:00","Dinner","晚餐", r.D, plateHTML(r.D));
-  if(r.big) meals += snackBlock("pm","21:00","Evening snack","晚餐后加餐", r.pm);
+  const meals = SLOTS.map(k=>mealBlock(k, r.meals[k], r)).join("");
   const diffTxt = (r.diff>0?"+":"") + r.diff;
+  const anySet = Object.keys(rec.mo||{}).length > 0;
+  const math = r.coachSet
+    ? `Coach-set 教练设定 · 公式建议 ${r.formula} kcal`
+    : `维持热量 ${r.maint} kcal（BMR ${r.bmr} × 1.2 ${a.activity ? "+ 运动 " + a.activity : "· 轻量运动不加"}）　${adjTxt} kcal（${g.zh}${(a.goal==="gain"||a.goal==="lose")&&a.age>=40?" · 40+":""}）`;
+  const tedit = !coach ? "" : (S.editTarget
+    ? `<div class="tedit noprint"><input id="kcal-ovr" type="number" inputmode="numeric" value="${r.target}" aria-label="Daily kcal" /><button class="mini" data-tsave>Save 保存</button>${r.coachSet ? `<button class="mini o" data-tauto>Use formula 用公式</button>` : ""}<button class="mini o" data-tcancel>Cancel</button></div>`
+    : `<div class="tedit noprint"><button class="ebtn" data-tedit>Adjust target 调整每日热量</button>${r.coachSet ? `<span class="ctag">COACH-SET</span>` : ""}</div>`);
   return `
   <button class="back noprint" data-edit>← Edit details 修改资料</button>
   ${rec.name ? `<p class="client">${esc(rec.name)}</p>` : ""}
-  <div class="who">${a.gender==="m"?"Male 男":"Female 女"} · ${a.age} 岁 · ${a.height} cm · ${a.weight} kg · ${act.en} ${act.zh} · <b>${g.en} ${g.zh}</b></div>
+  <div class="who">${a.gender==="m"?"Male 男":"Female 女"} · ${a.age} 岁 · ${a.height} cm · ${a.weight} kg · ${act.zh} · <b>${g.en} ${g.zh}</b></div>
   <section class="target">
     <div class="k">DAILY CALORIE TARGET · 每日摄入目标</div>
     <div class="big num">${r.target}<small>kcal</small></div>
-    <div class="math num">TDEE 维持热量 ${r.tdee} kcal　${adjTxt} kcal（${g.zh}${(a.goal==="gain"||a.goal==="lose")&&a.age>=40?" · 40+":""}）</div>
+    <div class="math num">${math}</div>
+    ${tedit}
   </section>
-  ${r.floored ? `<div class="note">计算值低于安全下限，已调整为 ${FLOOR[a.gender]} kcal。长期吃太少会掉肌肉、代谢变慢。</div>` : ""}
+  ${r.floored && !r.coachSet ? `<div class="note">计算值低于安全下限，已调整为 ${FLOOR[a.gender]} kcal。长期吃太少会掉肌肉、代谢变慢。</div>` : ""}
+  ${r.belowFloor ? `<div class="note noprint">教练设定低于安全下限（${a.gender==="m"?"男":"女"} ${FLOOR[a.gender]} kcal），请确认是短期安排。</div>` : ""}
 
   <div class="sec-h noprint"><h3>Today's setup</h3><span>今日设置</span></div>
   <button class="toggle noprint" data-train aria-pressed="${rec.training}">
@@ -693,18 +782,19 @@ function plan(){
   </button>
   <div class="box noprint">
     <p>Shake recipe · 早餐 & 下午茶奶昔配方（两餐一致）${r.big ? "<br>每日目标超过 2500 kcal：奶昔固定加低脂牛奶，还不够才加餐" : ""}</p>
-    <div class="chips">${SHAKE_ITEMS.map(i=>{ const locked = i.lock || (r.big && i.id==="milk"); return `<button class="chip ${r.shake[i.id]?"on":""} ${locked?"lock-c":""}" data-shake="${i.id}" ${locked?'aria-disabled="true"':""}>${i.en}<i>${i.k}</i></button>`; }).join("")}</div>
+    <div class="chips">${SHAKE_ITEMS.map(i=>{ const locked = i.lock || (r.big && i.id==="milk"); return `<button class="chip ${r.baseShake[i.id]?"on":""} ${locked?"lock-c":""}" data-shake="${i.id}" ${locked?'aria-disabled="true"':""}>${i.en}<i>${i.k}</i></button>`; }).join("")}</div>
   </div>
 
   <div class="sec-h"><h3>One-day meal plan</h3><span>一日餐单</span></div>
+  ${coach ? `<p class="hint noprint">每一餐都可以按「Edit 编辑」：改分量、换加餐、改奶昔配方、写自定义餐点或移除。没调整的餐会自动配，补足每日目标。${anySet ? ` <button class="ebtn" data-mreset>Reset all 全部恢复自动</button>` : ""}</p>` : ""}
   <ul class="day">${meals}</ul>
   <div class="sum num">
     <div><span>TARGET 目标</span><b>${r.target}</b></div>
     <div><span>PLAN 合计</span><b>${r.total}</b></div>
     <div><span>GAP 差距</span><b style="color:${Math.abs(r.diff)<=100?"var(--good)":"var(--warn)"}">${diffTxt}</b></div>
   </div>
-  ${r.tooLow ? `<div class="note">午晚餐已是最小分量。可以把奶昔改成清水冲泡，或去掉香蕉，让总热量更贴近目标。</div>` : ""}
-  ${r.tooHigh ? `<div class="note">热量需求很高。午餐和晚餐可以各多加半碗饭或一份蛋白质，补足差距。</div>` : ""}
+  ${r.tooLow ? `<div class="note">餐单合计比目标多 ${r.diff} kcal。${coach ? "可以缩小某一餐或改奶昔配方。" : "可以把奶昔改成清水冲泡，或去掉香蕉。"}</div>` : ""}
+  ${r.tooHigh ? `<div class="note">餐单合计比目标少 ${-r.diff} kcal。${coach ? "可以加大某一餐、加一份自定义加餐。" : "午餐和晚餐可以各多加半碗饭或一份蛋白质。"}</div>` : ""}
 
   <div class="sec-h"><h3>Lunch & dinner options</h3><span>午晚餐怎么选</span></div>
   <div class="menu">
@@ -719,7 +809,7 @@ function plan(){
     <li>少油少酱，煎炸改成蒸、烤、水煮</li>
   </ul>
 
-  ${isCoach() ? `<div class="sec-h"><h3>Coach notes</h3><span>教练备注（会印在 PDF 上）</span></div>
+  ${coach ? `<div class="sec-h"><h3>Coach notes</h3><span>教练备注（会印在 PDF 上）</span></div>
   <textarea id="note" class="noprint" placeholder="例如：每周一量体重，先戒含糖饮料…">${esc(rec.note)}</textarea>
   ${rec.note ? `<div class="box print-only notes-print">${esc(rec.note)}</div>` : ""}` : ""}
 
@@ -728,9 +818,9 @@ function plan(){
     <div class="row">
       <button class="sbtn" data-dl>Save file<small>下载档案</small></button>
       <button class="sbtn" data-copy="meal">Copy text<small>复制到 WhatsApp</small></button>
-      ${isCoach() ? `<button class="sbtn y" data-workout>Workout design<small>训练设计 →</small></button>` : ""}
+      ${coach ? `<button class="sbtn y" data-workout>Workout design<small>训练设计 →</small></button>` : ""}
     </div>
-    ${isCoach() ? `<button class="sbtn danger ${S.arm?"arm":""}" data-del>${S.arm ? "Tap again to delete<small>再按一次确认删除</small>" : "Delete student<small>删除这位学员</small>"}</button>` : ""}
+    ${coach ? `<button class="sbtn danger ${S.arm?"arm":""}" data-del>${S.arm ? "Tap again to delete<small>再按一次确认删除</small>" : "Delete student<small>删除这位学员</small>"}</button>` : ""}
   </div>`;
 }
 
@@ -800,23 +890,25 @@ function workout(){
 /* ================= WhatsApp 文字 ================= */
 function mealText(){
   const rec=S.rec, r=calc(rec), g=GOALS[rec.a.goal];
-  const pl = k => { const p=PORTION[k]; return [p.rice, p.pro, p.veg].filter(Boolean).join(" / "); };
-  const sh = `${shakeZh(r.shake)}${r.shake.milk ? "（只用低脂牛奶冲泡）" : "（清水冲泡）"}`;
-  const sn = p => p ? `${p.k} kcal\n${p.en} ${p.zh}` : "不加";
-  let t = `⚡ *BurnUp × Herbalife Coaching*\n${rec.name ? rec.name + " · " : ""}${g.en} ${g.zh}\nDaily target 每日摄入：*${r.target} kcal*\n\n`;
-  t += `🥤 *Breakfast 早餐 07:30* — ${r.shakeK} kcal\n${sh}\n\n`;
-  if(r.big) t += `🍎 *Morning snack 早上加餐 10:00* — ${sn(r.am)}\n\n`;
-  t += `🍱 *Lunch 午餐 12:30* — ${r.L} kcal\n${pl(r.L)}\n\n`;
-  t += `🥤 *Afternoon shake 下午茶 16:00* — ${r.shakeK} kcal\n${sh}\n\n`;
-  if(rec.training) t += `💪 *Post-workout 运动后* — ${WHEY} kcal\nRS Pro Whey\n\n`;
-  t += `🍽 *Dinner 晚餐 19:00* — ${r.D} kcal\n${pl(r.D)}\n\n`;
-  if(r.big) t += `🍌 *Evening snack 晚餐后加餐 21:00* — ${sn(r.pm)}\n\n`;
+  const icons = {breakfast:"🥤", am:"🍎", lunch:"🍱", pm:"🥤", whey:"💪", dinner:"🍽", eve:"🍌"};
+  const line = (key, m) => {
+    if(m.custom) return m.text || "Custom meal";
+    if(m.shake) return `${shakeZh(m.shake)}${m.shake.milk ? "（只用低脂牛奶冲泡）" : "（清水冲泡）"}`;
+    if(m.portion){ const p=PORTION[m.portion]; return [p.rice, p.pro, p.veg].filter(Boolean).join(" / "); }
+    if(m.snack) return `${m.snack.en} ${m.snack.zh}`;
+    if(key==="whey") return "RS Pro Whey（运动后 30 分钟内）";
+    return "";
+  };
+  let t = `⚡ *BurnUp Coaching* · with Herbalife\n${rec.name ? rec.name + " · " : ""}${g.en} ${g.zh}\nDaily target 每日摄入：*${r.target} kcal*\n\n`;
+  SLOTS.forEach(k => { const m=r.meals[k], i=SLOT_INFO[k]; if(m.off) return;
+    t += `${icons[k]} *${i.en} ${i.zh} ${/^\d/.test(i.t)?i.t:""}* — ${m.kcal} kcal\n${line(k,m)}\n\n`; });
   t += `Carbs 碳水：白饭 / 糙米饭 / Soba / 土豆\nProtein 蛋白质：鸡肉 / 鱼肉 / 鸡蛋 / 瘦牛肉（素：豆腐 / Tempeh）\nVeg 蔬菜：各种绿色蔬菜\n📏 1 份蛋白质 = 一个手掌；1 份蔬菜 = 两个拳头\n\nTotal 合计约 ${r.total} kcal`;
+  if(rec.note && isCoach()) t += `\n\n📝 ${rec.note}`;
   return t;
 }
 function fitText(){
   const w = S.rec.workout;
-  let t = `⚡ *BurnUp Workout Plan 训练课表*\n${S.rec.name ? S.rec.name + " · " : ""}${w.days.length} days/week\n\n`;
+  let t = `⚡ *BurnUp Coaching · Workout 训练课表*\n${S.rec.name ? S.rec.name + " · " : ""}${w.days.length} days/week\n\n`;
   w.days.forEach(d => {
     t += `*${d.name}*\n`;
     d.items.filter(it=>it.name).forEach(it => t += `• ${it.name} — ${it.sets||"-"} × ${it.reps||"-"}${it.rest ? "，休息 " + it.rest : ""}\n`);
@@ -865,7 +957,7 @@ function snapshot(){
 
 /* ================= 流程 ================= */
 function finishQuiz(){
-  S.rec.snacks = {am:null, pm:null};
+  if(!isCoach()) S.rec.mo = {};   // 学员重新计算时，加餐恢复自动；教练的调整会保留
   if(isCoach() && !S.rec.id){ S.rec.id = "s" + Date.now().toString(36); S.rec.created = Date.now(); }
   saveRec(); go("plan");
 }
@@ -899,7 +991,7 @@ $app.addEventListener("click", e=>{
   }
   if("train" in d){ S.rec.training=!S.rec.training; saveRec(); return render(); }
   if(d.shake){ if(t.getAttribute("aria-disabled")) return; S.rec.shake[d.shake]=!S.rec.shake[d.shake]; saveRec(); return render(); }
-  if(d.snack){ const [slot,id]=d.snack.split(":"); S.rec.snacks[slot]=id; saveRec(); return render(); }
+  if(d.snack){ const [slot,id]=d.snack.split(":"); S.rec.mo[slot] = id==="none" ? {off:true} : {snack:id}; saveRec(); return render(); }
   if(d.copy) return copy(d.copy==="meal" ? mealText() : fitText());
   if("pdf" in d) return pdf();
   if("dl" in d) return snapshot();
@@ -916,6 +1008,33 @@ $app.addEventListener("click", e=>{
   // ---- 训练设计 ----
   if(!isCoach()) return;
   const w = S.rec.workout;
+  // ---- 教练：热量与每一餐 ----
+  const mo = S.rec.mo;
+  if("tedit" in d){ S.editTarget=true; render(); document.getElementById("kcal-ovr")?.select(); return; }
+  if("tcancel" in d){ S.editTarget=false; return render(); }
+  if("tauto" in d){ S.rec.kcalOverride=null; S.editTarget=false; saveRec(); toast("已恢复公式计算"); return render(); }
+  if("tsave" in d){
+    const v = parseInt(document.getElementById("kcal-ovr").value,10);
+    if(!(v>=800 && v<=6000)) return toast("请输入 800–6000 之间的数字");
+    S.rec.kcalOverride=v; S.editTarget=false; saveRec(); toast("已设定每日 " + v + " kcal"); return render();
+  }
+  if(d.medit){ S.editMeal = S.editMeal===d.medit ? null : d.medit; return render(); }
+  if("mclose" in d){ S.editMeal=null; return render(); }
+  if(d.mset){ const [k,type,val]=d.mset.split(":"); mo[k] = type==="portion" ? {portion:+val} : type==="snack" ? {snack:val} : {on:true}; saveRec(); return render(); }
+  if(d.mshake){
+    if(t.getAttribute("aria-disabled")) return;
+    const [k,id]=d.mshake.split(":"); const r=calc(S.rec); const cur=Object.assign({}, r.meals[k].shake || r.baseShake);
+    cur[id]=!cur[id]; mo[k]={shake:cur}; saveRec(); return render();
+  }
+  if(d.mcustom){
+    const k=d.mcustom, text=document.getElementById("ct-text-"+k).value.trim(), kc=parseInt(document.getElementById("ct-kcal-"+k).value,10);
+    if(!text) return toast("请填写餐点内容");
+    if(!(kc>=0 && kc<=2500)) return toast("热量请输入 0–2500");
+    mo[k]={custom:{text, kcal:kc}}; saveRec(); return render();
+  }
+  if(d.mauto){ delete mo[d.mauto]; saveRec(); return render(); }
+  if(d.moff){ mo[d.moff]={off:true}; saveRec(); return render(); }
+  if("mreset" in d){ S.rec.mo={}; S.editMeal=null; saveRec(); toast("全部恢复自动"); return render(); }
   if("workout" in d){ S.tplGoal = tplGoalFor(S.rec.a.goal); return go("workout"); }
   if(d.tplgoal){ S.tplGoal = d.tplgoal; S.arm=false; return render(); }
   if(d.tpl !== undefined){

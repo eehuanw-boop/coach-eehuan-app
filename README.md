@@ -1,6 +1,6 @@
 # BurnUp 减重比赛排行 · 独立网页版
 
-> 🆕 **`coaching.html` — BurnUp × Herbalife 学员教练页**：Meal Plan（TDEE → 每日热量 → 自动配一日餐单）+ Fitness（目标 × 每周天数 → 课表）。纯 HTML/JS 单文件，无需构建，直接打开即可。部署后网址：`<你的 Pages 网址>/coaching.html`。
+> 🆕 **`coaching.html` — BurnUp × Herbalife Coaching**：学员端（问答 → 每日热量 → 一日餐单，可下载 PDF）+ 教练端（本机 PIN 登入、学员档案、训练设计器、备份/导入）。纯 HTML/JS 单文件，无需构建。部署后网址：`<你的 Pages 网址>/coaching.html`。
 
 
 BurnUp FitCamp 的减重比赛排行榜 —— 记录学员的体重、体脂率、内脏脂肪、肌肉量、基础代谢、代谢年龄、身体水分等指标，按 **体脂下降比例** 自动排名。

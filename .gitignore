@@ -144,3 +144,4 @@ vite.config.ts.timestamp-*
 
 # Local build output cache
 build/
+_site/

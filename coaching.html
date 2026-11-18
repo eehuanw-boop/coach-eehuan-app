@@ -818,6 +818,7 @@ const T = {
   "mac.done":["Goal reached","已达标","已達標","Sasaran dicapai"],
   "sq.target":["Daily target","每日目标","每日目標","Sasaran harian"],
   "sq.protein":["Protein goal","蛋白质目标","蛋白質目標","Sasaran protein"],
+  "sq.meals":["Meals done","已吃餐数","已吃餐數","Hidangan selesai"],
   "sq.water":["Water","饮水","飲水","Air"],
   "sq.wk":["Workouts this week","本周训练","本週訓練","Senaman minggu ini"],
   "next.h":["NEXT UP","下一餐","下一餐","SETERUSNYA"],
@@ -1115,7 +1116,8 @@ function calc(rec){
     tooLow: diff >= 150, tooHigh: diff <= -300, belowFloor: coachSet && target < FLOOR[a.gender]};
 }
 
-/* ================= 营养素（估算） ================= */
+const WATER = {f:2.7, m:3.0};   // 每日饮水目标（公升）：女 2.7L，男 3.0L
+/* ================= 营养素（估算，暂时不显示） ================= */
 const MAC = {f1:[9,13,1.5], f3:[9,0.5,0.5], milk:[8.5,12,4], banana:[0.7,15,0.2]};   // 每份 [蛋白质, 碳水, 脂肪] g
 const PLATE_MAC = {800:[67,55,33], 600:[37,55,25], 400:[35,32,14], 300:[33,10,14]};
 const SNACK_MAC = {banana:[1.5,35,0.5], apple:[0.5,25,0.3], sandwich:[12,30,9]};
@@ -1236,9 +1238,9 @@ function workoutCard(rec, date, compact){
 function todayView(){
   const rec = S.rec, r = calc(rec), now = new Date(), today = ymd(now), L = dayLog(today);
   const keys = SLOTS.filter(k => !r.meals[k].off);
-  let eaten = 0, em = [0,0,0];
-  keys.forEach(k => { if(L.meals[k]){ eaten += r.meals[k].kcal; const mm = mealMacros(k, r.meals[k]); em = em.map((v,j)=>v+mm[j]); } });
-  const tg = macroTargets(rec, r.target), left = r.target - eaten;
+  let eaten = 0;
+  keys.forEach(k => { if(L.meals[k]) eaten += r.meals[k].kcal; });
+  const left = r.target - eaten;
   const C = 2*Math.PI*52, pct = Math.min(1, eaten / r.target);
   // 下一餐：按现在时间找最近一餐还没吃的
   const mins = now.getHours()*60 + now.getMinutes();
@@ -1265,14 +1267,12 @@ function todayView(){
     </div>
     <div class="ring"><svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="52" fill="none" stroke="#262626" stroke-width="10"/><circle cx="60" cy="60" r="52" fill="none" stroke="${left < 0 ? "#FF8A3D" : "#FFD000"}" stroke-width="10" stroke-linecap="round" stroke-dasharray="${(C*pct).toFixed(1)} ${C.toFixed(1)}"/></svg>
       <div class="c"><b class="num">${Math.abs(left)}</b><small>${t(left < 0 ? "cal.over" : "cal.left")}</small></div></div>
-    <div class="macs">${MAC_UI.map(([lab,col,j]) => { const e = Math.round(em[j]), g = tg[j], lf = g - e;
-      return `<div class="mac"><span>${t(lab)}</span><i><b style="width:${Math.min(100, g ? e/g*100 : 0)}%;background:${col}"></b></i><small>${lf > 0 ? t("mac.left",{n:lf}) : t("mac.done")}</small><em class="num">${e} / ${g}g</em></div>`; }).join("")}</div>
   </section>
 
   <div class="sqs">
     <div class="sq hl"><div class="t">${t("sq.target")}${IC.flame}</div><b class="num">${r.target}<small>kcal</small></b></div>
-    <div class="sq"><div class="t">${t("sq.protein")}${IC.muscle}</div><b class="num">${tg[0]}<small>g</small></b></div>
-    <div class="sq"><div class="t">${t("sq.water")}${IC.drop}</div><b class="num">${(rec.a.weight*0.035).toFixed(1)}<small>L</small></b></div>
+    <div class="sq"><div class="t">${t("sq.meals")}${IC.check}</div><b class="num">${keys.filter(k=>L.meals[k]).length}<small>/ ${keys.length}</small></b></div>
+    <div class="sq"><div class="t">${t("sq.water")}${IC.drop}</div><b class="num">${WATER[rec.a.gender] || WATER.f}<small>L</small></b></div>
     <div class="sq"><div class="t">${t("sq.wk")}${IC.dumb}</div><b class="num">${wkDone}<small>/ ${nDesign || "–"}</small></b></div>
   </div>
 
@@ -1591,10 +1591,6 @@ function plan(){
     <div><span>${t("sum.plan")}</span><b>${r.total}</b></div>
     <div><span>${t("sum.gap")}</span><b style="color:${Math.abs(r.diff)<=100?"var(--good)":"var(--warn)"}">${diffTxt}</b></div>
   </div>
-  ${(() => { const tg = macroTargets(rec, r.target), pm = SLOTS.reduce((a,k)=>{ const mm = mealMacros(k, r.meals[k]); return a.map((v,j)=>v+mm[j]); }, [0,0,0]);
-    return `<section class="card"><div class="cardh"><h3>${t("macros.h")}</h3></div><div class="macs flat">${MAC_UI.map(([lab,col,j]) => { const pv = Math.round(pm[j]), g = tg[j];
-      return `<div class="mac"><span>${t(lab)}</span><i><b style="width:${Math.min(100, g ? pv/g*100 : 0)}%;background:${col}"></b></i><small class="num">${t("macros.plan",{p:pv, g})}</small></div>`; }).join("")}</div>
-      <p class="hint" style="margin-top:12px;font-size:12px">${t("macros.note",{k:proPerKg(a.goal)})}</p></section>`; })()}
   ${r.tooLow ? `<div class="note">${t("note.over",{n:r.diff})} ${t(coach?"note.over.c":"note.over.s")}</div>` : ""}
   ${r.tooHigh ? `<div class="note">${t("note.under",{n:-r.diff})} ${t(coach?"note.under.c":"note.under.s")}</div>` : ""}
 

@@ -442,6 +442,55 @@ main.shell{padding-top:14px;padding-bottom:120px}
 .bnav button.on span{display:inline}
 .bnav svg{width:22px;height:22px;flex:none}
 @media print{.bnav,.apphd{display:none!important}.card,.sq{background:#fff!important}}
+/* ---------- water / sleep / photo check-in ---------- */
+button.sq{font:inherit;color:inherit;text-align:left;cursor:pointer;width:100%}
+button.sq:hover{border-color:#555}
+.sq .bar2{display:block;height:5px;border-radius:5px;background:rgba(255,255,255,.12);overflow:hidden;margin-top:-6px}
+.sq .bar2 i{display:block;height:100%;background:var(--yellow);border-radius:5px}
+.sq.hl .bar2 i{background:var(--fg)}
+.sq .sub2{font-size:11px;color:var(--muted);margin-top:-8px}
+.photo{display:grid;gap:12px;border-color:#25402f;background:linear-gradient(160deg,#0f1a13,#0d0d0d)}
+.photo .k{color:#4CD07D;display:flex;align-items:center;gap:6px}
+.photo .k svg{width:16px;height:16px}
+.photo h3{margin:0;font-family:var(--head);font-size:20px;font-weight:800;letter-spacing:-.02em}
+.photo p{margin:0;color:#bdbdbd;font-size:13px}
+.photo .acts{display:flex;flex-wrap:wrap;gap:10px}
+.btn.wa{background:#25D366;color:#062b14}
+.sheet-bg{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;max-width:520px;margin:0 auto;max-height:92vh;overflow:auto;background:#141414;border:1px solid var(--line);border-bottom:0;border-radius:28px 28px 0 0;padding:10px max(18px,env(safe-area-inset-left,0px)) calc(20px + env(safe-area-inset-bottom,0px));display:grid;gap:12px}
+.sheet.anim{animation:sheetUp .25s ease-out}
+@keyframes sheetUp{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.sheet .grab{justify-self:center;width:40px;height:5px;border-radius:5px;background:#333}
+.sheet-hd{display:grid;grid-template-columns:40px 1fr 40px;align-items:center;text-align:center}
+.sheet-hd b{display:block;font-family:var(--head);font-size:17px;font-weight:800}
+.sheet-hd small{display:block;color:var(--muted);font-size:12px}
+.circ{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:#1d1d1d;color:var(--fg);display:grid;place-items:center;padding:0;font-size:18px}
+.circ.y{background:var(--yellow);color:var(--ink);border-color:var(--yellow)}
+.circ svg{width:18px;height:18px}
+.srow{background:#1b1b1b;border:1px solid var(--line);border-radius:18px;padding:6px 16px;display:grid}
+.srow label{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;font-size:14px}
+.srow label + label{border-top:1px solid var(--line)}
+.srow label span{display:flex;align-items:center;gap:8px}
+.srow label span svg{width:16px;height:16px;color:var(--yellow)}
+.srow input{background:#262626;border:1px solid #333;border-radius:10px;color:var(--fg);font:inherit;font-weight:700;font-size:15px;padding:9px 12px;min-width:0}
+.srow input:focus{outline:none;border-color:var(--yellow)}
+.dur{background:#1b1b1b;border:1px solid var(--line);border-radius:18px;padding:16px;text-align:center}
+.dur small{display:block;font-family:var(--head);font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--muted)}
+.dur b{font-family:var(--head);font-size:48px;font-weight:800;letter-spacing:-.04em;line-height:1.1}
+.dur b i{font-style:normal;font-size:16px;color:var(--muted);margin-left:4px}
+.qchips{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.qchips button{background:#1b1b1b;border:1px solid var(--line);border-radius:999px;padding:11px 6px;font-weight:600;font-size:13px;color:#ddd}
+.qchips button.on{background:var(--yellow);color:var(--ink);border-color:var(--yellow)}
+.bottle{position:relative;width:110px;height:170px;margin:4px auto 0;border:3px solid #3a3a3a;border-radius:22px 22px 26px 26px;overflow:hidden;background:#101010}
+.bottle::before{content:"";position:absolute;top:-3px;left:30px;right:30px;height:12px;background:#3a3a3a;border-radius:0 0 6px 6px;z-index:2}
+.bottle i{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(180deg,#9ad8ff,#3aa8f0);transition:height .35s ease}
+.wbig{text-align:center}
+.wbig b{font-family:var(--head);font-size:44px;font-weight:800;letter-spacing:-.04em}
+.wbig b i{font-style:normal;font-size:16px;color:var(--muted);margin-left:4px}
+.wbig small{display:block;color:var(--muted);font-size:13px}
+.wbtns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.wbtns .btn{padding:14px 10px;font-size:13px;text-transform:none;letter-spacing:0}
+.wbtns .undo{grid-column:1/-1;background:none;border:1px solid var(--line);color:var(--muted)}
 /* ---------- shake mixing animation ---------- */
 .mixbtn{display:inline-flex;align-items:center;gap:6px;margin-top:10px;background:rgba(255,208,0,.1);border:1px solid rgba(255,208,0,.5);color:var(--yellow);border-radius:999px;padding:6px 12px;font-family:var(--head);font-weight:700;font-size:12px}
 .mixbtn svg{width:10px;height:10px}
@@ -505,6 +554,7 @@ const FIREBASE_CONFIG = {
   measurementId: "G-VEXMGEWFV7"
 };  // 例：{apiKey:"…", authDomain:"xxx.firebaseapp.com", projectId:"xxx", appId:"…"}
 const COACH_EMAILS = ["eehuanw@gmail.com"];        // 教练 email（要和 firestore.rules 里的一样），例：["coach@gmail.com"]
+const WHATSAPP_GROUP = "";        // BurnUp WhatsApp 群组邀请链接，例："https://chat.whatsapp.com/xxxx"（留空就不显示按钮）
 const FB_VER = "10.12.2";
 let CLOUD = !!((FIREBASE_CONFIG && FIREBASE_CONFIG.apiKey) || window.__FB_MOCK);
 const STUDENT_FIELDS = ["name","a","shake","training","mo","updated"];
@@ -840,6 +890,33 @@ const T = {
   "macros.h":["Daily macros","每日营养素","每日營養素","Makronutrien harian"],
   "macros.plan":["plan {p}g · goal {g}g","餐单 {p}g · 目标 {g}g","餐單 {p}g · 目標 {g}g","pelan {p}g · sasaran {g}g"],
   "macros.note":["Estimates. Protein goal = {k}g per kg of body weight; fat about 25% of calories; carbs make up the rest.","估算值：蛋白质目标 = 每公斤体重 {k}g；脂肪约占热量 25%；其余为碳水。","估算值：蛋白質目標 = 每公斤體重 {k}g；脂肪約佔熱量 25%；其餘為碳水。","Anggaran: sasaran protein = {k}g sekilogram berat badan; lemak kira-kira 25% kalori; selebihnya karbohidrat."],
+  "sleep.h":["Log sleep","记录睡眠","記錄睡眠","Rekod tidur"],
+  "sleep.tile":["Sleep","睡眠","睡眠","Tidur"],
+  "sleep.bed":["Bedtime","睡觉时间","睡覺時間","Waktu tidur"],
+  "sleep.wake":["Wake up","起床时间","起床時間","Waktu bangun"],
+  "sleep.dur":["DURATION","睡眠时长","睡眠時長","TEMPOH"],
+  "sleep.q":["How was it? (optional)","睡得怎么样？（可选）","睡得怎麼樣？（可選）","Bagaimana tidur anda? (pilihan)"],
+  "sleep.poor":["Poor","不好","不好","Teruk"],
+  "sleep.normal":["Normal","普通","普通","Biasa"],
+  "sleep.great":["Great","很好","很好","Nyenyak"],
+  "sleep.tip":["Aim for 7–9 hours. Good sleep helps fat loss and recovery.","建议睡 7–9 小时，睡得好更容易减脂、恢复。","建議睡 7–9 小時，睡得好更容易減脂、恢復。","Sasarkan 7–9 jam. Tidur yang cukup membantu pembakaran lemak dan pemulihan."],
+  "sleep.saved":["Sleep saved: {h} h","已记录睡眠：{h} 小时","已記錄睡眠：{h} 小時","Tidur direkod: {h} jam"],
+  "log.date":["Date","日期","日期","Tarikh"],
+  "log.tap":["Tap to log","点一下记录","點一下記錄","Tekan untuk rekod"],
+  "water.h":["Log water","记录饮水","記錄飲水","Rekod air"],
+  "water.goal":["Goal {g} L","目标 {g} L","目標 {g} L","Sasaran {g} L"],
+  "water.cup":["+ 1 glass · 250 ml","+ 1 杯 · 250 ml","+ 1 杯 · 250 ml","+ 1 gelas · 250 ml"],
+  "water.bottle":["+ 1 bottle · 500 ml","+ 1 瓶 · 500 ml","+ 1 瓶 · 500 ml","+ 1 botol · 500 ml"],
+  "water.undo":["Undo 250 ml","减 250 ml","減 250 ml","Buang 250 ml"],
+  "water.left":["{n} ml to go","还差 {n} ml","還差 {n} ml","{n} ml lagi"],
+  "water.done":["Water goal reached! 💧","今天喝水达标了！💧","今天喝水達標了！💧","Sasaran air dicapai! 💧"],
+  "photo.h":["PHOTO CHECK-IN","拍照打卡","拍照打卡","SEMAKAN FOTO"],
+  "photo.t":["Snap it, post it","拍下来，发到群里","拍下來，發到群裡","Ambil gambar, hantar ke grup"],
+  "photo.p":["Take a photo of every meal, your water and your workout, then post it in the BurnUp WhatsApp group so your coach can check on you.","每一餐、喝水和训练都拍照，发到 BurnUp WhatsApp 群组，让教练帮你检查。","每一餐、喝水和訓練都拍照，發到 BurnUp WhatsApp 群組，讓教練幫你檢查。","Ambil gambar setiap hidangan, air dan senaman anda, kemudian hantar ke grup WhatsApp BurnUp supaya jurulatih boleh menyemak."],
+  "photo.posted":["I posted today's photos","今天的照片已发","今天的照片已發","Saya sudah hantar gambar hari ini"],
+  "photo.done":["Photos posted today ✓","今天已发照片 ✓","今天已發照片 ✓","Gambar sudah dihantar ✓"],
+  "photo.open":["Open WhatsApp group","打开 WhatsApp 群组","打開 WhatsApp 群組","Buka grup WhatsApp"],
+  "photo.toast":["Logged. Don't forget to snap a photo for the WhatsApp group 📸","已记录！别忘了拍照发到 WhatsApp 群组 📸","已記錄！別忘了拍照發到 WhatsApp 群組 📸","Direkod. Jangan lupa ambil gambar untuk grup WhatsApp 📸"],
   "mix.btn":["How to mix","冲泡示范","沖泡示範","Cara bancuh"],
   "mix.replay":["Replay","重播","重播","Main semula"],
   "mix.open":["Open the lids","打开盖子","打開蓋子","Buka penutup"],
@@ -1143,15 +1220,15 @@ const MAC_UI = [["lab.protein","#FFD000",0],["lab.carbs","#FFE98A",1],["mac.f","
 const ymd = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
 const logKey = () => "bu_log_" + (cloudOn() && S.user ? S.user.uid : "local");
 const getLog = () => LS.get(logKey(), {});
-const dayLog = date => Object.assign({meals:{}, wk:false}, getLog()[date]);
+const dayLog = date => Object.assign({meals:{}, wk:false, water:0, sleep:null, photo:false}, getLog()[date]);
 function setDayLog(date, fn){
-  const L = getLog(); const d = Object.assign({meals:{}, wk:false}, L[date]); fn(d); L[date] = d;
+  const L = getLog(); const d = Object.assign({meals:{}, wk:false, water:0, sleep:null, photo:false}, L[date]); fn(d); L[date] = d;
   const keys = Object.keys(L).sort(); while(keys.length > 60) delete L[keys.shift()];
   LS.set(logKey(), L);
 }
 function streak(){
   const L = getLog(), d = new Date();
-  const has = k => L[k] && (Object.values(L[k].meals||{}).some(Boolean) || L[k].wk);
+  const has = k => L[k] && (Object.values(L[k].meals||{}).some(Boolean) || L[k].wk || L[k].water > 0 || L[k].sleep || L[k].photo);
   if(!has(ymd(d))) d.setDate(d.getDate()-1);
   let n = 0; while(has(ymd(d))){ n++; d.setDate(d.getDate()-1); }
   return n;
@@ -1177,6 +1254,9 @@ const IC = {
   flame:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5c.8 3.8 5.5 5.6 5.5 10.6a5.5 5.5 0 0 1-11 0c0-3 1.8-4.6 2.2-7.3 1.4 1.1 2.4 2.6 2.8 4.2.6-2.2.5-5.2.5-7.5z" fill="currentColor"/></svg>`,
   drop:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3s6 7 6 11.2a6 6 0 0 1-12 0C6 10 12 3 12 3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>`,
   check:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  moon:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.5A8 8 0 1 1 9.5 4.5a6.5 6.5 0 0 0 10 10z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>`,
+  sun:`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`,
+  cam:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.5-2.5h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>`,
   clock:`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7.5V12l3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`,
   muscle:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 17c2-1 3.5-1 6 0s5 1 8-1c0-4-2-6-5-6-1 0-2 .5-3 1l-1-4-2-1-1 2 1 3c-2 1-3 3-3 6z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>`
 };
@@ -1235,6 +1315,50 @@ function workoutCard(rec, date, compact){
       <button class="btn sm ${L.wk ? "done" : "btn-o"}" data-wkdone>${t(L.wk ? "wk.doneToday" : "wk.mark")}</button></div>
   </section>`;
 }
+const waterGoal = rec => WATER[rec.a.gender] || WATER.f;
+const sleepHours = (bed, wake) => { const toM = x => { const [h,m] = (x||"0:0").split(":").map(Number); return h*60 + m; }; let d = toM(wake) - toM(bed); if(d <= 0) d += 1440; return Math.round(d/6)/10; };
+const longDate = ds => { const [y,m,d] = ds.split("-").map(Number); return new Intl.DateTimeFormat(LANGS.find(l=>l.id===LANG).html, {weekday:"long", month:"short", day:"numeric"}).format(new Date(y, m-1, d)); };
+function openSleep(date){
+  const sl = dayLog(date).sleep;
+  S.sheetData = {date, bed: sl ? sl.bed : "23:00", wake: sl ? sl.wake : "07:00", q: sl ? sl.q : null};
+  S.sheet = "sleep"; S.sheetFresh = true;
+}
+function sheetHTML(){
+  if(S.sheet === "water"){
+    const today = ymd(new Date()), ml = dayLog(today).water, g = waterGoal(S.rec), left = g*1000 - ml;
+    return `<div class="sheet-bg" data-sheetclose></div>
+    <div class="sheet ${S.sheetFresh ? "anim" : ""}" role="dialog" aria-modal="true" aria-label="${t("water.h")}">
+      <div class="grab"></div>
+      <div class="sheet-hd"><button class="circ" data-sheetclose aria-label="${t("close")}">×</button><div><b>${t("water.h")}</b><small>${longDate(today)}</small></div><button class="circ y" data-sheetclose aria-label="${t("done")}">${IC.check}</button></div>
+      <div class="bottle" aria-hidden="true"><i style="height:${Math.min(100, ml/(g*10))}%"></i></div>
+      <div class="wbig"><b class="num">${(ml/1000).toFixed(2)}<i>/ ${g} L</i></b><small>${left > 0 ? t("water.left",{n:left}) : t("water.done")}</small></div>
+      <div class="wbtns">
+        <button class="btn btn-y" data-water="250">${t("water.cup")}</button>
+        <button class="btn btn-y" data-water="500">${t("water.bottle")}</button>
+        ${ml > 0 ? `<button class="btn undo" data-water="-250">${t("water.undo")}</button>` : ""}
+      </div>
+    </div>`;
+  }
+  if(S.sheet === "sleep"){
+    const D = S.sheetData;
+    return `<div class="sheet-bg" data-sheetclose></div>
+    <div class="sheet ${S.sheetFresh ? "anim" : ""}" role="dialog" aria-modal="true" aria-label="${t("sleep.h")}">
+      <div class="grab"></div>
+      <div class="sheet-hd"><button class="circ" data-sheetclose aria-label="${t("close")}">×</button><div><b>${t("sleep.h")}</b><small>${longDate(D.date)}</small></div><button class="circ y" data-sleepsave aria-label="${t("save")}">${IC.check}</button></div>
+      <div class="srow"><label for="sl-date"><span>${t("log.date")}</span><input type="date" id="sl-date" value="${D.date}" max="${ymd(new Date())}" /></label></div>
+      <div class="srow">
+        <label for="sl-bed"><span>${IC.moon}${t("sleep.bed")}</span><input type="time" id="sl-bed" value="${D.bed}" /></label>
+        <label for="sl-wake"><span>${IC.sun}${t("sleep.wake")}</span><input type="time" id="sl-wake" value="${D.wake}" /></label>
+      </div>
+      <div class="dur"><small>${t("sleep.dur")}</small><b class="num" id="sl-dur">${sleepHours(D.bed, D.wake)}<i>h</i></b></div>
+      <p class="hint" style="margin:0">${t("sleep.q")}</p>
+      <div class="qchips">${["poor","normal","great"].map(q=>`<button class="${D.q===q?"on":""}" data-slq="${q}">${t("sleep."+q)}</button>`).join("")}</div>
+      <p class="hint" style="margin:0;font-size:12px">${t("sleep.tip")}</p>
+      <button class="btn btn-y block" data-sleepsave>${t("save")} ${ARROW}</button>
+    </div>`;
+  }
+  return "";
+}
 function todayView(){
   const rec = S.rec, r = calc(rec), now = new Date(), today = ymd(now), L = dayLog(today);
   const keys = SLOTS.filter(k => !r.meals[k].off);
@@ -1270,9 +1394,9 @@ function todayView(){
   </section>
 
   <div class="sqs">
-    <div class="sq hl"><div class="t">${t("sq.target")}${IC.flame}</div><b class="num">${r.target}<small>kcal</small></b></div>
+    <button class="sq hl" data-sheet="water"><div class="t">${t("sq.water")}${IC.drop}</div><b class="num">${(L.water/1000).toFixed(1)}<small>/ ${waterGoal(rec)} L</small></b><span class="bar2"><i style="width:${Math.min(100, L.water/(waterGoal(rec)*10))}%"></i></span></button>
+    <button class="sq" data-sheet="sleep"><div class="t">${t("sleep.tile")}${IC.moon}</div>${L.sleep ? `<b class="num">${L.sleep.dur}<small>h</small></b><div class="sub2">${L.sleep.q ? t("sleep."+L.sleep.q) : `${L.sleep.bed} – ${L.sleep.wake}`}</div>` : `<b>—</b><div class="sub2">${t("log.tap")}</div>`}</button>
     <div class="sq"><div class="t">${t("sq.meals")}${IC.check}</div><b class="num">${keys.filter(k=>L.meals[k]).length}<small>/ ${keys.length}</small></b></div>
-    <div class="sq"><div class="t">${t("sq.water")}${IC.drop}</div><b class="num">${WATER[rec.a.gender] || WATER.f}<small>L</small></b></div>
     <div class="sq"><div class="t">${t("sq.wk")}${IC.dumb}</div><b class="num">${wkDone}<small>/ ${nDesign || "–"}</small></b></div>
   </div>
 
@@ -1282,6 +1406,16 @@ function todayView(){
     ${mealDesc(next, r.meals[next])}
     <div class="acts"><button class="btn btn-y sm" data-eat="${next}">${IC.check.replace('aria-hidden="true"','aria-hidden="true" width="16" height="16"')} ${t("next.mark")}</button></div>
   </section>` : `<section class="card next"><div class="k">${IC.check} ${t("next.h")}</div><p style="margin:0;font-weight:600">${t("next.alldone")}</p></section>`}
+
+  <section class="card photo">
+    <div class="k">${IC.cam} ${t("photo.h")}</div>
+    <h3>${t("photo.t")}</h3>
+    <p>${t("photo.p")}</p>
+    <div class="acts">
+      <button class="btn sm ${L.photo ? "done" : "btn-o"}" data-photo>${t(L.photo ? "photo.done" : "photo.posted")}</button>
+      ${WHATSAPP_GROUP ? `<a class="btn sm wa" href="${esc(WHATSAPP_GROUP)}" target="_blank" rel="noopener">${t("photo.open")}</a>` : ""}
+    </div>
+  </section>
 
   ${workoutCard(rec, now)}
 
@@ -1312,12 +1446,13 @@ function render(){
   const shell = inShell();
   $app.innerHTML = (shell ? appHeader() : nav()) + `<main class="wrap ${narrow?"narrow":""} ${shell?"shell":""}">
     <div class="print-only print-head"><span class="logo">${LOGO("p")}</span><div class="t">BurnUp Coaching · with Herbalife<br>${S.rec.name ? esc(S.rec.name) + " · " : ""}${today()}</div></div>
-    <div id="view">${body}</div></main>` + (shell ? bnav(S.view) : "");
+    <div id="view">${body}</div></main>` + (shell ? bnav(S.view) + sheetHTML() : "");
   const inp = $app.querySelector("input.autofocus");
   if(inp) inp.focus({preventScroll:true});
+  S.sheetFresh = false;
   if(S.view==="plan" && S.mix && document.getElementById("mix")) requestAnimationFrame(startMix); else mixRun++;
 }
-function go(view){ S.view = view; S.menu = false; S.mix = null; S.arm = false; S.armTpl = null; S.editMeal = null; S.editTarget = false; render(); window.scrollTo(0,0); }
+function go(view){ S.view = view; S.menu = false; S.sheet = null; S.mix = null; S.arm = false; S.armTpl = null; S.editMeal = null; S.editTarget = false; render(); window.scrollTo(0,0); }
 const tabs = active => isCoach() && planReady(S.rec) ? `<div class="tabs noprint" role="tablist">
   <button class="${active==="plan"?"on":""}" data-go="plan" role="tab" aria-selected="${active==="plan"}">${t("tab.meal")}</button>
   <button class="${active==="workout"?"on":""}" data-workout role="tab" aria-selected="${active==="workout"}">${t("tab.workout")}</button></div>` : "";
@@ -1920,8 +2055,18 @@ $app.addEventListener("click", e=>{
   if("workout" in d && !isCoach()) return go("workout");
   if("menu" in d){ S.menu = !S.menu; return render(); }
   if("gohome" in d){ S.menu = false; if(!cloudOn()) S.rec = selfRec(); return go("home"); }
-  if(d.eat){ const k = d.eat; setDayLog(ymd(new Date()), x => { x.meals[k] = !x.meals[k]; }); return render(); }
-  if("wkdone" in d){ setDayLog(ymd(new Date()), x => { x.wk = !x.wk; }); return render(); }
+  if(d.eat){ const k = d.eat; let on; setDayLog(ymd(new Date()), x => { on = x.meals[k] = !x.meals[k]; }); render(); if(on) toast(t("photo.toast")); return; }
+  if("wkdone" in d){ let on; setDayLog(ymd(new Date()), x => { on = x.wk = !x.wk; }); render(); if(on) toast(t("photo.toast")); return; }
+  if("photo" in d){ setDayLog(ymd(new Date()), x => { x.photo = !x.photo; }); return render(); }
+  if(d.sheet){ if(d.sheet === "sleep") openSleep(ymd(new Date())); else { S.sheet = d.sheet; S.sheetFresh = true; } return render(); }
+  if("sheetclose" in d){ S.sheet = null; return render(); }
+  if(d.water){ const g = waterGoal(S.rec)*1000; let before, after;
+    setDayLog(ymd(new Date()), x => { before = x.water; x.water = Math.max(0, x.water + Number(d.water)); after = x.water; });
+    render(); if(before < g && after >= g) toast(t("water.done")); return; }
+  if(d.slq){ S.sheetData.q = S.sheetData.q === d.slq ? null : d.slq; return render(); }
+  if("sleepsave" in d){ const D = S.sheetData, h = sleepHours(D.bed, D.wake);
+    setDayLog(D.date, x => { x.sleep = {bed:D.bed, wake:D.wake, dur:h, q:D.q}; });
+    S.sheet = null; render(); toast(t("sleep.saved",{h})); return; }
   if(d.mix){ S.mix = S.mix===d.mix ? null : d.mix; render(); if(S.mix) document.getElementById("mix")?.scrollIntoView({block:"nearest", behavior:"smooth"}); return; }
   if("mixreplay" in d) return render();
   if("new" in d){ S.rec = blankRec(); S.step=0; return go("quiz"); }
@@ -2005,6 +2150,9 @@ $app.addEventListener("click", e=>{
   if(d.delex){ const [i,sec,j]=d.delex.split(":"); w.days[+i][sec].splice(+j,1); saveRec(); return render(); }
 });
 
+$app.addEventListener("click", e => { if(e.target.classList && e.target.classList.contains("sheet-bg")){ S.sheet = null; render(); } });
+document.addEventListener("keydown", e => { if(e.key === "Escape" && S.sheet){ S.sheet = null; render(); } });
+
 $app.addEventListener("submit", async e=>{
   e.preventDefault();
   const err = document.getElementById("err");
@@ -2049,6 +2197,8 @@ $app.addEventListener("submit", async e=>{
 // 输入时只更新资料、不重画（光标不会跳）
 $app.addEventListener("input", e=>{
   const el = e.target, d = el.dataset;
+  if(el.id==="sl-bed" || el.id==="sl-wake"){ S.sheetData[el.id==="sl-bed" ? "bed" : "wake"] = el.value; const o = document.getElementById("sl-dur"); if(o) o.innerHTML = sleepHours(S.sheetData.bed, S.sheetData.wake) + "<i>h</i>"; return; }
+  if(el.id==="sl-date"){ if(el.value){ const q = S.sheetData; openSleep(el.value); S.sheetFresh = false; if(!dayLog(el.value).sleep){ S.sheetData.bed = q.bed; S.sheetData.wake = q.wake; S.sheetData.q = q.q; } render(); } return; }
   if(el.id==="note"){ S.rec.note = el.value; return saveSoon(); }
   if(el.id==="wnote"){ S.rec.workout.note = el.value; return saveSoon(); }
   if(d.wf){

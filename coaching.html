@@ -335,6 +335,52 @@ textarea{width:100%;min-height:84px;background:var(--panel);border:1px solid var
 .tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px}
 .tabs button{border:0;background:none;border-radius:9px;padding:10px;font-family:var(--head);font-weight:800;font-size:14px;color:var(--muted)}
 .tabs button.on{background:var(--yellow);color:var(--ink)}
+/* ---------- shake mixing animation ---------- */
+.mixbtn{display:inline-flex;align-items:center;gap:6px;margin-top:10px;background:rgba(255,208,0,.1);border:1px solid rgba(255,208,0,.5);color:var(--yellow);border-radius:999px;padding:6px 12px;font-family:var(--head);font-weight:700;font-size:12px}
+.mixbtn svg{width:10px;height:10px}
+.mixbtn.on{background:var(--yellow);color:var(--ink)}
+.mix{margin-top:12px;border:1px solid var(--line);border-radius:16px;background:radial-gradient(120% 90% at 50% 0%,#221d0c 0%,#0c0c0c 70%);overflow:hidden}
+.mix-cap{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);font-family:var(--head);font-weight:700;font-size:14px;min-height:50px}
+.mix-cap #mixcap{color:var(--fg)}
+.mix-wrap{position:relative;height:calc(250px * var(--s,1));overflow:hidden}
+.stage{position:absolute;left:50%;top:0;width:360px;height:250px;transform-origin:top center;transform:translateX(-50%) scale(var(--s,1));perspective:800px}
+.stage *{position:absolute}
+.floor{left:6px;right:6px;bottom:14px;height:30px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,208,0,.22),transparent)}
+.can{bottom:30px;border-radius:9px 9px 12px 12px/7px 7px 12px 12px;background:linear-gradient(90deg,#9d9d9d 0%,#e9e9e9 18%,#fff 42%,#f1f1f1 62%,#c9c9c9 86%,#8e8e8e 100%);box-shadow:0 14px 20px rgba(0,0,0,.55);transform:rotateY(-16deg);transform-style:preserve-3d}
+.can.f1{left:20px;width:76px;height:112px}
+.can.f3{left:108px;width:64px;height:72px}
+.can .mouth{left:5px;right:5px;top:-6px;height:13px;border-radius:50%;background:radial-gradient(ellipse at 50% 60%,#7a573e 0 55%,#cfcfcf 58%,#f2f2f2 70%)}
+.can.f3 .mouth{background:radial-gradient(ellipse at 50% 60%,#e2d4ba 0 55%,#cfcfcf 58%,#f2f2f2 70%)}
+.can .lid{left:-4px;right:-4px;top:-15px;height:22px;border-radius:9px/7px;background:linear-gradient(90deg,#0b3a26,#2d8f60 38%,#22774f 64%,#0a3322);box-shadow:inset 0 3px 0 rgba(255,255,255,.18)}
+.can .lbl{left:8px;right:4px;top:40%;font-family:var(--head);font-weight:800;color:#1c6a45;font-size:10px;line-height:1.05;letter-spacing:0;white-space:nowrap}
+.can.f3 .lbl{top:30%;font-size:8.5px}
+.can .lbl small{display:block;position:static;white-space:normal;color:#666;font-size:6.5px;font-weight:700;letter-spacing:.04em;margin-top:3px}
+.cupgrp{left:240px;bottom:30px;width:84px;height:140px;transform-origin:50% 100%}
+.cup{inset:0;clip-path:polygon(0 0,100% 0,93% 100%,7% 100%);background:linear-gradient(90deg,rgba(255,255,255,.14),rgba(255,255,255,.34) 26%,rgba(255,255,255,.07) 58%,rgba(255,255,255,.24) 86%,rgba(255,255,255,.1));border-radius:4px 4px 12px 12px}
+.cup .ticks{left:10px;top:30px;width:10px;bottom:16px;background:repeating-linear-gradient(to bottom,rgba(255,255,255,.55) 0 1.5px,transparent 1.5px 18px)}
+.liq{left:0;right:0;bottom:0;height:0}
+.foam{left:0;right:0;top:-4px;height:9px;border-radius:50%;background:#f3e3cf;opacity:0}
+.pow{left:0;right:0;height:0}
+.pow.p1{bottom:0;background:#9a6f4f}
+.pow.p3{bottom:0;background:#eadfc9}
+.cuplid{left:-5px;top:-20px;width:94px;height:22px;border-radius:8px 8px 4px 4px;background:linear-gradient(90deg,#b88600,#ffd84a 35%,#ffcc00 65%,#a77a00);opacity:0;display:grid;place-items:center}
+.cuplid svg{position:static;width:9px;height:13px}
+.carton{left:300px;top:6px;width:36px;height:58px;border-radius:3px;transform-origin:0% 100%;transform:translate(90px,-30px);display:grid;place-items:center;font-family:var(--head);font-weight:800;font-size:9px;letter-spacing:.06em}
+.carton.milk{background:linear-gradient(90deg,#d9d9d9,#fff 40%,#e9e9e9);color:#1d5fbf;box-shadow:inset 0 14px 0 #3b7be0}
+.carton.water{background:linear-gradient(90deg,rgba(170,215,255,.35),rgba(220,240,255,.7) 40%,rgba(170,215,255,.35));color:#cfe8ff;border:1px solid rgba(200,230,255,.6);border-radius:6px}
+.carton span{position:static;margin-top:16px}
+.stream{left:279px;top:44px;width:6px;height:0;border-radius:3px}
+.banana{left:178px;bottom:30px;width:52px;height:34px;opacity:0}
+.banana svg{position:static;width:100%;height:100%}
+.lev{width:46px;height:4px;border-radius:2px;background:linear-gradient(90deg,#bbb,#fff,#bbb);opacity:0;box-shadow:0 1px 2px rgba(0,0,0,.5)}
+.spoon{left:0;top:0;width:96px;height:26px;transform-origin:14px 13px;filter:drop-shadow(0 6px 6px rgba(0,0,0,.5));z-index:5}
+.spoon svg{position:static;display:block}
+.heap{left:3px;top:-3px;width:22px;height:12px;border-radius:50% 50% 45% 45%/90% 90% 30% 30%;transform-origin:50% 100%;transform:scale(0)}
+.pt{width:4px;height:4px;border-radius:50%;z-index:6}
+.mix-steps{margin:0;padding:10px 14px 14px 34px;display:grid;gap:4px;font-size:13px;color:var(--muted);border-top:1px solid var(--line)}
+.mix-steps li{transition:color .2s}
+.mix-steps li.on{color:var(--yellow);font-weight:700}
+.mix-steps li.done{color:var(--fg)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -592,7 +638,19 @@ const T = {
   "toast.imported":["Imported {n} clients","已导入 {n} 位学员","已匯入 {n} 位學員","{n} klien diimport"],
   "toast.badfile":["Wrong file. Choose a BurnUp backup .json.","文件格式不对，请选 BurnUp 备份 .json","檔案格式不對，請選 BurnUp 備份 .json","Fail salah. Pilih fail sandaran BurnUp .json."],
   "txt.target":["Daily target","每日摄入","每日攝入","Sasaran harian"],
-  "txt.total":["Total about {n} kcal","合计约 {n} kcal","合計約 {n} kcal","Jumlah kira-kira {n} kcal"]
+  "txt.total":["Total about {n} kcal","合计约 {n} kcal","合計約 {n} kcal","Jumlah kira-kira {n} kcal"],
+  "mix.btn":["How to mix","冲泡示范","沖泡示範","Cara bancuh"],
+  "mix.replay":["Replay","重播","重播","Main semula"],
+  "mix.open":["Open the lids","打开盖子","打開蓋子","Buka penutup"],
+  "mix.f1":["Formula 1 · scoop {i}/3 · level it off","Formula 1 · 第 {i}/3 匙 · 刮平","Formula 1 · 第 {i}/3 匙 · 刮平","Formula 1 · sudu {i}/3 · ratakan"],
+  "mix.f3":["Formula 3 · scoop {i}/2 · level it off","Formula 3 · 第 {i}/2 匙 · 刮平","Formula 3 · 第 {i}/2 匙 · 刮平","Formula 3 · sudu {i}/2 · ratakan"],
+  "mix.s.f1":["3 level scoops of Formula 1","3 匙刮平的 Formula 1","3 匙刮平的 Formula 1","3 sudu rata Formula 1"],
+  "mix.s.f3":["2 level scoops of Formula 3","2 匙刮平的 Formula 3","2 匙刮平的 Formula 3","2 sudu rata Formula 3"],
+  "mix.milk":["Pour in 250ml low-fat milk","倒入 250ml 低脂牛奶","倒入 250ml 低脂牛奶","Tuang 250ml susu rendah lemak"],
+  "mix.water":["Pour in 250ml water","倒入 250ml 清水","倒入 250ml 清水","Tuang 250ml air"],
+  "mix.shake":["Close the lid and shake for 10–15 seconds","盖上盖子，摇 10–15 秒","蓋上蓋子，搖 10–15 秒","Tutup penutup dan goncang 10–15 saat"],
+  "mix.banana":["Have ½ banana with it (or blend it in)","搭配半条香蕉（或用搅拌机一起打）","搭配半條香蕉（或用攪拌機一起打）","Makan ½ pisang bersama (atau kisar sekali)"],
+  "mix.done":["Ready · {k} kcal","完成 · {k} kcal","完成 · {k} kcal","Siap · {k} kcal"]
 };
 function t(k, vars){
   let s = T[k] ? tx(T[k]) : k;
@@ -880,8 +938,9 @@ function render(){
     <div id="view">${body}</div></main>`;
   const inp = $app.querySelector("input.autofocus");
   if(inp) inp.focus({preventScroll:true});
+  if(S.view==="plan" && S.mix && document.getElementById("mix")) requestAnimationFrame(startMix); else mixRun++;
 }
-function go(view){ S.view = view; S.arm = false; S.armTpl = null; S.editMeal = null; S.editTarget = false; render(); window.scrollTo(0,0); }
+function go(view){ S.view = view; S.mix = null; S.arm = false; S.armTpl = null; S.editMeal = null; S.editTarget = false; render(); window.scrollTo(0,0); }
 const tabs = active => isCoach() && planReady(S.rec) ? `<div class="tabs noprint" role="tablist">
   <button class="${active==="plan"?"on":""}" data-go="plan" role="tab" aria-selected="${active==="plan"}">${t("tab.meal")}</button>
   <button class="${active==="workout"?"on":""}" data-workout role="tab" aria-selected="${active==="workout"}">${t("tab.workout")}</button></div>` : "";
@@ -1045,7 +1104,7 @@ function mealBlock(key, m, r){
   return `<li class="meal ${m.off?"off noprint":""} ${info.kind==="plate"?"":"fixed"}">
     <div class="meal-h"><div><div class="t">${tx(info.t)}</div><h4>${tx(info.n)}${coach && set ? `<span class="ctag noprint">${t("tag.adjusted")}</span>` : ""}</h4></div>
       <div class="mr"><div class="kc num">${m.kcal}<small>kcal</small></div>${editBtn}</div></div>
-    ${mealDesc(key, m)}${studentSnack}${coach && S.editMeal===key ? mealEditor(key, m, r) : ""}</li>`;
+    ${mealDesc(key, m)}${m.shake && !m.off ? `<button class="mixbtn noprint ${S.mix===key?"on":""}" data-mix="${key}">${PLAY} ${t("mix.btn")}</button>` + (S.mix===key ? mixHTML(key, m.shake, m.kcal) : "") : ""}${studentSnack}${coach && S.editMeal===key ? mealEditor(key, m, r) : ""}</li>`;
 }
 function plan(){
   const rec = S.rec, a = rec.a, r = calc(rec), coach = isCoach();
@@ -1188,6 +1247,131 @@ function workout(){
   </div>`;
 }
 
+/* ================= 冲泡动画：F1 3 匙 → (F3 2 匙) → 液体 → 摇匀 ================= */
+const PLAY = `<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M2 1l7 4-7 4z" fill="currentColor"/></svg>`;
+const SPOON_SVG = `<svg width="96" height="26" viewBox="0 0 96 26" aria-hidden="true"><rect x="24" y="10.5" width="58" height="5" rx="2.5" fill="#efefef" stroke="#c9c9c9"/><ellipse cx="88" cy="13" rx="7" ry="5" fill="#f5f5f5" stroke="#c9c9c9"/><ellipse cx="14" cy="13" rx="13" ry="9" fill="#fafafa" stroke="#c9c9c9"/><ellipse cx="14" cy="12" rx="9" ry="5.5" fill="#e3e3e3"/></svg>`;
+const BANANA_SVG = `<svg viewBox="0 0 52 34" aria-hidden="true"><path d="M3 22 Q20 36 46 10 Q49 6 46 4 Q42 4 41 7 Q26 26 6 17 Q1 16 3 22Z" fill="#FFD93D" stroke="#9a7400" stroke-width="1.2"/><path d="M46 4 l3 -3" stroke="#5a4500" stroke-width="2.5" stroke-linecap="round"/></svg>`;
+const MIX = {f1:"#9a6f4f", f3:"#eadfc9", milk:"#f4f0e8", water:"rgba(160,205,255,.45)", mixMilk:"#c89f7c", mixWater:"#9b6f4e"};
+let mixRun = 0;
+function mixSteps(sh){
+  const st = [t("mix.s.f1")];
+  if(sh.f3) st.push(t("mix.s.f3"));
+  st.push(t(sh.milk ? "mix.milk" : "mix.water"), t("mix.shake"));
+  if(sh.banana) st.push(t("mix.banana"));
+  return st;
+}
+function mixHTML(key, sh, kcal){
+  S.mixData = {sh, kcal};
+  return `<div class="mix noprint" id="mix">
+    <div class="mix-cap"><span id="mixcap" aria-live="polite">${t("mix.open")}</span><button class="mini o" data-mixreplay>${t("mix.replay")}</button></div>
+    <div class="mix-wrap" id="mixwrap"><div class="stage" id="stage" aria-hidden="true">
+      <div class="floor"></div>
+      <div class="can f1"><div class="mouth"></div><div class="lid" id="lidF1"></div><div class="lbl">FORMULA 1<small>NUTRITIONAL SHAKE MIX</small></div></div>
+      ${sh.f3 ? `<div class="can f3"><div class="mouth"></div><div class="lid" id="lidF3"></div><div class="lbl">FORMULA 3<small>PROTEIN POWDER</small></div></div>` : ""}
+      ${sh.banana ? `<div class="banana" id="banana">${BANANA_SVG}</div>` : ""}
+      <div class="cupgrp" id="cupgrp"><div class="cup"><div class="pow p1" id="pow1"></div><div class="pow p3" id="pow3"></div><div class="liq" id="liq"><div class="foam" id="foam"></div></div><div class="ticks"></div></div><div class="cuplid" id="cuplid">${BOLT("m")}</div></div>
+      <div class="carton ${sh.milk?"milk":"water"}" id="carton"><span>${sh.milk?"MILK":"H₂O"}</span></div>
+      <div class="stream" id="stream" style="background:${sh.milk?MIX.milk:"rgba(170,215,255,.8)"}"></div>
+      <div class="lev" id="lev"></div>
+      <div class="spoon" id="spoon">${SPOON_SVG}<div class="heap" id="heap"></div></div>
+    </div></div>
+    <ol class="mix-steps">${mixSteps(sh).map((x,i)=>`<li data-st="${i}">${x}</li>`).join("")}</ol>
+  </div>`;
+}
+async function startMix(){
+  const id = ++mixRun, $ = q => document.getElementById(q);
+  const wrap = $("mixwrap"); if(!wrap || !S.mixData) return;
+  wrap.style.setProperty("--s", Math.min(1, wrap.clientWidth/360));
+  const {sh, kcal} = S.mixData;
+  const cap = $("mixcap"), spoon = $("spoon"), heap = $("heap"), lev = $("lev"), stage = $("stage");
+  const steps = [...document.querySelectorAll(".mix-steps li")];
+  const live = () => { if(id !== mixRun || !document.body.contains(stage)) throw "stop"; };
+  const A = (el, kf, dur, o={}) => el.animate(kf, Object.assign({duration:dur, fill:"forwards", easing:"cubic-bezier(.45,0,.25,1)"}, o)).finished;
+  const wait = ms => new Promise(r=>setTimeout(r, ms));
+  const pose = (x,y,r=0) => `translate(${x-14}px,${y-13}px) rotate(${r}deg)`;
+  let cur = [175, 34, 0];
+  const move = async (x,y,r,dur) => { const to=[x,y,r]; await A(spoon, [{transform:pose(...cur)},{transform:pose(...to)}], dur); cur=to; live(); };
+  const mark = i => steps.forEach((li,j)=>{ li.classList.toggle("on", j===i); li.classList.toggle("done", j<i); });
+  const drop = (x, y, toY, color, n) => { for(let k=0;k<n;k++){ const p=document.createElement("div"); p.className="pt"; p.style.background=color; p.style.left=x+"px"; p.style.top=y+"px"; stage.appendChild(p);
+      const dx=(Math.random()-.5)*16; p.animate([{transform:"translate(0,0)",opacity:1},{transform:`translate(${dx}px,${toY-y}px)`,opacity:.9}],{duration:380+Math.random()*220,delay:k*35,easing:"cubic-bezier(.5,0,1,1)",fill:"forwards"}).finished.then(()=>p.remove()); } };
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const liq = $("liq"), pow1 = $("pow1"), pow3 = $("pow3"), cupgrp = $("cupgrp"), cuplid = $("cuplid"), foam = $("foam");
+  const mixColor = sh.milk ? MIX.mixMilk : MIX.mixWater;
+  if(reduced){   // 不播放动画：直接显示完成状态
+    liq.style.height="96px"; liq.style.background=mixColor; foam.style.opacity=1; cap.textContent=t("mix.done",{k:kcal});
+    steps.forEach(li=>li.classList.add("done")); if(sh.banana) $("banana").style.opacity=1; return;
+  }
+  try{
+    spoon.style.transform = pose(...cur);
+    let si = 0, p1h = 0, p3h = 0;
+    await wait(300); live();
+    // 打开盖子
+    await Promise.all([A($("lidF1"), [{transform:"none"},{transform:"translate(-10px,-30px) rotate(-28deg)"}], 450),
+      sh.f3 ? A($("lidF3"), [{transform:"none"},{transform:"translate(-8px,-26px) rotate(-24deg)"}], 450) : null]); live();
+    const scoop = async (canX, mouthY, color, label, i) => {
+      cap.textContent = label;
+      heap.style.background = color;
+      await move(canX, mouthY-26, 0, 550);
+      await move(canX, mouthY-2, 8, 300);                       // 舀
+      A(heap, [{transform:"scale(0)"},{transform:"scale(1.15)"}], 260);
+      await move(canX, mouthY-30, 0, 380);                      // 拿起（满匙）
+      // 刮平
+      lev.style.left = (canX-44)+"px"; lev.style.top = (mouthY-37)+"px";
+      await A(lev, [{opacity:0,transform:"translateX(0)"},{opacity:1,transform:"translateX(8px)"}], 150); live();
+      A(heap, [{transform:"scale(1.15)"},{transform:"scale(1,.5)"}], 420);
+      drop(canX+10, mouthY-34, mouthY, color, 4);
+      await A(lev, [{opacity:1,transform:"translateX(8px)"},{opacity:1,transform:"translateX(70px)"}], 420); live();
+      A(lev, [{opacity:1},{opacity:0}], 150);
+      // 倒进 shaker
+      await move(268, 50, 0, 650);
+      await move(270, 54, 62, 300);
+      drop(268, 60, 214 - p1h - p3h, color, 9);
+      await A(heap, [{transform:"scale(1,.5)"},{transform:"scale(0)"}], 260); live();
+      await wait(250); live();
+      await move(268, 50, 0, 250);
+    };
+    mark(si);
+    for(let i=1;i<=3;i++){
+      await scoop(58, 104, MIX.f1, t("mix.f1",{i}), i);
+      const h0=p1h; p1h+=7; await A(pow1, [{height:h0+"px"},{height:p1h+"px"}], 250); live();
+    }
+    if(sh.f3){
+      mark(++si); pow3.style.bottom = p1h+"px";
+      for(let i=1;i<=2;i++){
+        await scoop(140, 144, MIX.f3, t("mix.f3",{i}), i);
+        const h0=p3h; p3h+=5; await A(pow3, [{height:h0+"px"},{height:p3h+"px"}], 250); live();
+      }
+    }
+    await move(175, 34, 0, 500);
+    // 倒液体
+    mark(++si); cap.textContent = t(sh.milk ? "mix.milk" : "mix.water");
+    const carton = $("carton"), stream = $("stream");
+    await A(carton, [{transform:"translate(90px,-30px)"},{transform:"translate(0,0)"}], 500); live();
+    await A(carton, [{transform:"translate(0,0)"},{transform:"translate(-6px,4px) rotate(-72deg)"}], 420); live();
+    const liqColor = sh.milk ? MIX.milk : MIX.water;
+    liq.style.background = liqColor;
+    await A(stream, [{height:"0px"},{height:"172px"}], 260); live();
+    await A(liq, [{height:"0px"},{height:"96px"}], 1500, {easing:"linear"}); live();
+    await A(stream, [{height:"172px",transform:"translateY(0)"},{height:"0px",transform:"translateY(172px)"}], 220); live();
+    await A(carton, [{transform:"translate(-6px,4px) rotate(-72deg)"},{transform:"translate(90px,-30px)"}], 500); live();
+    // 盖上、摇
+    mark(++si); cap.textContent = t("mix.shake");
+    await A(cuplid, [{opacity:0,transform:"translateY(-50px)"},{opacity:1,transform:"translateY(0)"}], 380, {easing:"cubic-bezier(.3,1.4,.6,1)"}); live();
+    const shakeKF = []; for(let k=0;k<=12;k++){ const a = k%2 ? 16 : -16; shakeKF.push({transform: k===0||k===12 ? "none" : `translate(${a/2}px,-${12+(k%3)*3}px) rotate(${a}deg)`}); }
+    A(liq, [{background:liqColor},{background:mixColor}], 1600);
+    A(pow1, [{opacity:1},{opacity:0}], 1100); A(pow3, [{opacity:1},{opacity:0}], 1100);
+    await A(cupgrp, shakeKF, 1800, {easing:"linear"}); live();
+    await A(cuplid, [{opacity:1,transform:"translateY(0)"},{opacity:0,transform:"translate(18px,-46px) rotate(18deg)"}], 420); live();
+    A(foam, [{opacity:0},{opacity:1}], 400);
+    if(sh.banana){ mark(++si); cap.textContent = t("mix.banana");
+      await A($("banana"), [{opacity:0,transform:"translateY(-40px) rotate(-20deg)"},{opacity:1,transform:"none"}], 600, {easing:"cubic-bezier(.3,1.4,.6,1)"}); live(); await wait(900); live(); }
+    // 盖回罐子
+    await Promise.all([A($("lidF1"), [{transform:"translate(-10px,-30px) rotate(-28deg)"},{transform:"none"}], 400),
+      sh.f3 ? A($("lidF3"), [{transform:"translate(-8px,-26px) rotate(-24deg)"},{transform:"none"}], 400) : null]); live();
+    mark(steps.length); cap.innerHTML = `<b style="color:var(--yellow)">${t("mix.done",{k:kcal})}</b>`;
+  }catch(e){ if(e !== "stop") console.warn(e); }
+}
+
 /* ================= WhatsApp 文字 ================= */
 function mealText(){
   const rec=S.rec, r=calc(rec), g=GOALS[rec.a.goal];
@@ -1295,6 +1479,8 @@ $app.addEventListener("click", e=>{
   if("start" in d){ if(!isCoach()){ S.role="student"; SS.set("bu_role","student"); S.rec = selfRec(); } S.step=0; return go("quiz"); }
   if("myplan" in d){ S.rec = selfRec(); return go("plan"); }
   if("fitlocked" in d) return toast(t("fit.toast"));
+  if(d.mix){ S.mix = S.mix===d.mix ? null : d.mix; render(); if(S.mix) document.getElementById("mix")?.scrollIntoView({block:"nearest", behavior:"smooth"}); return; }
+  if("mixreplay" in d) return render();
   if("new" in d){ S.rec = blankRec(); S.step=0; return go("quiz"); }
   if(d.open){ const s = students().find(x=>x.id===d.open); if(!s) return; S.rec = normalize(s); S.step=0; return go(planReady(S.rec) ? "plan" : "quiz"); }
   if("back" in d){ S.step=Math.max(0,S.step-1); return go("quiz"); }

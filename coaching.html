@@ -7,7 +7,13 @@
 <meta name="claude:viewport-fit-sides" content="cover" />
 <meta name="theme-color" content="#000000" />
 <meta name="description" content="BurnUp Coaching — 80% nutrition + 20% training. Meal plan and coach-designed workouts in 简体中文, 繁體中文, English and Bahasa Melayu." />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23FFD000' d='M14.5 1 4 13.5h6.2L8.5 23 20 9.8h-6.3z'/%3E%3C/svg%3E" />
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png" />
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="BurnUp" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" />
@@ -507,6 +513,13 @@ button.sq:hover{border-color:#555}
 .vegimg{display:block;width:100%;max-width:520px;margin:4px auto 10px;filter:drop-shadow(0 12px 14px rgba(0,0,0,.6))}
 .cook{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
 .cook span{font-size:13px;font-weight:700;color:#062b14;background:#4CD07D;border-radius:999px;padding:6px 14px}
+/* ---------- install (PWA) ---------- */
+.install{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;align-items:center;border-color:#3a3000;background:linear-gradient(135deg,#1a1500,#0e0e0e)}
+.install img{grid-row:span 2;width:52px;height:52px;border-radius:14px}
+.install b{font-family:var(--head);font-size:16px;font-weight:800}
+.install p{margin:0;color:#bdbdbd;font-size:13px}
+.install .acts{grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.install .ios{grid-column:1/-1;margin:4px 0 0;font-size:13px;color:var(--yellow)}
 /* ---------- shake mixing animation ---------- */
 .mixbtn{display:inline-flex;align-items:center;gap:6px;margin-top:10px;background:rgba(255,208,0,.1);border:1px solid rgba(255,208,0,.5);color:var(--yellow);border-radius:999px;padding:6px 12px;font-family:var(--head);font-weight:700;font-size:12px}
 .mixbtn svg{width:10px;height:10px}
@@ -959,6 +972,14 @@ const T = {
   "carb.brown":["Brown rice","糙米饭","糙米飯","Nasi perang"],
   "carb.potato":["Smashed potato","薯泥 / 土豆","薯泥 / 馬鈴薯","Kentang lenyek"],
   "carb.white":["White rice","白饭","白飯","Nasi putih"],
+  "pwa.h":["Get the BurnUp app","安装 BurnUp App","安裝 BurnUp App","Pasang aplikasi BurnUp"],
+  "pwa.p":["Add it to your home screen: one tap to open, full screen, works without internet.","加到主屏幕：一键打开、全屏显示，没网络也能看。","加到主畫面：一鍵打開、全螢幕顯示，沒網路也能看。","Tambah ke skrin utama: buka dengan satu sentuhan, skrin penuh, boleh guna tanpa internet."],
+  "pwa.btn":["Install","安装","安裝","Pasang"],
+  "pwa.ios":["On iPhone: tap the Share button (square with arrow), then “Add to Home Screen”.","iPhone：按 Safari 下方的「分享」按钮（方框加箭头），再选「加入主画面」。","iPhone：按 Safari 下方的「分享」按鈕（方框加箭頭），再選「加入主畫面」。","Di iPhone: tekan butang Kongsi (kotak dengan anak panah), kemudian “Add to Home Screen”."],
+  "pwa.later":["Not now","以后再说","以後再說","Nanti"],
+  "pwa.done":["Installed! Open BurnUp from your home screen.","安装好了！之后从主屏幕打开 BurnUp。","安裝好了！之後從主畫面打開 BurnUp。","Dipasang! Buka BurnUp dari skrin utama."],
+  "net.off":["You're offline. Showing your saved plan.","目前离线，显示已保存的计划。","目前離線，顯示已保存的計劃。","Anda di luar talian. Memaparkan pelan yang disimpan."],
+  "net.on":["Back online.","已恢复网络。","已恢復網路。","Kembali dalam talian."],
   "mix.btn":["How to mix","冲泡示范","沖泡示範","Cara bancuh"],
   "mix.replay":["Replay","重播","重播","Main semula"],
   "mix.open":["Open the lids","打开盖子","打開蓋子","Buka penutup"],
@@ -1324,6 +1345,23 @@ const carbGallery = () => `<section class="card"><div class="cardh"><h3>${t("car
   <div class="carbs">${CARBS.map(c => `<div class="carb"><span class="gi ${c.low ? "" : "mid"}">${t(c.low ? "carb.low" : "carb.some")}</span><img src="${CARB_IMG[c.id]}" alt="${esc(t("carb."+c.id))}" loading="lazy" /><b>${t("carb."+c.id)}</b></div>`).join("")}</div>
 </section>`;
 
+/* ================= PWA：安装到主屏幕 ================= */
+const isStandalone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+let installEvt = null;
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; if(["home","today"].includes(S.view)) render(); });
+window.addEventListener("appinstalled", () => { installEvt = null; LS.set("bu_pwa_off", true); toast(t("pwa.done")); render(); });
+function installCard(){
+  if(isStandalone() || LS.get("bu_pwa_off", false)) return "";
+  if(!installEvt && !isIOS()) return "";
+  return `<section class="card install noprint">
+    <img src="icons/icon-192.png" alt="" />
+    <b>${t("pwa.h")}</b><p>${t("pwa.p")}</p>
+    ${installEvt ? "" : `<p class="ios">${t("pwa.ios")}</p>`}
+    <div class="acts">${installEvt ? `<button class="btn btn-y sm" data-install>${t("pwa.btn")} ${ARROW}</button>` : ""}<button class="btn btn-o sm" data-installoff>${t("pwa.later")}</button></div>
+  </section>`;
+}
+
 /* ================= 渲染 ================= */
 const $app = document.getElementById("app");
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -1446,6 +1484,7 @@ function todayView(){
     <div class="todaychip"><span class="dot">${wdName(now)}</span><span>${t(!w0 ? "nav.today" : w0.rest ? "wk.restday" : "wk.time")}</span></div>
     ${strip}
   </div>
+  ${installCard()}
 
   <section class="card cal">
     <div class="cal-l">
@@ -1548,6 +1587,7 @@ function home(){
     </div>
   </section>
 
+  ${installCard()}
   <div class="sec-title"><h2>${t("sec.title")}</h2></div>
   <div class="ratio" aria-hidden="true"><i></i><i></i></div>
   <div class="ratio-k"><span>${t("ratio.n")}</span><span>${t("ratio.t")}</span></div>
@@ -2113,11 +2153,13 @@ $app.addEventListener("click", e=>{
     LS.del(K_PIN); LS.del(K_STU); S.arm=false; toast(t("toast.reset")); return render();
   }
   if("start" in d && cloudOn() && !isCoach()){ S.step=0; return go(planReady(S.rec) ? "today" : "quiz"); }
-  if("start" in d){ if(!isCoach()){ S.role="student"; SS.set("bu_role","student"); S.rec = selfRec(); } S.step=0; return go("quiz"); }
+  if("start" in d){ if(!isCoach()){ S.role="student"; SS.set("bu_role","student"); S.rec = selfRec(); if(planReady(S.rec)) return go("today"); } S.step=0; return go("quiz"); }
   if("myplan" in d){ if(!cloudOn()) S.rec = selfRec(); S.step=0; return go(planReady(S.rec) ? "today" : "quiz"); }
   if("fitlocked" in d){ if(cloudOn() && planReady(S.rec)) return go("workout"); return toast(t("fit.toast")); }
   if("workout" in d && !isCoach()) return go("workout");
   if("menu" in d){ S.menu = !S.menu; return render(); }
+  if("install" in d && installEvt){ installEvt.prompt(); installEvt.userChoice.finally(() => { installEvt = null; render(); }); return; }
+  if("installoff" in d){ LS.set("bu_pwa_off", true); return render(); }
   if("gohome" in d){ S.menu = false; if(!cloudOn()) S.rec = selfRec(); return go("home"); }
   if(d.eat){ const k = d.eat; let on; setDayLog(ymd(new Date()), x => { on = x.meals[k] = !x.meals[k]; }); render(); if(on) toast(t("photo.toast")); return; }
   if("wkdone" in d){ let on; setDayLog(ymd(new Date()), x => { on = x.wk = !x.wk; }); render(); if(on) toast(t("photo.toast")); return; }
@@ -2305,7 +2347,11 @@ async function loadFirebase(){
   if(window.__FB_MOCK) return window.__FB_MOCK;
   const base = `https://www.gstatic.com/firebasejs/${FB_VER}/`;
   const [AppM, A, F] = await Promise.all([import(base+"firebase-app.js"), import(base+"firebase-auth.js"), import(base+"firebase-firestore.js")]);
-  const app = AppM.initializeApp(FIREBASE_CONFIG), auth = A.getAuth(app), db = F.getFirestore(app), col = F.collection(db, "clients");
+  const app = AppM.initializeApp(FIREBASE_CONFIG), auth = A.getAuth(app);
+  let db;   // 云端资料在手机上留一份，没网络也能看
+  try{ db = F.initializeFirestore(app, {localCache: F.persistentLocalCache({tabManager: F.persistentMultipleTabManager()})}); }
+  catch(e){ db = F.getFirestore(app); }
+  const col = F.collection(db, "clients");
   const me = u => u ? {uid:u.uid, email:(u.email||"").toLowerCase(), verified:u.emailVerified} : null;
   return {
     onAuth: cb => A.onAuthStateChanged(auth, u => cb(me(u))),
@@ -2362,6 +2408,13 @@ function onUser(u){
     softRender(pending);
   }, onCloudErr);
 }
+
+/* ================= PWA：离线 ================= */
+if("serviceWorker" in navigator && /^https?:$/.test(location.protocol)){
+  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(e => console.warn("SW", e)));
+}
+window.addEventListener("offline", () => toast(t("net.off")));
+window.addEventListener("online", () => toast(t("net.on")));
 
 if(S.role==="coach" && !CLOUD){ S.rec = blankRec(); S.view = S.authed ? "home" : "login"; }
 if(CLOUD){

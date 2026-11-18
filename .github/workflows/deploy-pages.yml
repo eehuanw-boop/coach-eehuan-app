@@ -37,6 +37,8 @@ jobs:
           mkdir -p _site
           cp index.html _site/index.html
           cp coaching.html _site/coaching.html
+          cp manifest.webmanifest sw.js _site/
+          cp -r icons _site/icons
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

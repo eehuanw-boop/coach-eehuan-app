@@ -8,6 +8,7 @@
   from = "/"
   to = "/coaching.html"
   status = 301
+  force = true   # 首页已经有 index.html（比赛排行榜），要强制才会转到 App
 
 # 离线功能档每次都检查新版，确保学员拿到最新网页
 [[headers]]
